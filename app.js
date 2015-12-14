@@ -6,8 +6,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
 var users = require('./routes/users');
+
+var mongoose = require('mongoose');
+var opts = {
+  server: {
+    socketOptions: { keepAlive: 1 }
+  }
+};
+mongoose.connect(process.env.MONGODB, opts);
+var passport = require('passport');
+require('./routes/passport-config')(passport);
 
 var app = express();
 if (process.env.ENABLE_CORS && process.env.ENABLE_CORS.toLowerCase()==="true") {
@@ -28,7 +37,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
 app.use('/users', users);
 
 // catch 404 and forward to error handler
