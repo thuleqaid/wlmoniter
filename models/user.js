@@ -24,9 +24,9 @@ userSchema.methods.validatePassword = function(password) {
   return result;
 };
 
-userSchema.statics.findByUsername = function(username, callback) {
-  this.findOne({email:username}).select('-password');
-};
+// userSchema.statics.findByUsername = function(username, callback) {
+//   this.findOne({email:username}).select('-password');
+// };
 
 var User = mongoose.model('User', userSchema);
 

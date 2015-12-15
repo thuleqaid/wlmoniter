@@ -55,23 +55,35 @@ router.route('/login').post(function(req, res, next) {
         /* console.log("Remove Error:"+err); */
       }
     });
+    var random_token = crypto.randomBytes(32).toString('hex');
+    var expires = moment().add(5, 'days').valueOf();
+    var token = jwt.encode({iss:random_token,
+                            exp:expires}, process.env.JWTSECRET);
     /* Add access token record */
     var access_token = new AccessToken({userid:user._id,
-                                token:crypto.randomBytes(32).toString('hex')
+                                token:token
                                });
     access_token.save(function(err) {
       if (err) {
         return next(err);
       }
     });
-    var expires = moment().add(5, 'days').valueOf();
-    var token = jwt.encode({iss:access_token.token,
-                            exp:expires}, process.env.JWTSECRET);
     /* return JsonWebToken */
     res.json({token:token,
               expires:expires,
-              user:user.toJSON()});
+              user:{
+                userid: user._id,
+                email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name
+              }
+            });
   })(req, res, next);
+});
+
+router.route('/logout').post(passport.authenticate('bearer', {session:false}), function(req, res, next) {
+  AccessToken.remove({userid:req.body.userid, token:req.body.token}, function(err) { });
+  res.json({message:'ok'});
 });
 
 router.route('/reset').post(function(req, res, next) {

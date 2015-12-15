@@ -1,0 +1,23 @@
+<p>{{user.name}}</p>
+<table class="table table-hover table-striped" id="ordertable">
+    <thead>
+        <td>顧客</td>
+        <td>顧客項目名</td>
+        <td>光庭項目名</td>
+        <td>NDA状態</td>
+        <td>契約書状態</td>
+        <td>作成者</td>
+        <td>作成日付</td>
+    </thead>
+    <tbody>
+        <tr ng-repeat="order in orders track by $index">
+            <td>{{order.customer}}</td>
+            <td>{{order.projectname_c}}</td>
+            <td><a ui-sref="singleOrder({id:order.id})">{{order.projectname_k}}</a></td>
+            <td>{{label_nda(order.nda)}}</td>
+            <td>{{label_contract(order.contract)}}</td>
+            <td>{{order.author}}</td>
+            <td>{{order.datePublished}}</td>
+        </tr>
+    </tbody>
+</table>

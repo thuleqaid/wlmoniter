@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+        <form name="newOrderForm" ng-submit="updateOrder()" class="form-horizontal" novalidate role="form">
+            <div>
+                <div class="form-group" ng-class="{'has-error':newOrderForm.customer.$dirty && newOrderForm.customer.$invalid}">
+                    <label for="customer" class="col-sm-2 control-label">顧客</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="customer" ng-model="order.customer" ng-required="true" class="form-control" id="customer" placeholder="顧客名">
+                        <span class="error-message" ng-show="newOrderForm.customer.$dirty && newOrderForm.customer.$invalid">顧客名は必要です</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error':newOrderForm.projectname_c.$dirty && newOrderForm.projectname_c.$invalid}">
+                    <label for="projectname_c" class="col-sm-2 control-label">顧客項目名</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="projectname_c" ng-model="order.projectname_c" ng-required="true" class="form-control" id="projectname_c" placeholder="顧客項目名">
+                        <span class="error-message" ng-show="newOrderForm.projectname_c.$dirty && newOrderForm.projectname_c.$invalid">顧客項目名は必要です</span>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error':newOrderForm.projectname_k.$dirty && newOrderForm.projectname_k.$invalid}">
+                    <label for="projectname_k" class="col-sm-2 control-label">光庭項目名</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="projectname_k" ng-model="order.projectname_k" ng-required="true" class="form-control" id="projectname_k" placeholder="光庭項目名">
+                        <span class="error-message" ng-show="newOrderForm.projectname_k.$dirty && newOrderForm.projectname_k.$invalid">光庭項目名は必要です</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nda" class="col-sm-2 control-label">NDA状態</label>
+                    <div class="col-sm-10">
+                        <select name="nda" ng-model="order.nda" ng-options="nda.id as nda.label for nda in ndas" class="form-control" id="nda"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="contract" class="col-sm-2 control-label">契約書状態</label>
+                    <div class="col-sm-10">
+                        <select name="contract" ng-model="order.contract" ng-options="contract.id as contract.label for contract in contracts" class="form-control" id="contract"></select>
+                    </div>
+                </div>
+                <br />
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5>契約書状態変更通知設定</h5>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="contract_setting" class="col-sm-3 control-label">契約書状態</label>
+                            <div class="col-sm-9">
+                                <select name="contract_setting" ng-model="settingidx" ng-options="contract.id as contract.label for contract in contracts" class="form-control" id="contract_setting"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract_sts_follow_day" class="col-sm-3 control-label">フォロー時間</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" name="contract_sts_follow_day" ng-model="order.follow[settingidx]" ng-required="true" class="form-control" id="contract_sts_follow_day" placeholder="フォローしない場合、「0」を指定してください">
+                                    <span class="input-group-addon">日後</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract_sts_follow_user" class="col-sm-3 control-label">フォローユーザ</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" name="contract_sts_follow_user" ng-model="order.follow_email[settingidx]" class="form-control" id="contract_sts_follow_user" placeholder="メールリスト">
+                                    <span class="input-group-addon" ng-click="open(1)">...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract_sts_notify_user" class="col-sm-3 control-label">通知ユーザ</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" name="contract_sts_notify_user" ng-model="order.notify_email[settingidx]" class="form-control" id="contract_sts_notify_user" placeholder="メールリスト">
+                                    <span class="input-group-addon" ng-click="open(2)">...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success" ng-disabled="newOrderForm.$invalid">{{buttonText}}</button>
+                        <button class="btn btn-muted" ng-click="closeOrder()">取り消し</button>
+                    </div>
+                </div>
+            </div>
+            <script type="text/ng-template" id="email_chooser.html">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title" id="modalLabel">emails</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" ng-model="emails" />
+                    <input type="hidden" id="targetid" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="ok()">Save</button>
+                    <button type="button" class="btn btn-warning" ng-click="cancel()">Close</button>
+                </div>
+            </script>
+        </form>
+    </div>
+</div>
+

@@ -25,17 +25,20 @@ module.exports = function(passport) {
     });
   }));
   passport.use(new BearerStrategy(function(token, cb) {
+    /* console.log("passport-bearer-strategy:["+token+"]"); */
     try {
       var decoded = jwt.decode(token, process.env.JWTSECRET);
       if (decoded.exp <= Date.now()) {
-        AccessToken.remove({token:decoded.iss});
+        AccessToken.remove({token:token});
         return cb(null, false);
       }
-      AccessToken.find({token:decoded.iss}, function(err, access_token) {
+      AccessToken.find({token:token}, function(err, access_token) {
         if (err) {
+          /* console.log(err); */
           return cb(err);
         }
         if (!access_token) {
+          /* console.log("no record found"); */
           return cb(null, false);
         }
         return cb(null, access_token);
