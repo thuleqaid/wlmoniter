@@ -1,5 +1,4 @@
 angular.module('common.accounts', [
-  'ngCookies',
   'ui.router',
   // 'common.accounts.directives',
   // 'common.accounts.filters',
@@ -20,10 +19,25 @@ angular.module('common.accounts').config(['$stateProvider', '$locationProvider',
       }]
     }
   });
+  $stateProvider.state('register', {
+    url: '/register',
+    templateUrl: 'javascripts/modules/accounts/views/register.html',
+    controller: 'RegisterController'
+  });
+  $stateProvider.state('resetpassword', {
+    url: '/resetpassword',
+    templateUrl: 'javascripts/modules/accounts/views/resetpassword.html',
+    controller: 'ResetPasswordController'
+  });
+  $stateProvider.state('forgotpassword', {
+    url: '/forgotpassword',
+    templateUrl: 'javascripts/modules/accounts/views/forgotpassword.html',
+    controller: 'ForgotPasswordController'
+  });
   // $locationProvider.html5Mode(true);
 }]);
 
-angular.module('common.accounts').run(['$rootScope', '$state', '$cookieStore', 'authService', function($rootScope, $state, $cookieStore, authService) {
+angular.module('common.accounts').run(['$rootScope', '$state', 'persistService', 'authService', function($rootScope, $state, persistService, authService) {
   $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
     if (error.unAuthorized) {
       $state.go("login");
@@ -31,14 +45,7 @@ angular.module('common.accounts').run(['$rootScope', '$state', '$cookieStore', '
       $state.go("allOrders");
     }
   });
-  authService.user = $cookieStore.get('user');
-  authService.token = $cookieStore.get('token');
-  if (authService.user && authService.token) {
-  } else {
-    if(window.localStorage){
-      authService.user = JSON.parse(window.localStorage.getItem('user'));
-      authService.token = window.localStorage.getItem('token');
-    }
-  }
+  authService.user = persistService.get('user');
+  authService.token = persistService.get('token');
 }]);
 

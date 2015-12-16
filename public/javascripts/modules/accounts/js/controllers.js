@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('common.accounts.controllers', ['ngCookies']).controller('LoginController', ['$scope', 'authService', '$state', 'DEFAULT_ROUTE', function($scope, authService, $state, DEFAULT_ROUTE) {
+angular.module('common.accounts.controllers', []).controller('LoginController', ['$scope', 'authService', '$state', 'DEFAULT_ROUTE', function($scope, authService, $state, DEFAULT_ROUTE) {
   $scope.buttonText = "Login";
   $scope.login = function() {
     $scope.buttonText = "Logging in ...";
@@ -14,7 +14,28 @@ angular.module('common.accounts.controllers', ['ngCookies']).controller('LoginCo
     });
   };
   $scope.forgot = function() {
-    console.log("forgot");
+    $state.go('forgotpassword');
+  };
+}]);
+
+angular.module('common.accounts.controllers').controller('RegisterController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
+  $scope.register = function() {
+    authService.register($scope.credentials.username+"@kotei-info.com", "12345678", $scope.credentials.firstname, $scope.credentials.lastname);
+    $state.go('login');
+  };
+}]);
+
+angular.module('common.accounts.controllers').controller('ResetPasswordController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
+  $scope.resetpassword = function() {
+    authService.resetpassword($scope.credentials.username+"@kotei-info.com", $scope.credentials.password, $scope.credentials.resetcode);
+    $state.go('login');
+  };
+}]);
+
+angular.module('common.accounts.controllers').controller('ForgotPasswordController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
+  $scope.forgotpassword = function() {
+    authService.forgotpassword($scope.credentials.username+"@kotei-info.com");
+    $state.go('resetpassword');
   };
 }]);
 
@@ -33,5 +54,11 @@ angular.module('common.accounts.controllers').controller('NavController', ['$sco
   });
   $scope.logout = function() {
     authService.logout();
+  };
+  $scope.transReg = function() {
+    $state.go('register');
+  };
+  $scope.transLogin = function() {
+    $state.go('login');
   };
 }]);

@@ -3,9 +3,13 @@ var crypto = require('crypto');
 var userSchema = mongoose.Schema({
   email: {type:String, required:true, unique:true},
   password: {type:String, required:true},
-  first_name: {type:String},
-  last_name: {type:String},
-  reset_code: {type:String, default:''}
+  first_name: {type:String, required:true},
+  last_name: {type:String, required:true},
+  reset_code: {type:String, default:''},
+  valid: {type:Boolean, required:true, default:true},
+  enabler: {type:String, default:''},
+  disabler: {type:String, default:''},
+  permission: {type:[String], required:true, default:['read','modify']} /* read/modify/create/admin */
 });
 
 userSchema.pre('save', function(next) {
@@ -31,15 +35,15 @@ userSchema.methods.validatePassword = function(password) {
 var User = mongoose.model('User', userSchema);
 
 /* initial data */
-User.find(function(err, users) {
-  if (users.length) {
-    return;
-  }
-  new User({email:'quant@kotei-info.com',
-            password:'kotei$88',
-            first_name:'quan',
-            last_name:'tian'}).save();
-});
+//User.find(function(err, users) {
+//  if (users.length) {
+//    return;
+//  }
+//  new User({email:'quant@kotei-info.com',
+//            password:'kotei$88',
+//            first_name:'quan',
+//            last_name:'tian'}).save();
+//});
 
 module.exports = User;
 

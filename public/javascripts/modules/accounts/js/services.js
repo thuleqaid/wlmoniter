@@ -1,50 +1,72 @@
 'use strict'
 
-angular.module('common.accounts.services', ['ngCookies']).factory('authService', ['LOGIN_ENDPOINT', 'LOGOUT_ENDPOINT', '$http', '$cookieStore', '$rootScope', function(LOGIN_ENDPOINT, LOGOUT_ENDPOINT, $http, $cookieStore, $rootScope) {
+angular.module('common.accounts.services', ['ngCookies']);
+angular.module('common.accounts.services').factory('persistService', ['$cookieStore', function($cookieStore) {
+  var persist = {};
+  persist.set = function(key, value) {
+    $cookieStore.put(key, value);
+    if (window.localStorage) {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    }
+  };
+  persist.get = function(key) {
+    var value = $cookieStore.get(key);
+    if (!value) {
+      if (window.localStorage) {
+        value = JSON.parse(window.localStorage.getItem(key));
+      }
+    }
+    return value;
+  };
+  persist.remove = function(key) {
+    $cookieStore.remove(key);
+    if (window.localStorage) {
+      window.localStorage.removeItem(key);
+    }
+  };
+  return persist;
+}]);
+angular.module('common.accounts.services').factory('authService', ['REGISTER_ENDPOINT', 'LOGIN_ENDPOINT', 'LOGOUT_ENDPOINT', 'FORGOTPASSWORD_ENDPOINT', 'RESETPASSWORD_ENDPOINT', 'persistService', '$http', '$rootScope', function(REGISTER_ENDPOINT, LOGIN_ENDPOINT, LOGOUT_ENDPOINT, FORGOTPASSWORD_ENDPOINT, RESETPASSWORD_ENDPOINT, persistService, $http, $rootScope) {
   var auth = {};
+  auth.register = function(username, password, firstname, lastname) {
+    return $http.post(REGISTER_ENDPOINT, {username:username, password:password, firstname:firstname, lastname:lastname}).then(function(response, status) {
+    });
+  };
   auth.login = function(username, password) {
     return $http.post(LOGIN_ENDPOINT, {username:username, password:password}).then(function(response, status) {
-      if(window.localStorage){
-        window.localStorage.setItem('user', JSON.stringify(response.data.user));
-        window.localStorage.setItem('expires', response.data.expires);
-        window.localStorage.setItem('token', response.data.token);
-      }
       auth.user = response.data.user;
       auth.token = response.data.token;
-      $cookieStore.put('user', auth.user);
-      $cookieStore.put('token', auth.token);
+      persistService.set('user', auth.user);
+      persistService.set('token', auth.token);
       $rootScope.$broadcast('authorize_changed', 'login');
       return auth.user;
     });
   };
   auth.logout = function() {
-    return $http.post(LOGOUT_ENDPOINT, {userid:auth.user.userid, token:auth.token}).then(function(response, status) {
-      if(window.localStorage){
-        window.localStorage.removeItem('user');
-        window.localStorage.removeItem('expires');
-        window.localStorage.removeItem('token');
-      }
+    return $http.post(LOGOUT_ENDPOINT, {token:auth.token}).then(function(response, status) {
       auth.user = undefined;
       auth.token = undefined;
-      $cookieStore.remove('user');
-      $cookieStore.remove('token');
+      persistService.remove('user');
+      persistService.remove('token');
       $rootScope.$broadcast('authorize_changed', 'logout');
+    });
+  };
+  auth.forgotpassword = function(username) {
+    return $http.post(FORGOTPASSWORD_ENDPOINT, {username:username}).then(function(response, status) {
+    });
+  };
+  auth.resetpassword = function(username, password, resetcode) {
+    return $http.post(RESETPASSWORD_ENDPOINT, {username:username, password:password, resetcode:resetcode}).then(function(response, status) {
     });
   };
   return auth;
 }]);
 
-angular.module('common.accounts.services').factory('tokenInterceptor',['$q', '$cookieStore', function($q, $cookieStore) {
+angular.module('common.accounts.services').factory('tokenInterceptor',['$q', 'persistService', function($q, persistService) {
   return {
     request: function(config) {
       config.headers = config.headers || {};
-      var token = $cookieStore.get('token');
-      if (token) {
-      } else {
-        if(window.localStorage){
-          token = window.localStorage.getItem('token');
-        }
-      }
+      var token = persistService.get('token');
       if (token) {
         config.headers.Authorization = 'Bearer ' + token;
       }
@@ -59,6 +81,9 @@ angular.module('common.accounts.services').config(['$httpProvider', function($ht
   $httpProvider.interceptors.push('tokenInterceptor');
 }]);
 
+angular.module('common.accounts.services').value('REGISTER_ENDPOINT', 'http://127.0.0.1:5000/users/register');
 angular.module('common.accounts.services').value('LOGIN_ENDPOINT', 'http://127.0.0.1:5000/users/login');
 angular.module('common.accounts.services').value('LOGOUT_ENDPOINT', 'http://127.0.0.1:5000/users/logout');
+angular.module('common.accounts.services').value('FORGOTPASSWORD_ENDPOINT', 'http://127.0.0.1:5000/users/forgotpassword');
+angular.module('common.accounts.services').value('RESETPASSWORD_ENDPOINT', 'http://127.0.0.1:5000/users/resetpassword');
 angular.module('common.accounts.services').value('DEFAULT_ROUTE', 'allOrders');

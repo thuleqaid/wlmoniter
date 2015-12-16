@@ -29,10 +29,10 @@ module.exports = function(passport) {
     try {
       var decoded = jwt.decode(token, process.env.JWTSECRET);
       if (decoded.exp <= Date.now()) {
-        AccessToken.remove({token:token});
+        AccessToken.remove({userid:decoded.iss, token:decoded.jti},function(err) { });
         return cb(null, false);
       }
-      AccessToken.find({token:token}, function(err, access_token) {
+      AccessToken.find({userid:decoded.iss, token:decoded.jti}, function(err, access_token) {
         if (err) {
           /* console.log(err); */
           return cb(err);
