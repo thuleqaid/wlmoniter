@@ -84,10 +84,17 @@ router.route('/login').post(function(req, res, next) {
   })(req, res, next);
 });
 
-router.route('/logout').post(passport.authenticate('bearer', {session:false}), function(req, res, next) {
-  var decoded = jwt.decode(req.body.token, process.env.JWTSECRET);
-  AccessToken.remove({userid:decoded.iss, token:decoded.jti},function(err) { });
-  res.json({message:'ok'});
+router.route('/logout').post(function(req, res, next) {
+  passport.authenticate('bearer', {session:false}, function(err, token) {
+    if (err) {
+      return next(err);
+    }
+    if (!token) {
+      return res.status(401).json({error:'wrong token'});
+    }
+    AccessToken.remove({_id:token[0]._id},function(err) {});
+    res.json({message:'ok'});
+  })(req, res, next);
 });
 
 router.route('/register').post(function(req, res, next) {
@@ -192,8 +199,8 @@ router.route('/forgotpassword').post(function(req, res, next) {
   res.json({message:'ok'});
 });
 
-router.get('/info', passport.authenticate('bearer', {session:false}), function(req, res) {
-  res.json({message:'ok'});
-});
+// router.get('/info', passport.authenticate('bearer', {session:false}), function(req, res) {
+//   res.json({message:'ok'});
+// });
 
 module.exports = router;
