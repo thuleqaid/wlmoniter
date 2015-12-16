@@ -61,4 +61,7 @@ angular.module('common.accounts.controllers').controller('NavController', ['$sco
   $scope.transLogin = function() {
     $state.go('login');
   };
+  $scope.transPassword = function() {
+    $state.go('resetpassword');
+  };
 }]);

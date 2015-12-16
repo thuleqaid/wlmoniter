@@ -77,7 +77,8 @@ router.route('/login').post(function(req, res, next) {
                 userid: user._id,
                 email: user.email,
                 first_name: user.first_name,
-                last_name: user.last_name
+                last_name: user.last_name,
+                permission: user.permission
               }
             });
   })(req, res, next);
@@ -95,6 +96,23 @@ router.route('/register').post(function(req, res, next) {
   var firstname = req.body.firstname;
   var lastname = req.body.lastname;
   if (username && password && firstname && lastname) {
+    var random_password = crypto.randomBytes(8).toString('hex');
+    var reset_code = crypto.randomBytes(32).toString('hex');
+    /* make the first register user as administrator */
+    User.count(function(err, count) {
+      if (err) {
+        return next(err);
+      }
+      if (count <= 0) {
+        new User({email:username,
+                  first_name:firstname,
+                  last_name:lastname,
+                  password:random_password,
+                  reset_code:reset_code,
+                  permission:['read','modify','creat','admin']}).save();
+        sendMail(username, reset_code);
+      }
+    });
     var autoConfirm =false;
     if (process.env.MAIL_AUTOALLOW && process.env.MAIL_AUTOALLOW.toLowerCase() === 'true') {
       autoConfirm = true;
@@ -108,8 +126,6 @@ router.route('/register').post(function(req, res, next) {
           if (suberr) {
             return next(suberr);
           }
-          var random_password = crypto.randomBytes(8).toString('hex');
-          var reset_code = crypto.randomBytes(32).toString('hex');
           if (!appuser) {
             if (autoConfirm) {
               /* Add record to User collection */

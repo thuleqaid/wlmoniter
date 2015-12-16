@@ -25,6 +25,7 @@ userSchema.methods.validatePassword = function(password) {
   var chksum = crypto.createHash('sha1');
   chksum.update(password);
   var result = (this.password == chksum.digest('hex'));
+  result = result && this.valid;
   return result;
 };
 
