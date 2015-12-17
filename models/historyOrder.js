@@ -15,6 +15,7 @@ var orderSchema = mongoose.Schema({
   updater: {type:String, required:true},
   date_update: {type:Date, required:true},
   valid: {type:Boolean, required:true, default:true},
+  baseid: {type:String},
   version: {type:Number, required:true}
 });
 

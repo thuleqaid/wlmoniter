@@ -25,8 +25,9 @@ orderSchema.pre('save', function(next) {
 
 orderSchema.post('save', function(order) {
   var histobj = order.toJSON();
-  delete histobj._id;
+  histobj.baseid = histobj._id;
   histobj.version = histobj.__v;
+  delete histobj._id;
   new HistoryOrder(histobj).save(function(err) {});
 });
 var Order = mongoose.model('Order', orderSchema);

@@ -1,7 +1,8 @@
 angular.module('wlmoniter.orders', [
         'wlmoniter.orders.services',
         'wlmoniter.orders.controllers',
-        'ui.router'
+        'ui.router',
+        'ui.bootstrap',
         ]);
 angular.module('wlmoniter.orders').config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
     $stateProvider.state('allOrders', {

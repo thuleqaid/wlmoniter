@@ -2,6 +2,12 @@
     <div class="col-xs-8 col-xs-offset-2">
         <form name="newOrderForm" ng-submit="addOrder()" class="form-horizontal" novalidate role="form">
             <div ng-include="'/javascripts/modules/orders/views/_order.html'" />
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success" ng-disabled="newOrderForm.$invalid">{{buttonText}}</button>
+                    <button class="btn btn-muted" ng-click="closeOrder()">取り消し</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
