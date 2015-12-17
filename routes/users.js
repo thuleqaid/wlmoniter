@@ -11,7 +11,7 @@ var router = express.Router();
 var nodemailer = require('nodemailer');
 var sendMail = function(to, reset_code) {
   var subject = process.env.MAIL_SUBJECT;
-  var address = 'http://'+process.env.HOST+':'+process.env.PORT+'/#/resetpassword';
+  var address = 'http://'+process.env.HOST+':'+process.env.PORT+'/#/resetpassword/'+reset_code+'/'+to.substr(0,to.lastIndexOf('@'));
   var html = '<a href="'+address+'">Reset Link</a><p>Reset Code:<pre>'+reset_code+'</pre></p>';
   var transport = nodemailer.createTransport("SMTP", {
     host: process.env.MAIL_HOST,
@@ -190,9 +190,17 @@ router.route('/resetpassword').post(function(req, res, next) {
 
 router.route('/forgotpassword').post(function(req, res, next) {
   var email = req.body.username;
-  var reset_code = crypto.randomBytes(32).toString('hex');
-  User.update({email:email}, {$set:{reset_code:reset_code}}, function(err, result) {
-    if (result.nModified > 0) {
+  User.findOne({email:email}, function(err, user) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return next(null, false);
+    }
+    if (user.valid) {
+      var reset_code = crypto.randomBytes(32).toString('hex');
+      user.reset_code = reset_code;
+      user.save(function(err) {});
       sendMail(email, reset_code);
     }
   });

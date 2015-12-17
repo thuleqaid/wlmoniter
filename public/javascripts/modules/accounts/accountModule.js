@@ -25,7 +25,7 @@ angular.module('common.accounts').config(['$stateProvider', '$locationProvider',
     controller: 'RegisterController'
   });
   $stateProvider.state('resetpassword', {
-    url: '/resetpassword',
+    url: '/resetpassword/:resetcode/:email',
     templateUrl: 'javascripts/modules/accounts/views/resetpassword.html',
     controller: 'ResetPasswordController'
   });

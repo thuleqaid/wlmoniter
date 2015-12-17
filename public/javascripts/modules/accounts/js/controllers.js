@@ -25,7 +25,11 @@ angular.module('common.accounts.controllers').controller('RegisterController', [
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('ResetPasswordController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
+angular.module('common.accounts.controllers').controller('ResetPasswordController', ['$scope', 'authService', '$state', '$stateParams', function($scope, authService, $state, $stateParams) {
+  $scope.credentials = {
+    username: $stateParams.email,
+    resetcode: $stateParams.resetcode
+  };
   $scope.resetpassword = function() {
     authService.resetpassword($scope.credentials.username+"@kotei-info.com", $scope.credentials.password, $scope.credentials.resetcode);
     $state.go('login');
@@ -35,7 +39,7 @@ angular.module('common.accounts.controllers').controller('ResetPasswordControlle
 angular.module('common.accounts.controllers').controller('ForgotPasswordController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
   $scope.forgotpassword = function() {
     authService.forgotpassword($scope.credentials.username+"@kotei-info.com");
-    $state.go('resetpassword');
+    $state.go('resetpassword', {email:$scope.credentials.username});
   };
 }]);
 
@@ -60,8 +64,5 @@ angular.module('common.accounts.controllers').controller('NavController', ['$sco
   };
   $scope.transLogin = function() {
     $state.go('login');
-  };
-  $scope.transPassword = function() {
-    $state.go('resetpassword');
   };
 }]);
