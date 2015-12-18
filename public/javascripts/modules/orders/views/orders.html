@@ -16,9 +16,9 @@
       <td>{{order.name_c}}</td>
       <td><a ui-sref="singleOrder({id:order._id})">{{order.name_k || "T.B.D"}}</a></td>
       <td>{{order.contract}}</td>
-      <td>{{order.author}}</td>
+      <td>{{username(order.author)}}</td>
       <td>{{order.date_create|date:'yyyy-MM-dd'}}</td>
-      <td>{{order.updater}}</td>
+      <td>{{username(order.updater)}}</td>
       <td>{{order.date_update|date:'yyyy-MM-dd'}}</td>
       <td><textarea readonly="readonly">{{order.memo}}</textarea></td>
     </tr>

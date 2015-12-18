@@ -9,7 +9,7 @@ var userSchema = mongoose.Schema({
   valid: {type:Boolean, required:true, default:true},
   enabler: {type:String, default:''},
   disabler: {type:String, default:''},
-  permission: {type:[String], required:true, default:['read','modify']} /* read/modify/create/admin */
+  permission: {type:[String], required:true, default:['modify']} /* modify/create/admin */
 });
 
 userSchema.pre('save', function(next) {

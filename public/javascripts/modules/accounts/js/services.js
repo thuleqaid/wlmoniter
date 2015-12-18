@@ -43,7 +43,7 @@ angular.module('common.accounts.services').factory('authService', ['REGISTER_END
     });
   };
   auth.logout = function() {
-    return $http.post(LOGOUT_ENDPOINT, {token:auth.token}).then(function(response, status) {
+    return $http.post(LOGOUT_ENDPOINT, {token:auth.token}).finally(function(response, status) {
       auth.user = undefined;
       auth.token = undefined;
       persistService.remove('user');
@@ -81,6 +81,33 @@ angular.module('common.accounts.services').config(['$httpProvider', function($ht
   $httpProvider.interceptors.push('tokenInterceptor');
 }]);
 
+angular.module('common.accounts.services').factory('User', ['USER_ENDPOINT', '$resource', function(USER_ENDPOINT, $resource) {
+  return $resource(USER_ENDPOINT,
+                   {id:'@_id'},
+                   {
+                     update: {
+                       method: 'PUT'
+                     }
+                   },
+                   {stripTrailingSplashes: true});
+}]);
+
+angular.module('common.accounts.services').factory('ApplyUser', ['APPLY_ENDPOINT', '$http', function(APPLY_ENDPOINT, $http) {
+  var apply = {};
+  apply.query = function() {
+    return $http.get(APPLY_ENDPOINT);
+  };
+  apply.allow = function(appid) {
+    return $http.post(APPLY_ENDPOINT, {appid:appid, action:'allow'});
+  };
+  apply.deny = function(appid) {
+    return $http.post(APPLY_ENDPOINT, {appid:appid, action:'deny'});
+  };
+  return apply;
+}]);
+
+angular.module('common.accounts.services').value('APPLY_ENDPOINT', 'http://127.0.0.1:5000/users/apply');
+angular.module('common.accounts.services').value('USER_ENDPOINT', 'http://127.0.0.1:5000/users/api/:id');
 angular.module('common.accounts.services').value('REGISTER_ENDPOINT', 'http://127.0.0.1:5000/users/register');
 angular.module('common.accounts.services').value('LOGIN_ENDPOINT', 'http://127.0.0.1:5000/users/login');
 angular.module('common.accounts.services').value('LOGOUT_ENDPOINT', 'http://127.0.0.1:5000/users/logout');

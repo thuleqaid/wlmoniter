@@ -73,7 +73,7 @@ router.route('/:id')
       res.json(order);
     });
   })
-  .delete(passport.authenticate('bearer', {session:false}), function(req, res) {
-    res.json({message:'Successful'});
-  })
+  .delete(function(req, res) {
+    res.json({message:'Not Support'});
+  });
 module.exports = router;

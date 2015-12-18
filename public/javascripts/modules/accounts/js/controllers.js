@@ -43,6 +43,36 @@ angular.module('common.accounts.controllers').controller('ForgotPasswordControll
   };
 }]);
 
+angular.module('common.accounts.controllers').controller('UsersAdminController', ['$scope', '$state', 'User', 'ApplyUser', function($scope, $state, User, ApplyUser) {
+  var removeItem = function(appid) {
+    for (var idx = 0; idx < $scope.appusers.length; idx ++) {
+      if ($scope.appusers[idx]._id == appid) {
+        $scope.appusers.splice(idx, 1);
+        break;
+      }
+    }
+  };
+  var refreshData = function() {
+    $scope.users = User.query();
+    ApplyUser.query().success(function(data, status, config, headers) {
+      $scope.appusers = data;
+    }).error(function(data, status, config, headers) {
+      $scope.appusers = [];
+    });
+  };
+  refreshData();
+  $scope.allow = function(appid) {
+    removeItem(appid);
+    ApplyUser.allow(appid);
+    refreshData();
+  };
+  $scope.deny = function(appid) {
+    removeItem(appid);
+    ApplyUser.deny(appid);
+    refreshData();
+  };
+}]);
+
 angular.module('common.accounts.controllers').controller('NavController', ['$scope', 'authService', '$state', 'DEFAULT_ROUTE', function($scope, authService, $state, DEFAULT_ROUTE) {
   $scope.user = authService.user;
 
@@ -64,5 +94,11 @@ angular.module('common.accounts.controllers').controller('NavController', ['$sco
   };
   $scope.transLogin = function() {
     $state.go('login');
+  };
+  $scope.transAdmin = function() {
+    $state.go('usersadmin');
+  };
+  $scope.transDefault = function() {
+    $state.go(DEFAULT_ROUTE);
   };
 }]);

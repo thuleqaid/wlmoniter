@@ -51,7 +51,7 @@ router.route('/login').post(function(req, res, next) {
     /* console.log("passport-local-authenticate:"+err+","+user); */
     /* Todo: multi-device login with different tokens */
     /* One device can obtain only one access token */
-    var clientid = 'browser';
+    var clientid = req.body.clientid || 'browser';
     AccessToken.remove({userid:user._id, clientid:clientid}, function(err) {
       if (err) {
         /* console.log("Remove Error:"+err); */
@@ -92,7 +92,7 @@ router.route('/logout').post(function(req, res, next) {
     if (!token) {
       return res.status(401).json({error:'wrong token'});
     }
-    AccessToken.remove({_id:token[0]._id},function(err) {});
+    AccessToken.remove({_id:token._id},function(err) {});
     res.json({message:'ok'});
   })(req, res, next);
 });
@@ -116,50 +116,51 @@ router.route('/register').post(function(req, res, next) {
                   last_name:lastname,
                   password:random_password,
                   reset_code:reset_code,
-                  permission:['read','modify','creat','admin']}).save();
+                  permission:['modify','create','admin']}).save();
         sendMail(username, reset_code);
-      }
-    });
-    var autoConfirm =false;
-    if (process.env.MAIL_AUTOALLOW && process.env.MAIL_AUTOALLOW.toLowerCase() === 'true') {
-      autoConfirm = true;
-    }
-    User.findOne({email:username}, function(err,user) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        ApplyUser.findOne({email:username}, function(suberr, appuser) {
-          if (suberr) {
-            return next(suberr);
+      } else {
+        var autoConfirm =false;
+        if (process.env.MAIL_AUTOALLOW && process.env.MAIL_AUTOALLOW.toLowerCase() === 'true') {
+          autoConfirm = true;
+        }
+        User.findOne({email:username}, function(err,user) {
+          if (err) {
+            return next(err);
           }
-          if (!appuser) {
-            if (autoConfirm) {
-              /* Add record to User collection */
-              new User({email:username,
-                        first_name:firstname,
-                        last_name:lastname,
-                        password:random_password,
-                        reset_code:reset_code}).save();
-              sendMail(username, reset_code);
-            } else {
-              /* Add record to ApplyUser collection */
-              new ApplyUser({email:username,
-                             first_name:firstname,
-                             last_name:lastname}).save();
-            }
-            return;
-          }
-          if (autoConfirm) {
-            /* Remove record from ApplyUser collection */
-            ApplyUser.remove({_id:appuser._id}, function(err) { });
-            /* Add record to User collection */
-            new User({email:username,
-                      first_name:firstname,
-                      last_name:lastname,
-                      password:random_password,
-                      reset_code:reset_code}).save();
-            sendMail(username, reset_code);
+          if (!user) {
+            ApplyUser.findOne({email:username}, function(suberr, appuser) {
+              if (suberr) {
+                return next(suberr);
+              }
+              if (!appuser) {
+                if (autoConfirm) {
+                  /* Add record to User collection */
+                  new User({email:username,
+                            first_name:firstname,
+                            last_name:lastname,
+                            password:random_password,
+                            reset_code:reset_code}).save();
+                  sendMail(username, reset_code);
+                } else {
+                  /* Add record to ApplyUser collection */
+                  new ApplyUser({email:username,
+                                 first_name:firstname,
+                                 last_name:lastname}).save();
+                }
+                return;
+              }
+              if (autoConfirm) {
+                /* Remove record from ApplyUser collection */
+                ApplyUser.remove({_id:appuser._id}, function(err) { });
+                /* Add record to User collection */
+                new User({email:username,
+                          first_name:firstname,
+                          last_name:lastname,
+                          password:random_password,
+                          reset_code:reset_code}).save();
+                sendMail(username, reset_code);
+              }
+            });
           }
         });
       }
@@ -207,8 +208,153 @@ router.route('/forgotpassword').post(function(req, res, next) {
   res.json({message:'ok'});
 });
 
-// router.get('/info', passport.authenticate('bearer', {session:false}), function(req, res) {
-//   res.json({message:'ok'});
-// });
+router.route('/apply')
+  .get(function(req, res, next) {
+    passport.authenticate('bearer', {session:false}, function(err, token) {
+      if (err) {
+        return next(err);
+      }
+      if (!token) {
+        return res.status(401).json({error:'wrong token'});
+      }
+      User.findOne({_id:token.userid}).exec(function(err, user) {
+        if (err) {
+          return res.send(err);
+        }
+        if (!user) {
+          return res.json({message:'No Permission'});
+        }
+        if (user.permission.indexOf('admin') < 0) {
+          res.json({message:'No Permission'});
+        } else {
+          ApplyUser.find(function(err, appusers) {
+            if (err) {
+              res.send(err);
+            } else {
+              res.json(appusers);
+            }
+          });
+        }
+      });
+    })(req, res, next);
+  })
+  .post(function(req, res, next) {
+    passport.authenticate('bearer', {session:false}, function(err, token) {
+      if (err) {
+        return next(err);
+      }
+      if (!token) {
+        return res.status(401).json({error:'wrong token'});
+      }
+      User.findOne({_id:token.userid}).exec(function(err, user) {
+        if (err) {
+          return res.send(err);
+        }
+        if (!user) {
+          return res.json({message:'No Permission'});
+        }
+        if (user.permission.indexOf('admin') < 0) {
+          res.json({message:'No Permission'});
+        } else {
+          var appid = req.body.appid;
+          var action = req.body.action;
+          ApplyUser.findOne({_id:appid}, function(err, appuser) {
+            if (err) {
+              return res.send(err);
+            }
+            if (!appuser) {
+              return res.json({message:'Wrong ApplyID'});
+            }
+            var username = appuser.email;
+            var firstname = appuser.first_name;
+            var lastname = appuser.last_name;
+            ApplyUser.remove({_id:appuser._id}, function(err) { });
+            if (action=='allow') {
+              /* Add record to User collection */
+              var random_password = crypto.randomBytes(8).toString('hex');
+              var reset_code = crypto.randomBytes(32).toString('hex');
+              new User({email:username,
+                        first_name:firstname,
+                        last_name:lastname,
+                        password:random_password,
+                        reset_code:reset_code}).save();
+              sendMail(username, reset_code);
+            }
+          });
+        }
+      });
+    })(req, res, next);
+  });
+
+router.route('/api')
+  .get(function(req, res, next) {
+    passport.authenticate('bearer', {session:false}, function(err, token) {
+      if (err) {
+        return next(err);
+      }
+      if (!token) {
+        return res.status(401).json({error:'wrong token'});
+      }
+      User.findOne({_id:token.userid}).exec(function(err, user) {
+        if (err) {
+          return res.send(err);
+        }
+        var fields = {'password':0};
+        if (!user || user.permission.indexOf('admin') < 0) {
+          fields.permission = 0;
+        }
+        User.find({}, fields, function(err, users) {
+          if (err) {
+            res.send(err);
+          }
+          res.json(users);
+        });
+      });
+    })(req, res, next);
+  })
+  .post(function(req, res) {
+    res.json({message:'Not Support'});
+  });
+router.route('/api/:id')
+  .put(function(req, res, next) {
+    passport.authenticate('bearer', {session:false}, function(err, token) {
+      if (err) {
+        return next(err);
+      }
+      if (!token) {
+        return res.status(401).json({error:'wrong token'});
+      }
+      User.findOne({_id:req.params.id}).exec(function(err, user) {
+        if (err) {
+          return res.send(err);
+        }
+        /* update each field of record */
+        for (var prop in req.body) {
+          user[prop] = req.body[prop];
+        }
+        /* set updater and update date */
+        user.updater = token.userid;
+        user.date_update = Date.now();
+        /* save record */
+        user.save(function(err) {
+          if (err) {
+            return res.send(err);
+          }
+          res.json({message:'Successful'});
+        });
+      });
+    })(req, res, next);
+  })
+  .get(passport.authenticate('bearer', {session:false}), function(req, res) {
+    User.findOne({_id:req.params.id}).exec(function(err, user) {
+      if (err) {
+        return res.send(err);
+      }
+      res.json(user);
+    });
+  })
+  .delete(function(req, res) {
+    res.json({message:'Not Support'});
+  });
 
 module.exports = router;

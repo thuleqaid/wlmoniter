@@ -32,14 +32,13 @@ module.exports = function(passport) {
         AccessToken.remove({userid:decoded.iss, token:decoded.jti},function(err) { });
         return cb(null, false);
       }
-      AccessToken.find({userid:decoded.iss, token:decoded.jti}, function(err, access_token) {
+      AccessToken.findOne({userid:decoded.iss, token:decoded.jti}, function(err, access_token) {
         if (err) {
           /* console.log(err); */
           return cb(err);
         }
         if (!access_token) {
-          /* console.log("no record found"); */
-          return cb(null, false);
+          return cb('No Permission');
         }
         return cb(null, access_token);
       });

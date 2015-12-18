@@ -34,6 +34,11 @@ angular.module('common.accounts').config(['$stateProvider', '$locationProvider',
     templateUrl: 'javascripts/modules/accounts/views/forgotpassword.html',
     controller: 'ForgotPasswordController'
   });
+  $stateProvider.state('usersadmin', {
+    url: '/usersadmin',
+    templateUrl: 'javascripts/modules/accounts/views/usersadmin.html',
+    controller: 'UsersAdminController'
+  });
   // $locationProvider.html5Mode(true);
 }]);
 

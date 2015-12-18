@@ -1,7 +1,17 @@
 'use strict'
 
-angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', function($scope, Order) {
+angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', 'User', function($scope, Order, User) {
+  $scope.users = User.query();
   $scope.orders = Order.query();
+  $scope.username = function(userid) {
+    var ret = userid;
+    $scope.users.forEach(function(user) {
+      if (user._id == userid) {
+        ret = user.last_name + ' ' + user.first_name;
+      }
+    });
+    return ret;
+  };
 }]);
 angular.module('wlmoniter.orders.controllers').controller('OrderDetailsController', ['$stateParams', '$state', '$scope', 'Order', 'authService', function($stateParams, $state, $scope, Order, authService) {
   $scope.format = 'yyyy/MM/dd';
