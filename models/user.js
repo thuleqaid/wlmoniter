@@ -35,16 +35,5 @@ userSchema.methods.validatePassword = function(password) {
 
 var User = mongoose.model('User', userSchema);
 
-/* initial data */
-//User.find(function(err, users) {
-//  if (users.length) {
-//    return;
-//  }
-//  new User({email:'quant@kotei-info.com',
-//            password:'kotei$88',
-//            first_name:'quan',
-//            last_name:'tian'}).save();
-//});
-
 module.exports = User;
 

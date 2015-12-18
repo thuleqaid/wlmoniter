@@ -1,10 +1,11 @@
 'use strict'
 
-angular.module('common.accounts.controllers', []).controller('LoginController', ['$scope', 'authService', '$state', 'DEFAULT_ROUTE', function($scope, authService, $state, DEFAULT_ROUTE) {
+angular.module('common.accounts.controllers', []).controller('LoginController', ['$scope', 'authService', '$state', 'DEFAULT_ROUTE', 'MAIL_SUFFIX', function($scope, authService, $state, DEFAULT_ROUTE, MAIL_SUFFIX) {
   $scope.buttonText = "Login";
+  $scope.mailsuffix = MAIL_SUFFIX;
   $scope.login = function() {
     $scope.buttonText = "Logging in ...";
-    authService.login($scope.credentials.username+"@kotei-info.com", $scope.credentials.password).then(function(data) {
+    authService.login($scope.credentials.username+MAIL_SUFFIX, $scope.credentials.password).then(function(data) {
       $scope.invalidLogin = false;
       $state.go(DEFAULT_ROUTE);
     }, function(err) {
@@ -18,27 +19,30 @@ angular.module('common.accounts.controllers', []).controller('LoginController', 
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('RegisterController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
+angular.module('common.accounts.controllers').controller('RegisterController', ['$scope', 'authService', '$state', 'MAIL_SUFFIX', function($scope, authService, $state, MAIL_SUFFIX) {
+  $scope.mailsuffix = MAIL_SUFFIX;
   $scope.register = function() {
-    authService.register($scope.credentials.username+"@kotei-info.com", "12345678", $scope.credentials.firstname, $scope.credentials.lastname);
+    authService.register($scope.credentials.username+MAIL_SUFFIX, "12345678", $scope.credentials.firstname, $scope.credentials.lastname);
     $state.go('login');
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('ResetPasswordController', ['$scope', 'authService', '$state', '$stateParams', function($scope, authService, $state, $stateParams) {
+angular.module('common.accounts.controllers').controller('ResetPasswordController', ['$scope', 'authService', '$state', '$stateParams', 'MAIL_SUFFIX', function($scope, authService, $state, $stateParams, MAIL_SUFFIX) {
+  $scope.mailsuffix = MAIL_SUFFIX;
   $scope.credentials = {
     username: $stateParams.email,
     resetcode: $stateParams.resetcode
   };
   $scope.resetpassword = function() {
-    authService.resetpassword($scope.credentials.username+"@kotei-info.com", $scope.credentials.password, $scope.credentials.resetcode);
+    authService.resetpassword($scope.credentials.username+MAIL_SUFFIX, $scope.credentials.password, $scope.credentials.resetcode);
     $state.go('login');
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('ForgotPasswordController', ['$scope', 'authService', '$state', function($scope, authService, $state) {
+angular.module('common.accounts.controllers').controller('ForgotPasswordController', ['$scope', 'authService', '$state', 'MAIL_SUFFIX', function($scope, authService, $state, MAIL_SUFFIX) {
+  $scope.mailsuffix = MAIL_SUFFIX;
   $scope.forgotpassword = function() {
-    authService.forgotpassword($scope.credentials.username+"@kotei-info.com");
+    authService.forgotpassword($scope.credentials.username+MAIL_SUFFIX);
     $state.go('resetpassword', {email:$scope.credentials.username});
   };
 }]);

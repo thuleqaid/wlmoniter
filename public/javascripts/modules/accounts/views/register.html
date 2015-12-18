@@ -5,7 +5,7 @@
       <form class="form-signin" ng-submit="register()">
         <div class="input-group">
           <input type="text" class="form-control" placeholder="Username" ng-model="credentials.username" ng-required="ture"/>
-          <span class="input-group-addon">@kotei-info.com</span>
+          <span class="input-group-addon">{{mailsuffix}}</span>
         </div>
         <input type="text" class="form-control" placeholder="LastName" ng-model="credentials.lastname" ng-required="ture"/>
         <input type="text" class="form-control" placeholder="FirstName" ng-model="credentials.firstname" ng-required="ture"/>
