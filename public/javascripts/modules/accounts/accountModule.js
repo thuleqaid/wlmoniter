@@ -1,7 +1,7 @@
 angular.module('common.accounts', [
   'ui.router',
   // 'common.accounts.directives',
-  // 'common.accounts.filters',
+  'common.accounts.filters',
   'common.accounts.services',
   'common.accounts.controllers'
 ]);

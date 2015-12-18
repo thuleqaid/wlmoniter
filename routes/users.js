@@ -227,7 +227,7 @@ router.route('/apply')
         if (user.permission.indexOf('admin') < 0) {
           res.json({message:'No Permission'});
         } else {
-          ApplyUser.find(function(err, appusers) {
+          ApplyUser.find().sort('email').exec(function(err, appusers) {
             if (err) {
               res.send(err);
             } else {
@@ -303,7 +303,7 @@ router.route('/api')
         if (!user || user.permission.indexOf('admin') < 0) {
           fields.permission = 0;
         }
-        User.find({}, fields, function(err, users) {
+        User.find({}, fields).sort('email').exec(function(err, users) {
           if (err) {
             res.send(err);
           }

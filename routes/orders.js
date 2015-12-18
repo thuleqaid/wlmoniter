@@ -5,7 +5,7 @@ var passport = require('passport');
 
 router.route('/')
   .get(passport.authenticate('bearer', {session:false}), function(req, res) {
-    Order.find(function(err, orders) {
+    Order.find().sort('-date_create').exec(function(err, orders) {
       if (err) {
         res.send(err);
       }
@@ -22,7 +22,7 @@ router.route('/')
       }
       var order = new Order(req.body);
       /* set updater and update date */
-      order.author = token[0].userid;
+      order.author = token.userid;
       order.date_create = Date.now();
       order.updater = order.author;
       order.date_update = order.date_create;
@@ -53,7 +53,7 @@ router.route('/:id')
           order[prop] = req.body[prop];
         }
         /* set updater and update date */
-        order.updater = token[0].userid;
+        order.updater = token.userid;
         order.date_update = Date.now();
         /* save record */
         order.save(function(err) {

@@ -19,26 +19,20 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand brand" href="" ng-click="transDefault()">Review System</a>
+				<a class="navbar-brand brand" href="" ng-click="transDefault()">Home</a>
 			</div>
 			<div class="collapse navbar-collapse" id="the-menu">
-				<div ng-if="user && user.permission.indexOf('admin')>=0">
+				<div ng-if="user">
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="">{{user.last_name}} {{user.first_name}}</a></li>
-						<li><a href="" ng-click="transAdmin()">Admin</a></li>
-						<li><a href="" ng-click="logout()">LogOut</a></li>
-					</ul>
-				</div>
-				<div ng-if="user && user.permission.indexOf('admin')<0">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="">{{user.last_name}} {{user.first_name}}</a></li>
+						<li><a ui-sref="usersadmin()" ng-if="user.permission.indexOf('admin')>=0">Admin</a></li>
 						<li><a href="" ng-click="logout()">LogOut</a></li>
 					</ul>
 				</div>
 				<div ng-if="!user">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="" ng-click="transReg()">Register</a></li>
-						<li><a href="" ng-click="transLogin()">LogIn</a></li>
+						<li><a ui-sref="register()">Register</a></li>
+						<li><a ui-sref="login()">LogIn</a></li>
 					</ul>
 				</div>
 			</div>
@@ -61,9 +55,11 @@
 		<script src="javascripts/modules/accounts/accountModule.js"></script>
 		<script src="javascripts/modules/accounts/js/services.js"></script>
 		<script src="javascripts/modules/accounts/js/controllers.js"></script>
+		<script src="javascripts/modules/accounts/js/filters.js"></script>
 		<script src="javascripts/modules/orders/orderModule.js"></script>
 		<script src="javascripts/modules/orders/js/services.js"></script>
 		<script src="javascripts/modules/orders/js/controllers.js"></script>
+		<script src="javascripts/modules/orders/js/filters.js"></script>
 	</body>
 </html>
 

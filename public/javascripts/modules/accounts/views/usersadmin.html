@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="user in users track by $index">
-          <td>{{user.email}}</td>
+          <td>{{user.email|stripMail}}</td>
           <td>{{user.last_name}}</td>
           <td>{{user.first_name}}</td>
           <td>{{user.valid}}</td>
@@ -29,7 +29,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="appuser in appusers track by $index">
-          <td>{{appuser.email}}</td>
+          <td>{{appuser.email|stripMail}}</td>
           <td>{{appuser.last_name}}</td>
           <td>{{appuser.first_name}}</td>
           <td><a href="" ng-click="allow(appuser._id);">Allow</a><a href="" ng-click="deny(appuser._id);">Deny</a></td>

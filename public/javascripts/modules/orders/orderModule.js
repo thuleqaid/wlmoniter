@@ -1,6 +1,7 @@
 angular.module('wlmoniter.orders', [
         'wlmoniter.orders.services',
         'wlmoniter.orders.controllers',
+        'wlmoniter.orders.filters',
         'ui.router',
         'ui.bootstrap',
         ]);

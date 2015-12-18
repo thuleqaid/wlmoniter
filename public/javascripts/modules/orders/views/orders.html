@@ -1,26 +1,66 @@
-<table class="table table-hover table-striped" id="ordertable">
-  <thead>
-    <td>顧客</td>
-    <td>顧客項目名</td>
-    <td>光庭項目名</td>
-    <td>契約書状態</td>
-    <td>作成者</td>
-    <td>作成日付</td>
-    <td>最後変更者</td>
-    <td>最後変更日付</td>
-    <td>備考</td>
-  </thead>
-  <tbody>
-    <tr ng-repeat="order in orders track by $index">
-      <td>{{order.customer}}</td>
-      <td>{{order.name_c}}</td>
-      <td><a ui-sref="singleOrder({id:order._id})">{{order.name_k || "T.B.D"}}</a></td>
-      <td>{{order.contract}}</td>
-      <td>{{username(order.author)}}</td>
-      <td>{{order.date_create|date:'yyyy-MM-dd'}}</td>
-      <td>{{username(order.updater)}}</td>
-      <td>{{order.date_update|date:'yyyy-MM-dd'}}</td>
-      <td><textarea readonly="readonly">{{order.memo}}</textarea></td>
-    </tr>
-  </tbody>
-</table>
+<uib-tabset>
+  <uib-tab heading="Active Order">
+    <table class="table table-hover table-striped" id="ordertable1">
+      <thead>
+        <td><a ui-sref="newOrder()"><abbr title="New"><span class="glyphicon glyphicon-plus"></span></abbr></a>顧客</td>
+        <td>顧客項目名</td>
+        <td>光庭項目名</td>
+        <td>契約書状態</td>
+        <td>規模（人月）</td>
+        <td>期間</td>
+        <td>作成者</td>
+        <td>作成日付</td>
+        <td>最後変更者</td>
+        <td>最後変更日付</td>
+        <td>備考</td>
+      </thead>
+      <tbody>
+        <tr ng-repeat="order in orders track by $index" ng-if="order.valid">
+          <td>{{order.customer}}</td>
+          <td>{{order.name_c}}</td>
+          <td><a ui-sref="singleOrder({id:order._id})">{{order.name_k || "T.B.D"}}</a></td>
+          <td>{{order.contract|contractStatus}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.date_start|date:'yyyy-MM-dd'}}<br/>{{order.date_end|date:'yyyy-MM-dd'}}</td>
+          <td>{{username(order.author)}}</td>
+          <td>{{order.date_create|date:'yyyy-MM-dd'}}</td>
+          <td>{{username(order.updater)}}</td>
+          <td>{{order.date_update|date:'yyyy-MM-dd'}}</td>
+          <td><textarea readonly="readonly">{{order.memo}}</textarea></td>
+        </tr>
+      </tbody>
+    </table>
+  </uib-tab>
+  <uib-tab heading="Closed Order">
+    <table class="table table-hover table-striped" id="ordertable2">
+      <thead>
+        <td>顧客</td>
+        <td>顧客項目名</td>
+        <td>光庭項目名</td>
+        <td>契約書状態</td>
+        <td>規模（人月）</td>
+        <td>期間</td>
+        <td>作成者</td>
+        <td>作成日付</td>
+        <td>最後変更者</td>
+        <td>最後変更日付</td>
+        <td>備考</td>
+      </thead>
+      <tbody>
+        <tr ng-repeat="order in orders track by $index" ng-if="!order.valid">
+          <td>{{order.customer}}</td>
+          <td>{{order.name_c}}</td>
+          <td><a ui-sref="singleOrder({id:order._id})">{{order.name_k || "T.B.D"}}</a></td>
+          <td>{{order.contract|contractStatus}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.date_start|date:'yyyy-MM-dd'}}<br/>{{order.date_end|date:'yyyy-MM-dd'}}</td>
+          <td>{{username(order.author)}}</td>
+          <td>{{order.date_create|date:'yyyy-MM-dd'}}</td>
+          <td>{{username(order.updater)}}</td>
+          <td>{{order.date_update|date:'yyyy-MM-dd'}}</td>
+          <td><textarea readonly="readonly">{{order.memo}}</textarea></td>
+        </tr>
+      </tbody>
+    </table>
+  </uib-tab>
+</uib-tabset>

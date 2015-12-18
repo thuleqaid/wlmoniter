@@ -79,26 +79,13 @@ angular.module('common.accounts.controllers').controller('NavController', ['$sco
   $scope.$on('authorize_changed', function(event, data) {
     $scope.user = authService.user;
     if (data==='logout') {
-      if ($state.current.name !== DEFAULT_ROUTE) {
-        $state.go(DEFAULT_ROUTE);
-      } else {
-        $state.go('login');
-      }
+      $scope.transDefault();
     }
   });
   $scope.logout = function() {
     authService.logout();
   };
-  $scope.transReg = function() {
-    $state.go('register');
-  };
-  $scope.transLogin = function() {
-    $state.go('login');
-  };
-  $scope.transAdmin = function() {
-    $state.go('usersadmin');
-  };
   $scope.transDefault = function() {
-    $state.go(DEFAULT_ROUTE);
+    $state.go(DEFAULT_ROUTE, {}, {reload:true});
   };
 }]);
