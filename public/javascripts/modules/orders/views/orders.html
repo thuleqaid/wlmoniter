@@ -2,7 +2,7 @@
   <uib-tab heading="Active Order">
     <table class="table table-hover table-striped" id="ordertable1">
       <thead>
-        <td><a ui-sref="newOrder()"><abbr title="New"><span class="glyphicon glyphicon-plus"></span></abbr></a>顧客</td>
+        <td><a ui-sref="newOrder()" ng-if="permission.create"><abbr title="New"><span class="glyphicon glyphicon-plus"></span></abbr></a>顧客</td>
         <td>顧客項目名</td>
         <td>光庭項目名</td>
         <td>契約書状態</td>

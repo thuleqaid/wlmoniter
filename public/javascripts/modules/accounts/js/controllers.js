@@ -82,7 +82,11 @@ angular.module('common.accounts.controllers').controller('UserProfileController'
   $scope.puser = User.get({id:$stateParams.id}, function(user) {
     $scope.username = user.email.substr(0, user.email.lastIndexOf('@'));
   });
-  $scope.permission = (persistService.get('user').permission.indexOf('admin') >= 0);
+  $scope.permission = {
+    'modify': (persistService.get('user').permission.indexOf('modify') >= 0),
+    'create': (persistService.get('user').permission.indexOf('create') >= 0),
+    'admin': (persistService.get('user').permission.indexOf('admin') >= 0)
+  };
   $scope.updateProfile = function() {
     $scope.puser.$update(function() {
       $state.go(DEFAULT_ROUTE, {}, {reload:true});

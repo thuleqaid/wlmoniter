@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', 'User', function($scope, Order, User) {
+angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', 'User', 'persistService', function($scope, Order, User, persistService) {
   $scope.users = User.query();
   Order.query().$promise.then(function(data) {
     $scope.orders = data;
@@ -16,8 +16,13 @@ angular.module('wlmoniter.orders.controllers', []).controller('OrderController',
     });
     return ret;
   };
+  $scope.permission = {
+    'modify': (persistService.get('user').permission.indexOf('modify') >= 0),
+    'create': (persistService.get('user').permission.indexOf('create') >= 0),
+    'admin': (persistService.get('user').permission.indexOf('admin') >= 0)
+  };
 }]);
-angular.module('wlmoniter.orders.controllers').controller('OrderDetailsController', ['$stateParams', '$state', '$scope', 'Order', 'authService', function($stateParams, $state, $scope, Order, authService) {
+angular.module('wlmoniter.orders.controllers').controller('OrderDetailsController', ['$stateParams', '$state', '$scope', 'Order', 'persistService', function($stateParams, $state, $scope, Order, persistService) {
   $scope.format = 'yyyy/MM/dd';
   $scope.status = {
     opened_start:false,
@@ -49,8 +54,13 @@ angular.module('wlmoniter.orders.controllers').controller('OrderDetailsControlle
     $scope.order.date_end = new Date(Date.parse($scope.order.date_end));
  });
   $scope.order.date_start = new Date(Date.parse($scope.order.date_start));
+  $scope.permission = {
+    'modify': (persistService.get('user').permission.indexOf('modify') >= 0),
+    'create': (persistService.get('user').permission.indexOf('create') >= 0),
+    'admin': (persistService.get('user').permission.indexOf('admin') >= 0)
+  };
 }]);
-angular.module('wlmoniter.orders.controllers').controller('OrderCreateController', ['$stateParams', '$state', '$scope', 'Order', 'authService', function($stateParams, $state, $scope, Order, authService) {
+angular.module('wlmoniter.orders.controllers').controller('OrderCreateController', ['$stateParams', '$state', '$scope', 'Order', 'persistService', function($stateParams, $state, $scope, Order, persistService) {
   $scope.format = 'yyyy/MM/dd';
   $scope.status = {
     opened_start:false,
@@ -80,4 +90,9 @@ angular.module('wlmoniter.orders.controllers').controller('OrderCreateController
   $scope.order = new Order();
   $scope.order.valid = true;
   $scope.order.nda = true;
+  $scope.permission = {
+    'modify': (persistService.get('user').permission.indexOf('modify') >= 0),
+    'create': (persistService.get('user').permission.indexOf('create') >= 0),
+    'admin': (persistService.get('user').permission.indexOf('admin') >= 0)
+  };
 }]);
