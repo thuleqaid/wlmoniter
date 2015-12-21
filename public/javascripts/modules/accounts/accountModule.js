@@ -1,6 +1,6 @@
 angular.module('common.accounts', [
   'ui.router',
-  // 'common.accounts.directives',
+  'common.accounts.directives',
   'common.accounts.filters',
   'common.accounts.services',
   'common.accounts.controllers'
@@ -34,10 +34,15 @@ angular.module('common.accounts').config(['$stateProvider', '$locationProvider',
     templateUrl: 'javascripts/modules/accounts/views/forgotpassword.html',
     controller: 'ForgotPasswordController'
   });
-  $stateProvider.state('usersadmin', {
-    url: '/usersadmin',
-    templateUrl: 'javascripts/modules/accounts/views/usersadmin.html',
-    controller: 'UsersAdminController'
+  $stateProvider.state('useradmin', {
+    url: '/useradmin',
+    templateUrl: 'javascripts/modules/accounts/views/useradmin.html',
+    controller: 'UserAdminController'
+  });
+  $stateProvider.state('userprofile', {
+    url: '/userprofile/:id',
+    templateUrl: 'javascripts/modules/accounts/views/userprofile.html',
+    controller: 'UserProfileController'
   });
   // $locationProvider.html5Mode(true);
 }]);

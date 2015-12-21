@@ -74,7 +74,7 @@ router.route('/login').post(function(req, res, next) {
     /* return JsonWebToken */
     res.json({token:token,
               user:{
-                userid: user._id,
+                _id: user._id,
                 email: user.email,
                 first_name: user.first_name,
                 last_name: user.last_name,
@@ -116,8 +116,10 @@ router.route('/register').post(function(req, res, next) {
                   last_name:lastname,
                   password:random_password,
                   reset_code:reset_code,
-                  permission:['modify','create','admin']}).save();
+                  permission:['modify','create','admin'],
+                  date_update:Date.now()}).save();
         sendMail(username, reset_code);
+        res.json({message:'ok'});
       } else {
         var autoConfirm =false;
         if (process.env.MAIL_AUTOALLOW && process.env.MAIL_AUTOALLOW.toLowerCase() === 'true') {
@@ -139,7 +141,8 @@ router.route('/register').post(function(req, res, next) {
                             first_name:firstname,
                             last_name:lastname,
                             password:random_password,
-                            reset_code:reset_code}).save();
+                            reset_code:reset_code,
+                            date_update:Date.now()}).save();
                   sendMail(username, reset_code);
                 } else {
                   /* Add record to ApplyUser collection */
@@ -147,26 +150,30 @@ router.route('/register').post(function(req, res, next) {
                                  first_name:firstname,
                                  last_name:lastname}).save();
                 }
-                return;
-              }
-              if (autoConfirm) {
-                /* Remove record from ApplyUser collection */
-                ApplyUser.remove({_id:appuser._id}, function(err) { });
-                /* Add record to User collection */
-                new User({email:username,
-                          first_name:firstname,
-                          last_name:lastname,
-                          password:random_password,
-                          reset_code:reset_code}).save();
-                sendMail(username, reset_code);
+                return res.json({message:'ok'});
+              } else {
+                if (autoConfirm) {
+                  /* Remove record from ApplyUser collection */
+                  ApplyUser.remove({_id:appuser._id}, function(err) { });
+                  /* Add record to User collection */
+                  new User({email:username,
+                            first_name:firstname,
+                            last_name:lastname,
+                            password:random_password,
+                            reset_code:reset_code,
+                            date_update:Date.now()}).save();
+                  sendMail(username, reset_code);
+                  return res.json({message:'ok'});
+                }
               }
             });
           }
         });
       }
     });
+  } else {
+    res.json({message:'ok'});
   }
-  res.json({message:'ok'});
 });
 
 router.route('/resetpassword').post(function(req, res, next) {
@@ -277,7 +284,9 @@ router.route('/apply')
                         first_name:firstname,
                         last_name:lastname,
                         password:random_password,
-                        reset_code:reset_code}).save();
+                        reset_code:reset_code,
+                        updater:user.id,
+                        date_update:Date.now()}).save();
               sendMail(username, reset_code);
             }
           });
@@ -324,23 +333,36 @@ router.route('/api/:id')
       if (!token) {
         return res.status(401).json({error:'wrong token'});
       }
-      User.findOne({_id:req.params.id}).exec(function(err, user) {
+      User.findOne({_id:token.userid}).exec(function(err, curuser) {
         if (err) {
           return res.send(err);
         }
-        /* update each field of record */
-        for (var prop in req.body) {
-          user[prop] = req.body[prop];
+        if (!curuser) {
+          return res.status(401).json({error:'No Permission'});
         }
-        /* set updater and update date */
-        user.updater = token.userid;
-        user.date_update = Date.now();
-        /* save record */
-        user.save(function(err) {
+        User.findOne({_id:req.params.id}).exec(function(err, user) {
           if (err) {
             return res.send(err);
           }
-          res.json({message:'Successful'});
+          /* update each field of record */
+          for (var prop in req.body) {
+            if (prop != 'password') {
+              if (prop == 'permission' && curuser.permission.indexOf('admin') < 0) {
+              } else {
+                user[prop] = req.body[prop];
+              }
+            }
+          }
+          /* set updater and update date */
+          user.updater = curuser._id;
+          user.date_update = Date.now();
+          /* save record */
+          user.save(function(err) {
+            if (err) {
+              return res.send(err);
+            }
+            res.json({message:'Successful'});
+          });
         });
       });
     })(req, res, next);

@@ -47,7 +47,7 @@ angular.module('common.accounts.controllers').controller('ForgotPasswordControll
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('UsersAdminController', ['$scope', '$state', 'User', 'ApplyUser', function($scope, $state, User, ApplyUser) {
+angular.module('common.accounts.controllers').controller('UserAdminController', ['$scope', '$state', 'User', 'ApplyUser', function($scope, $state, User, ApplyUser) {
   var removeItem = function(appid) {
     for (var idx = 0; idx < $scope.appusers.length; idx ++) {
       if ($scope.appusers[idx]._id == appid) {
@@ -74,6 +74,22 @@ angular.module('common.accounts.controllers').controller('UsersAdminController',
     removeItem(appid);
     ApplyUser.deny(appid);
     refreshData();
+  };
+}]);
+
+angular.module('common.accounts.controllers').controller('UserProfileController', ['$scope', '$state', '$stateParams', 'User', 'authService', 'persistService', 'MAIL_SUFFIX', 'DEFAULT_ROUTE', function($scope, $state, $stateParams, User, authService, persistService, MAIL_SUFFIX, DEFAULT_ROUTE) {
+  $scope.mailsuffix = MAIL_SUFFIX;
+  $scope.puser = User.get({id:$stateParams.id}, function(user) {
+    $scope.username = user.email.substr(0, user.email.lastIndexOf('@'));
+  });
+  $scope.permission = (persistService.get('user').permission.indexOf('admin') >= 0);
+  $scope.updateProfile = function() {
+    $scope.puser.$update(function() {
+      $state.go(DEFAULT_ROUTE, {}, {reload:true});
+    });
+  };
+  $scope.updatePermission = function(args) {
+    $scope.puser.permission = args;
   };
 }]);
 

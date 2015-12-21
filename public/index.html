@@ -24,8 +24,8 @@
 			<div class="collapse navbar-collapse" id="the-menu">
 				<div ng-if="user">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="">{{user.last_name}} {{user.first_name}}</a></li>
-						<li><a ui-sref="usersadmin()" ng-if="user.permission.indexOf('admin')>=0">Admin</a></li>
+						<li><a ui-sref="userprofile({id:user._id})">{{user.last_name}} {{user.first_name}}</a></li>
+						<li><a ui-sref="useradmin()" ng-if="user.permission.indexOf('admin')>=0">Admin</a></li>
 						<li><a href="" ng-click="logout()">LogOut</a></li>
 					</ul>
 				</div>
@@ -56,6 +56,7 @@
 		<script src="javascripts/modules/accounts/js/services.js"></script>
 		<script src="javascripts/modules/accounts/js/controllers.js"></script>
 		<script src="javascripts/modules/accounts/js/filters.js"></script>
+		<script src="javascripts/modules/accounts/js/directives.js"></script>
 		<script src="javascripts/modules/orders/orderModule.js"></script>
 		<script src="javascripts/modules/orders/js/services.js"></script>
 		<script src="javascripts/modules/orders/js/controllers.js"></script>

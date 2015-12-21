@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-xs-6 col-xs-offset-3">
+    <h1 class="text-center login-title">Profile</h1>
+    <div class="account-well">
+      <form class="form-horizontal" ng-submit="updateProfile()" name="profileFrom">
+        <div class="form-group">
+          <label for="username" class="control-label col-sm-3">User Name</label>
+          <div class="col-sm-9">
+            <div class="input-group">
+              <input type="text" name="username"  ng-model="username" class="form-control" id="username" readonly="true">
+              <span class="input-group-addon">{{mailsuffix}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" ng-if="permission">
+          <label for="valid" class="col-sm-3 control-label">有効状態</label>
+          <div class="col-sm-9">
+            <input type="checkbox" ng-model="puser.valid" class="" id="valid" />有効
+          </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error':profileFrom.lastname.$dirty && profileFrom.lastname.$invalid}">
+          <label for="lastname" class="control-label col-sm-3">Last Name</label>
+          <div class="col-sm-9">
+            <input type="text" name="lastname" ng-model="puser.last_name" ng-required="true" class="form-control" id="lastname" placeholder="Last Name">
+            <span class="error-message" ng-show="profileFrom.lastname.$dirty && profileFrom.lastname.$invalid">Last name required</span>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error':profileFrom.firstname.$dirty && profileFrom.firstname.$invalid}">
+          <label for="firstname" class="control-label col-sm-3">First Name</label>
+          <div class="col-sm-9">
+            <input type="text" name="lastname" ng-model="puser.first_name" ng-required="true" class="form-control" id="firstname" placeholder="First Name">
+            <span class="error-message" ng-show="profileFrom.firstname.$dirty && profileFrom.firstname.$invalid">First name required</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-3">Permission</label>
+          <div class="col-sm-9" ng-if="permission">
+            <permission-edit permission="{{puser.permission}}" updater="updatePermission(args)"></permission-edit>
+          </div>
+          <div class="col-sm-9" ng-if="!permission">
+            <permission-view permission="{{puser.permission}}"></permission-view>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" ng-disabled="!profileFrom.$dirty || profileFrom.$invalid" type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+</div>
