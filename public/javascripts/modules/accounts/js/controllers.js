@@ -47,15 +47,7 @@ angular.module('common.accounts.controllers').controller('ForgotPasswordControll
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('UserAdminController', ['$scope', '$state', 'User', 'ApplyUser', function($scope, $state, User, ApplyUser) {
-  var removeItem = function(appid) {
-    for (var idx = 0; idx < $scope.appusers.length; idx ++) {
-      if ($scope.appusers[idx]._id == appid) {
-        $scope.appusers.splice(idx, 1);
-        break;
-      }
-    }
-  };
+angular.module('common.accounts.controllers').controller('UserAdminController', ['$scope', '$state', 'User', 'ApplyUser', 'socket', function($scope, $state, User, ApplyUser, socket) {
   var refreshData = function() {
     $scope.users = User.query();
     ApplyUser.query().success(function(data, status, config, headers) {
@@ -64,20 +56,20 @@ angular.module('common.accounts.controllers').controller('UserAdminController', 
       $scope.appusers = [];
     });
   };
+  socket.on('table-user', refreshData);
+  socket.on('table-applyuser', refreshData);
   refreshData();
   $scope.allow = function(appid) {
-    removeItem(appid);
     ApplyUser.allow(appid);
     refreshData();
   };
   $scope.deny = function(appid) {
-    removeItem(appid);
     ApplyUser.deny(appid);
     refreshData();
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('UserProfileController', ['$scope', '$state', '$stateParams', 'User', 'authService', 'persistService', 'MAIL_SUFFIX', 'DEFAULT_ROUTE', function($scope, $state, $stateParams, User, authService, persistService, MAIL_SUFFIX, DEFAULT_ROUTE) {
+angular.module('common.accounts.controllers').controller('UserProfileController', ['$scope', '$state', '$stateParams', 'User', 'persistService', 'MAIL_SUFFIX', 'DEFAULT_ROUTE', function($scope, $state, $stateParams, User, persistService, MAIL_SUFFIX, DEFAULT_ROUTE) {
   $scope.mailsuffix = MAIL_SUFFIX;
   $scope.puser = User.get({id:$stateParams.id}, function(user) {
     $scope.username = user.email.substr(0, user.email.lastIndexOf('@'));

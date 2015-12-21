@@ -11,4 +11,4 @@ angular.module('wlmoniter.orders.services',[]).factory('Order', ['ORDER_ENDPOINT
                    {stripTrailingSplashes: true});
 }]);
 
-angular.module('wlmoniter.orders.services').value('ORDER_ENDPOINT', 'http://127.0.0.1:5000/orders/:id');
+angular.module('wlmoniter.orders.services').value('ORDER_ENDPOINT', 'http://192.168.60.14:5000/orders/:id');

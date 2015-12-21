@@ -106,12 +106,37 @@ angular.module('common.accounts.services').factory('ApplyUser', ['APPLY_ENDPOINT
   return apply;
 }]);
 
+angular.module('common.accounts.services').factory('socket', ['$rootScope', 'WEBSOCKET_ENDPOINT', function($rootScope, WEBSOCKET_ENDPOINT) {
+  var socket = io(WEBSOCKET_ENDPOINT);
+  return {
+    on: function(eventName, callback) {
+      socket.on(eventName, function() {
+        var args = arguments;
+        $rootScope.$apply(function() {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function(eventName, data, callback) {
+      socket.emit(eventName, data, function() {
+        var args = arguments;
+        $rootScope.$apply(function() {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      });
+    }
+  };
+}]);
+angular.module('common.accounts.services').value('WEBSOCKET_ENDPOINT', 'http://192.168.60.14:4000');
+
 angular.module('common.accounts.services').value('MAIL_SUFFIX', '@kotei-info.com');
-angular.module('common.accounts.services').value('APPLY_ENDPOINT', 'http://127.0.0.1:5000/users/apply');
-angular.module('common.accounts.services').value('USER_ENDPOINT', 'http://127.0.0.1:5000/users/api/:id');
-angular.module('common.accounts.services').value('REGISTER_ENDPOINT', 'http://127.0.0.1:5000/users/register');
-angular.module('common.accounts.services').value('LOGIN_ENDPOINT', 'http://127.0.0.1:5000/users/login');
-angular.module('common.accounts.services').value('LOGOUT_ENDPOINT', 'http://127.0.0.1:5000/users/logout');
-angular.module('common.accounts.services').value('FORGOTPASSWORD_ENDPOINT', 'http://127.0.0.1:5000/users/forgotpassword');
-angular.module('common.accounts.services').value('RESETPASSWORD_ENDPOINT', 'http://127.0.0.1:5000/users/resetpassword');
+angular.module('common.accounts.services').value('APPLY_ENDPOINT', 'http://192.168.60.14:5000/users/apply');
+angular.module('common.accounts.services').value('USER_ENDPOINT', 'http://192.168.60.14:5000/users/api/:id');
+angular.module('common.accounts.services').value('REGISTER_ENDPOINT', 'http://192.168.60.14:5000/users/register');
+angular.module('common.accounts.services').value('LOGIN_ENDPOINT', 'http://192.168.60.14:5000/users/login');
+angular.module('common.accounts.services').value('LOGOUT_ENDPOINT', 'http://192.168.60.14:5000/users/logout');
+angular.module('common.accounts.services').value('FORGOTPASSWORD_ENDPOINT', 'http://192.168.60.14:5000/users/forgotpassword');
+angular.module('common.accounts.services').value('RESETPASSWORD_ENDPOINT', 'http://192.168.60.14:5000/users/resetpassword');
 angular.module('common.accounts.services').value('DEFAULT_ROUTE', 'allOrders');
