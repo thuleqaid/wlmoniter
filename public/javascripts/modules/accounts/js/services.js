@@ -106,7 +106,7 @@ angular.module('common.accounts.services').factory('ApplyUser', ['APPLY_ENDPOINT
   return apply;
 }]);
 
-angular.module('common.accounts.services').value('MAIL_SUFFIX', '@kotei.com');
+angular.module('common.accounts.services').value('MAIL_SUFFIX', '@kotei-info.com');
 angular.module('common.accounts.services').value('APPLY_ENDPOINT', 'http://127.0.0.1:5000/users/apply');
 angular.module('common.accounts.services').value('USER_ENDPOINT', 'http://127.0.0.1:5000/users/api/:id');
 angular.module('common.accounts.services').value('REGISTER_ENDPOINT', 'http://127.0.0.1:5000/users/register');

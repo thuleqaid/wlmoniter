@@ -2,7 +2,11 @@
 
 angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', 'User', function($scope, Order, User) {
   $scope.users = User.query();
-  $scope.orders = Order.query().$promise.then(null,function(err) {console.log(err);});
+  Order.query().$promise.then(function(data) {
+    $scope.orders = data;
+  },function(err) {
+    console.log(err);
+  });
   $scope.username = function(userid) {
     var ret = userid;
     $scope.users.forEach(function(user) {
