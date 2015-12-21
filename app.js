@@ -43,7 +43,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', users(io));
-app.use('/orders', orders);
+app.use('/orders', orders(io));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,12 +1,16 @@
 'use strict'
 
-angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', 'User', 'persistService', function($scope, Order, User, persistService) {
-  $scope.users = User.query();
-  Order.query().$promise.then(function(data) {
-    $scope.orders = data;
-  },function(err) {
-    console.log(err);
-  });
+angular.module('wlmoniter.orders.controllers', []).controller('OrderController', ['$scope', 'Order', 'User', 'persistService', 'socket', function($scope, Order, User, persistService, socket) {
+  var refreshData = function() {
+    $scope.users = User.query();
+    Order.query().$promise.then(function(data) {
+      $scope.orders = data;
+    },function(err) {
+      console.log(err);
+    });
+  };
+  socket.on('table-order', refreshData);
+  refreshData();
   $scope.username = function(userid) {
     var ret = userid;
     $scope.users.forEach(function(user) {

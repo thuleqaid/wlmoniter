@@ -8,7 +8,6 @@ var User = require('../models/user');
 var ApplyUser = require('../models/applyUser');
 var nodemailer = require('nodemailer');
 
-// module.exports = router;
 module.exports = function(io) {
   var router = express.Router();
   var sendMail = function(to, reset_code) {
@@ -32,7 +31,7 @@ module.exports = function(io) {
     };
     transport.sendMail(mailOptions, function(err, info) {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         console.log(info.response);
       }
@@ -120,7 +119,7 @@ module.exports = function(io) {
                     reset_code:reset_code,
                     permission:['modify','create','admin'],
                     date_update:Date.now()}).save();
-          io.sockets.emit('table-user', {message:'add'});
+          io.sockets.emit('table-user', {message:'add',email:username});
           sendMail(username, reset_code);
           res.json({message:'ok'});
         } else {
@@ -147,20 +146,20 @@ module.exports = function(io) {
                               reset_code:reset_code,
                               date_update:Date.now()}).save();
                     sendMail(username, reset_code);
-                    io.sockets.emit('table-user', {message:'add'});
+                    io.sockets.emit('table-user', {message:'add', email:username});
                   } else {
                     /* Add record to ApplyUser collection */
                     new ApplyUser({email:username,
                                    first_name:firstname,
                                    last_name:lastname}).save();
-                    io.sockets.emit('table-applyuser', {message:'add'});
+                    io.sockets.emit('table-applyuser', {message:'add', email:username});
                   }
                   return res.json({message:'ok'});
                 } else {
                   if (autoConfirm) {
                     /* Remove record from ApplyUser collection */
                     ApplyUser.remove({_id:appuser._id}, function(err) { });
-                    io.sockets.emit('table-applyuser', {message:'del'});
+                    io.sockets.emit('table-applyuser', {message:'del', email:username});
                     /* Add record to User collection */
                     new User({email:username,
                               first_name:firstname,
@@ -169,7 +168,7 @@ module.exports = function(io) {
                               reset_code:reset_code,
                               date_update:Date.now()}).save();
                     sendMail(username, reset_code);
-                    io.sockets.emit('table-user', {message:'add'});
+                    io.sockets.emit('table-user', {message:'add', email:username});
                     return res.json({message:'ok'});
                   }
                 }
@@ -284,7 +283,7 @@ module.exports = function(io) {
               var firstname = appuser.first_name;
               var lastname = appuser.last_name;
               ApplyUser.remove({_id:appuser._id}, function(err) { });
-              io.sockets.emit('table-applyuser', {message:'del'});
+              io.sockets.emit('table-applyuser', {message:'del', email:username});
               if (action=='allow') {
                 /* Add record to User collection */
                 var random_password = crypto.randomBytes(8).toString('hex');
@@ -297,7 +296,7 @@ module.exports = function(io) {
                           updater:user.id,
                           date_update:Date.now()}).save();
                 sendMail(username, reset_code);
-                io.sockets.emit('table-user', {message:'add'});
+                io.sockets.emit('table-user', {message:'add', email:username});
               }
             });
           }
@@ -371,6 +370,7 @@ module.exports = function(io) {
               if (err) {
                 return res.send(err);
               }
+              io.sockets.emit('table-user', {message:'chg', email:user.email});
               res.json({message:'Successful'});
             });
           });
