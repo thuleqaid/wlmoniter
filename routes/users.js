@@ -93,7 +93,8 @@ module.exports = function(io) {
       if (!token) {
         return res.status(401).json({error:'wrong token'});
       }
-      AccessToken.remove({_id:token._id},function(err) {});
+      var clientid = req.body.clientid || 'browser';
+      AccessToken.remove({_id:token._id, clientid:clientid},function(err) {});
       res.json({message:'ok'});
     })(req, res, next);
   });
@@ -118,10 +119,15 @@ module.exports = function(io) {
                     password:random_password,
                     reset_code:reset_code,
                     permission:['modify','create','admin'],
-                    date_update:Date.now()}).save();
-          io.sockets.emit('table-user', {message:'add',email:username});
-          sendMail(username, reset_code);
-          res.json({message:'ok'});
+                    date_update:Date.now()}).save(function(err) {
+                      if (err) {
+                        res.json({message:'ng'});
+                      } else {
+                        io.sockets.emit('table-user', {message:'add',email:username});
+                        sendMail(username, reset_code);
+                        res.json({message:'ok'});
+                      }
+                    });
         } else {
           var autoConfirm =false;
           if (process.env.MAIL_AUTOALLOW && process.env.MAIL_AUTOALLOW.toLowerCase() === 'true') {
@@ -144,31 +150,35 @@ module.exports = function(io) {
                               last_name:lastname,
                               password:random_password,
                               reset_code:reset_code,
-                              date_update:Date.now()}).save();
-                    sendMail(username, reset_code);
-                    io.sockets.emit('table-user', {message:'add', email:username});
+                              date_update:Date.now()}).save(function(err) {
+                                sendMail(username, reset_code);
+                                io.sockets.emit('table-user', {message:'add', email:username});
+                              });
                   } else {
                     /* Add record to ApplyUser collection */
                     new ApplyUser({email:username,
                                    first_name:firstname,
-                                   last_name:lastname}).save();
-                    io.sockets.emit('table-applyuser', {message:'add', email:username});
+                                   last_name:lastname}).save(function(err) {
+                                     io.sockets.emit('table-applyuser', {message:'add', email:username});
+                                   });
                   }
                   return res.json({message:'ok'});
                 } else {
                   if (autoConfirm) {
                     /* Remove record from ApplyUser collection */
-                    ApplyUser.remove({_id:appuser._id}, function(err) { });
-                    io.sockets.emit('table-applyuser', {message:'del', email:username});
+                    ApplyUser.remove({_id:appuser._id}, function(err) {
+                      io.sockets.emit('table-applyuser', {message:'del', email:username});
+                    });
                     /* Add record to User collection */
                     new User({email:username,
                               first_name:firstname,
                               last_name:lastname,
                               password:random_password,
                               reset_code:reset_code,
-                              date_update:Date.now()}).save();
-                    sendMail(username, reset_code);
-                    io.sockets.emit('table-user', {message:'add', email:username});
+                              date_update:Date.now()}).save(function(err) {
+                                sendMail(username, reset_code);
+                                io.sockets.emit('table-user', {message:'add', email:username});
+                              });
                     return res.json({message:'ok'});
                   }
                 }
@@ -196,7 +206,13 @@ module.exports = function(io) {
         }
         user.reset_code = '';
         user.password = password;
-        user.save();
+        user.save(function(err) {
+          AccessToken.remove({userid:user._id}, function(err) {
+            if (err) {
+              /* console.log("Remove Error:"+err); */
+            }
+          });
+        });
       });
       res.json({message:'ok'});
     }
@@ -282,8 +298,9 @@ module.exports = function(io) {
               var username = appuser.email;
               var firstname = appuser.first_name;
               var lastname = appuser.last_name;
-              ApplyUser.remove({_id:appuser._id}, function(err) { });
-              io.sockets.emit('table-applyuser', {message:'del', email:username});
+              ApplyUser.remove({_id:appuser._id}, function(err) {
+                io.sockets.emit('table-applyuser', {message:'del', email:username});
+              });
               if (action=='allow') {
                 /* Add record to User collection */
                 var random_password = crypto.randomBytes(8).toString('hex');
@@ -294,9 +311,10 @@ module.exports = function(io) {
                           password:random_password,
                           reset_code:reset_code,
                           updater:user.id,
-                          date_update:Date.now()}).save();
-                sendMail(username, reset_code);
-                io.sockets.emit('table-user', {message:'add', email:username});
+                          date_update:Date.now()}).save(function(err) {
+                            sendMail(username, reset_code);
+                            io.sockets.emit('table-user', {message:'add', email:username});
+                          });
               }
             });
           }
@@ -369,6 +387,13 @@ module.exports = function(io) {
             user.save(function(err) {
               if (err) {
                 return res.send(err);
+              }
+              if (!user.valid) {
+                AccessToken.remove({userid:user._id}, function(err) {
+                  if (err) {
+                    /* console.log("Remove Error:"+err); */
+                  }
+                });
               }
               io.sockets.emit('table-user', {message:'chg', email:user.email});
               res.json({message:'Successful'});
