@@ -20,12 +20,16 @@ var passport = require('passport');
 require('./routes/passport-config')(passport);
 
 var app = express();
+var server = require('http').createServer(app).listen(process.env.SOCKET_PORT, function() {});
+var io = require('socket.io').listen(server);
 if (process.env.ENABLE_CORS && process.env.ENABLE_CORS.toLowerCase()==="true") {
     console.log('Enable CORS');
     var cors = require('cors');
     app.use(cors());
 }
-
+io.on('connection', function(socket){
+  socket.on('disconnect', function(){});
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -38,8 +42,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/users', users);
-app.use('/orders', orders);
+app.use('/users', users(io));
+app.use('/orders', orders(io));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

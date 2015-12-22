@@ -6,10 +6,10 @@ var userSchema = mongoose.Schema({
   first_name: {type:String, required:true},
   last_name: {type:String, required:true},
   reset_code: {type:String, default:''},
+  permission: {type:[String], required:true, default:['modify']}, /* modify/create/admin */
   valid: {type:Boolean, required:true, default:true},
-  enabler: {type:String, default:''},
-  disabler: {type:String, default:''},
-  permission: {type:[String], required:true, default:['modify']} /* modify/create/admin */
+  updater: {type:String, default:''},
+  date_update: {type:Date, required:true}
 });
 
 userSchema.pre('save', function(next) {

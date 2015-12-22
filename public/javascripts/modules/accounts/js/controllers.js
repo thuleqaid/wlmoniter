@@ -47,15 +47,7 @@ angular.module('common.accounts.controllers').controller('ForgotPasswordControll
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('UsersAdminController', ['$scope', '$state', 'User', 'ApplyUser', function($scope, $state, User, ApplyUser) {
-  var removeItem = function(appid) {
-    for (var idx = 0; idx < $scope.appusers.length; idx ++) {
-      if ($scope.appusers[idx]._id == appid) {
-        $scope.appusers.splice(idx, 1);
-        break;
-      }
-    }
-  };
+angular.module('common.accounts.controllers').controller('UserAdminController', ['$scope', '$state', 'User', 'ApplyUser', 'socket', function($scope, $state, User, ApplyUser, socket) {
   var refreshData = function() {
     $scope.users = User.query();
     ApplyUser.query().success(function(data, status, config, headers) {
@@ -64,22 +56,50 @@ angular.module('common.accounts.controllers').controller('UsersAdminController',
       $scope.appusers = [];
     });
   };
+  socket.on('table-user', refreshData);
+  socket.on('table-applyuser', refreshData);
   refreshData();
   $scope.allow = function(appid) {
-    removeItem(appid);
     ApplyUser.allow(appid);
     refreshData();
   };
   $scope.deny = function(appid) {
-    removeItem(appid);
     ApplyUser.deny(appid);
     refreshData();
   };
 }]);
 
-angular.module('common.accounts.controllers').controller('NavController', ['$scope', 'authService', '$state', 'DEFAULT_ROUTE', function($scope, authService, $state, DEFAULT_ROUTE) {
+angular.module('common.accounts.controllers').controller('UserProfileController', ['$scope', '$state', '$stateParams', 'User', 'persistService', 'MAIL_SUFFIX', 'DEFAULT_ROUTE', function($scope, $state, $stateParams, User, persistService, MAIL_SUFFIX, DEFAULT_ROUTE) {
+  $scope.mailsuffix = MAIL_SUFFIX;
+  $scope.puser = User.get({id:$stateParams.id}, function(user) {
+    $scope.username = user.email.substr(0, user.email.lastIndexOf('@'));
+  });
+  $scope.permission = {
+    'modify': (persistService.get('user').permission.indexOf('modify') >= 0),
+    'create': (persistService.get('user').permission.indexOf('create') >= 0),
+    'admin': (persistService.get('user').permission.indexOf('admin') >= 0)
+  };
+  $scope.updateProfile = function() {
+    $scope.puser.$update(function() {
+      $state.go(DEFAULT_ROUTE, {}, {reload:true});
+    });
+  };
+  $scope.updatePermission = function(args) {
+    $scope.puser.permission = args;
+  };
+}]);
+
+angular.module('common.accounts.controllers').controller('NavController', ['$scope', 'authService', 'persistService', 'User', '$state', 'socket', 'DEFAULT_ROUTE', function($scope, authService, persistService, User, $state, socket, DEFAULT_ROUTE) {
   $scope.user = authService.user;
 
+  socket.on('table-user', function(data) {
+    if (data.message=='chg' && data.email == $scope.user.email) {
+      $scope.user = User.get({id:authService.user._id}, function(user) {
+        authService.user = $scope.user;
+        persistService.set('user', $scope.user);
+      });
+    }
+  });
   $scope.$on('authorize_changed', function(event, data) {
     $scope.user = authService.user;
     if (data==='logout') {
