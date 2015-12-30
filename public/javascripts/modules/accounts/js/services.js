@@ -34,18 +34,14 @@ angular.module('common.accounts.services').factory('authService', ['REGISTER_END
   };
   auth.login = function(username, password) {
     return $http.post(HTML_ENDPOINT+LOGIN_ENDPOINT, {username:username, password:password}).then(function(response, status) {
-      auth.user = response.data.user;
-      auth.token = response.data.token;
-      persistService.set('user', auth.user);
-      persistService.set('token', auth.token);
+      persistService.set('user', response.data.user);
+      persistService.set('token', response.data.token);
       $rootScope.$broadcast('authorize_changed', 'login');
-      return auth.user;
+      return response.data.user;
     });
   };
   auth.logout = function() {
     return $http.post(HTML_ENDPOINT+LOGOUT_ENDPOINT, {token:auth.token}).finally(function(response, status) {
-      auth.user = undefined;
-      auth.token = undefined;
       persistService.remove('user');
       persistService.remove('token');
       $rootScope.$broadcast('authorize_changed', 'logout');
@@ -129,8 +125,8 @@ angular.module('common.accounts.services').factory('socket', ['$rootScope', 'WEB
     }
   };
 }]);
-angular.module('common.accounts.services').value('HTML_ENDPOINT', 'http://192.168.60.14:5000');
-angular.module('common.accounts.services').value('WEBSOCKET_ENDPOINT', 'http://192.168.60.14:4000');
+angular.module('common.accounts.services').value('HTML_ENDPOINT', 'http://192.168.20.73:5000');
+angular.module('common.accounts.services').value('WEBSOCKET_ENDPOINT', 'http://192.168.20.73:4000');
 
 angular.module('common.accounts.services').value('MAIL_SUFFIX', '@kotei-info.com');
 angular.module('common.accounts.services').value('APPLY_ENDPOINT', '/users/apply');

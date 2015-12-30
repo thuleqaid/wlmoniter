@@ -11,8 +11,8 @@ angular.module('wlmoniter.orders').config(['$stateProvider', '$locationProvider'
       templateUrl: 'javascripts/modules/orders/views/orders.html',
       controller: 'OrderController',
       resolve:{
-        user:['authService', '$q', function(authService, $q) {
-          return authService.user || $q.reject({unAuthorized:true});
+        user:['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') || $q.reject({unAuthorized:true});
         }]
       }
     });
@@ -21,8 +21,8 @@ angular.module('wlmoniter.orders').config(['$stateProvider', '$locationProvider'
       templateUrl: 'javascripts/modules/orders/views/newOrder.html',
       controller: 'OrderCreateController',
       resolve:{
-        user:['authService', '$q', function(authService, $q) {
-          return authService.user || $q.reject({unAuthorized:true});
+        user:['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') || $q.reject({unAuthorized:true});
         }]
       }
     });
@@ -31,8 +31,8 @@ angular.module('wlmoniter.orders').config(['$stateProvider', '$locationProvider'
       templateUrl: 'javascripts/modules/orders/views/singleOrder.html',
       controller: 'OrderDetailsController',
       resolve:{
-        user:['authService', '$q', function(authService, $q) {
-          return authService.user || $q.reject({unAuthorized:true});
+        user:['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') || $q.reject({unAuthorized:true});
         }]
       }
     });

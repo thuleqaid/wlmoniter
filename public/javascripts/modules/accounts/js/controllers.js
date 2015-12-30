@@ -90,18 +90,17 @@ angular.module('common.accounts.controllers').controller('UserProfileController'
 }]);
 
 angular.module('common.accounts.controllers').controller('NavController', ['$scope', 'authService', 'persistService', 'User', '$state', 'socket', 'DEFAULT_ROUTE', function($scope, authService, persistService, User, $state, socket, DEFAULT_ROUTE) {
-  $scope.user = authService.user;
+  $scope.user = persistService.get('user');
 
   socket.on('table-user', function(data) {
     if (data.message=='chg' && data.email == $scope.user.email) {
-      $scope.user = User.get({id:authService.user._id}, function(user) {
-        authService.user = $scope.user;
+      $scope.user = User.get({id:persistService.get('user')._id}, function(user) {
         persistService.set('user', $scope.user);
       });
     }
   });
   $scope.$on('authorize_changed', function(event, data) {
-    $scope.user = authService.user;
+    $scope.user = persistService.get('user');
     if (data==='logout') {
       $scope.transDefault();
     }

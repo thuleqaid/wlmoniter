@@ -12,8 +12,8 @@ angular.module('common.accounts').config(['$stateProvider', '$locationProvider',
     templateUrl: 'javascripts/modules/accounts/views/login.html',
     controller: 'LoginController',
     resolve: {
-      user:['authService', '$q', function(authService, $q) {
-        if (authService.user) {
+      user:['persistService', '$q', function(persistService, $q) {
+        if (persistService.get('user')) {
           return $q.reject({authorized:true});
         }
       }]
@@ -47,15 +47,16 @@ angular.module('common.accounts').config(['$stateProvider', '$locationProvider',
   // $locationProvider.html5Mode(true);
 }]);
 
-angular.module('common.accounts').run(['$rootScope', '$state', 'persistService', 'authService', function($rootScope, $state, persistService, authService) {
+angular.module('common.accounts').run(['$rootScope', '$state', 'persistService', function($rootScope, $state, persistService) {
   $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
     if (error.unAuthorized) {
       $state.go("login");
     } else if (error.authorized) {
+      var user = User.get({id:persistService.get('user')._id}, function(user) {
+        persistService.set('user', user);
+      });
       $state.go("allOrders");
     }
   });
-  authService.user = persistService.get('user');
-  authService.token = persistService.get('token');
 }]);
 

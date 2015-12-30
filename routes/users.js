@@ -74,13 +74,7 @@ module.exports = function(io) {
       });
       /* return JsonWebToken */
       res.json({token:token,
-                user:{
-                  _id: user._id,
-                  email: user.email,
-                  first_name: user.first_name,
-                  last_name: user.last_name,
-                  permission: user.permission
-                }
+                user:user
                });
     })(req, res, next);
   });
@@ -335,7 +329,7 @@ module.exports = function(io) {
           if (err) {
             return res.send(err);
           }
-          var fields = {'password':0};
+          var fields = {'password':0, 'reset_code':0};
           if (!user || user.permission.indexOf('admin') < 0) {
             fields.permission = 0;
           }
@@ -403,7 +397,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .get(passport.authenticate('bearer', {session:false}), function(req, res) {
-      User.findOne({_id:req.params.id}).exec(function(err, user) {
+      User.findOne({_id:req.params.id}, {'password':0, 'reset_code':0}).exec(function(err, user) {
         if (err) {
           return res.send(err);
         }
