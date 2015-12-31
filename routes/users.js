@@ -12,7 +12,7 @@ module.exports = function(io) {
   var router = express.Router();
   var sendMail = function(to, reset_code) {
     var subject = process.env.MAIL_SUBJECT;
-    var address = 'http://'+process.env.HOST+':'+process.env.PORT+'/#/resetpassword/'+reset_code+'/'+to.substr(0,to.lastIndexOf('@'));
+    var address = 'http://'+process.env.HOST+':'+process.env.PORT+'/#/app/resetpassword/'+reset_code+'/'+to.substr(0,to.lastIndexOf('@'));
     var html = '<a href="'+address+'">Reset Link</a>';
     var transport = nodemailer.createTransport("SMTP", {
       host: process.env.MAIL_HOST,
@@ -31,9 +31,9 @@ module.exports = function(io) {
     };
     transport.sendMail(mailOptions, function(err, info) {
       if (err) {
-        // console.log(err);
+        /* console.log(err); */
       } else {
-        console.log(info.response);
+        /* console.log(info.response); */
       }
     });
   };
@@ -207,13 +207,14 @@ module.exports = function(io) {
             }
           });
         });
+        res.json({message:'ok'});
       });
-      res.json({message:'ok'});
     }
   });
 
   router.route('/forgotpassword').post(function(req, res, next) {
     var email = req.body.username;
+    var flag_email = req.body.sendmail || false;
     User.findOne({email:email}, function(err, user) {
       if (err) {
         return next(err);
@@ -225,11 +226,13 @@ module.exports = function(io) {
         var reset_code = crypto.randomBytes(32).toString('hex');
         user.reset_code = reset_code;
         user.save(function(err) {});
-        console.log('reset mail:'+email+':'+reset_code);
-        sendMail(email, reset_code);
+        /* console.log('reset mail:'+email+':'+reset_code); */
+        if (flag_email) {
+          sendMail(email, reset_code);
+        }
       }
+      res.json({message:'ok', reset_code:reset_code});
     });
-    res.json({message:'ok'});
   });
 
   router.route('/apply')

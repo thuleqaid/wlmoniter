@@ -1,0 +1,52 @@
+<ion-view view-title="User Admin">
+  <ion-content>
+    <div class="list card" ng-if="currentIdx == 0">
+      <div class="item row" ng-repeat="user in users track by $index" ng-if="user.valid">
+        <a class="col" ui-sref="app.userprofile({id:user._id})">{{user.email|stripMail}}</a>
+        <span class="col">{{user.last_name}} {{user.first_name}}</span>
+        <div class="col">
+          <permission-view permission="{{user.permission}}"></permission-view>
+        </div>
+        <a class="col" ng-click="reset(user.email);">Reset Password</a>
+      </div>
+    </div>
+    <div class="list card" ng-if="currentIdx == 1">
+      <div class="item row" ng-repeat="user in users track by $index" ng-if="!user.valid">
+        <a class="col" ui-sref="app.userprofile({id:user._id})">{{user.email|stripMail}}</a>
+        <span class="col">{{user.last_name}} {{user.first_name}}</span>
+        <div class="col">
+          <permission-view permission="{{user.permission}}"></permission-view>
+        </div>
+      </div>
+    </div>
+    <div class="list card" ng-if="currentIdx == 2">
+      <div class="item row" ng-repeat="user in appusers track by $index">
+        <span class="col">{{user.email|stripMail}}</span>
+        <span class="col">{{user.last_name}} {{user.first_name}}</span>
+        <div class="col">
+          <a ng-click="allow(user._id);">
+            <i class="icon ion-checkmark-round">Accept</i>
+          </a>
+          <a ng-click="deny(user._id);">
+            <i class="icon ion-close-round">Reject</i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+  <ion-footer-bar>
+    <div class="buttons">
+      <button class="button" ng-click="prevTab();">
+        <i class="icon ion-chevron-left"></i>
+      </button>
+    </div>
+    <h1 class="title" ng-if="currentIdx == 0">Valid User</h1>
+    <h1 class="title" ng-if="currentIdx == 1">InValid User</h1>
+    <h1 class="title" ng-if="currentIdx == 2">Applying User</h1>
+    <div class="buttons">
+      <button class="button" ng-click="nextTab();">
+        <i class="icon ion-chevron-right"></i>
+      </button>
+    </div>
+  </ion-footer-bar>
+</ion-view>
