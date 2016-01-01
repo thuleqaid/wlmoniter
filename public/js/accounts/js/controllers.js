@@ -11,8 +11,12 @@ angular.module('common.accounts.controllers',[]).controller('NavController', fun
   });
   socket.on('table-user', function(data) {
     if (data.message=='chg' && data.email == $scope.user.email) {
-      $scope.user = User.get({id:persistService.get('user')._id}, function(user) {
-        persistService.set('user', $scope.user);
+      User.get({id:$scope.user._id}).$promise.then(function(user) {
+        persistService.set('user', user);
+        $scope.user = user;
+      }, function(err) {
+        authService.logout();
+        transit.goHome();
       });
     }
   });

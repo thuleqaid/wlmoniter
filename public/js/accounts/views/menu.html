@@ -33,9 +33,6 @@
         <ion-item menu-close ng-if="user && user.permission.indexOf('admin')>=0" href="#/app/useradmin">
           User Admin
         </ion-item>
-        <ion-item menu-close ng-click="logout()" ng-if="user">
-          Logout
-        </ion-item>
         <ion-item menu-close href="#/app/search">
           Search
         </ion-item>
@@ -44,6 +41,9 @@
         </ion-item>
         <ion-item menu-close href="#/app/playlists">
           Playlists
+        </ion-item>
+        <ion-item menu-close ng-click="logout()" ng-if="user">
+          Logout
         </ion-item>
       </ion-list>
     </ion-content>

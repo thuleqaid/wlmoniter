@@ -47,6 +47,7 @@ angular.module('common.accounts.services').factory('persistService', function() 
   };
   return persist;
 });
+
 angular.module('common.accounts.services').factory('authService', function(REGISTER_ENDPOINT, LOGIN_ENDPOINT, LOGOUT_ENDPOINT, FORGOTPASSWORD_ENDPOINT, RESETPASSWORD_ENDPOINT, HTML_ENDPOINT, persistService, $http, $rootScope) {
   var auth = {};
   auth.register = function(username, password, firstname, lastname) {
