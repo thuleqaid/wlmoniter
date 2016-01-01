@@ -6,7 +6,7 @@ var User=require('../models/user');
 module.exports = function(passport) {
   passport.use(new LocalStrategy(function(username, password, done) {
     /* console.log("passport-local-strategy:["+username+"]["+password+"]"); */
-    User.findOne({email:username}, function(err, user) {
+    User.findOne({email:username}, {'reset_code':0}, function(err, user) {
       if (err) {
         return done(err);
       }

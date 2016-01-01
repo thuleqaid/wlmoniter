@@ -1,0 +1,30 @@
+<label class="item item-toggle">
+  Modify<i class="icon ion-edit"></i>
+  <label class="toggle toggle-positive">
+    <input type="checkbox" ng-model="checkModel.modify" disabled="disabled" ng-if="editable == 'false'">
+    <input type="checkbox" ng-model="checkModel.modify" ng-if="editable == 'true'">
+    <div class="track">
+      <div class="handle"></div>
+    </div>
+  </label>
+</label>
+<label class="item item-toggle">
+  Create<i class="icon ion-document"></i>
+  <label class="toggle toggle-positive">
+    <input type="checkbox" ng-model="checkModel.create" disabled="disabled" ng-if="editable == 'false'">
+    <input type="checkbox" ng-model="checkModel.create" ng-if="editable == 'true'">
+    <div class="track">
+      <div class="handle"></div>
+    </div>
+  </label>
+</label>
+<label class="item item-toggle">
+  UserAdmin<i class="icon ion-person-stalker"></i>
+  <label class="toggle toggle-positive">
+    <input type="checkbox" ng-model="checkModel.admin" disabled="disabled" ng-if="editable == 'false'">
+    <input type="checkbox" ng-model="checkModel.admin" ng-if="editable == 'true'">
+    <div class="track">
+      <div class="handle"></div>
+    </div>
+  </label>
+</label>
