@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, transit, socket, persistService, authService, User, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, $translate, transit, socket, persistService, authService, User, MAIL_SUFFIX) {
   var refreshData = function() {
     $scope.mailsuffix = MAIL_SUFFIX;
     $scope.user = persistService.get('user');
@@ -86,6 +86,11 @@ angular.module('common.accounts.controllers',[]).controller('NavController', fun
       .finally(function() {
         $scope.closeRegister();
       });
+  };
+
+  $scope.switchLang = function(lang) {
+    persistService.set('lang', lang);
+    $translate.use(lang);
   };
 });
 

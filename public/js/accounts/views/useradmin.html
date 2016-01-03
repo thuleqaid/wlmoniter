@@ -1,4 +1,5 @@
-<ion-view view-title="User Admin">
+<ion-view>
+  <ion-nav-title translate="T_ACCOUNTS_USERADMIN"></ion-nav-title>
   <ion-content>
     <div class="list card" ng-if="currentIdx == 0">
       <div class="item row" ng-repeat="user in users track by $index" ng-if="user.valid">
@@ -7,7 +8,7 @@
         <div class="col">
           <permission-view permission="{{user.permission}}"></permission-view>
         </div>
-        <a class="col" ng-click="reset(user.email);">Reset Password</a>
+        <a class="col" ng-click="reset(user.email);" translate="T_ACCOUNTS_RESETPASSWORD"></a>
       </div>
     </div>
     <div class="list card" ng-if="currentIdx == 1">
@@ -25,10 +26,10 @@
         <span class="col">{{user.last_name}} {{user.first_name}}</span>
         <div class="col">
           <a ng-click="allow(user._id);">
-            <i class="icon ion-checkmark-round">Accept</i>
+            <i class="icon ion-checkmark-round" translate="T_ACCOUNTS_ACCEPT"></i>
           </a>
           <a ng-click="deny(user._id);">
-            <i class="icon ion-close-round">Reject</i>
+            <i class="icon ion-close-round" translate="T_ACCOUNTS_REJECT"></i>
           </a>
         </div>
       </div>

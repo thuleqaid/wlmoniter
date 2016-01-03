@@ -19,31 +19,31 @@
     <ion-content>
       <ion-list>
         <ion-item menu-close ng-click="register()" ng-if="!user">
-          Register
+          <pre translate="T_ACCOUNTS_REGISTER"></pre>
         </ion-item>
         <ion-item menu-close ng-click="login()" ng-if="!user">
-          Login
+          <pre translate="T_ACCOUNTS_LOGIN"></pre>
         </ion-item>
         <ion-item menu-close href="#/app/resetpassword//" ng-if="!user">
-          Reset Password
+          <pre translate="T_ACCOUNTS_RESETPASSWORD"></pre>
         </ion-item>
         <ion-item menu-close href="#/app/userprofile/{{user._id}}" ng-if="user">
           {{user.last_name}} {{user.first_name}}
         </ion-item>
         <ion-item menu-close ng-if="user && user.permission.indexOf('admin')>=0" href="#/app/useradmin">
-          User Admin
+          <pre translate="T_ACCOUNTS_USERADMIN"></pre>
         </ion-item>
         <ion-item menu-close href="#/app/search">
-          Search
-        </ion-item>
-        <ion-item menu-close href="#/app/browse">
-          Browse
-        </ion-item>
-        <ion-item menu-close href="#/app/playlists">
-          Playlists
+          <pre translate="T_ACCOUNTS_SEARCH"></pre>
         </ion-item>
         <ion-item menu-close ng-click="logout()" ng-if="user">
-          Logout
+          <pre translate="T_ACCOUNTS_LOGOUT"></pre>
+        </ion-item>
+        <ion-item menu-close ng-click="switchLang('en')">
+          English
+        </ion-item>
+        <ion-item menu-close ng-click="switchLang('cn')">
+          中文
         </ion-item>
       </ion-list>
     </ion-content>

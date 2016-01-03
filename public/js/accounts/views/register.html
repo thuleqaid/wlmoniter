@@ -1,28 +1,28 @@
 <ion-modal-view>
   <ion-header-bar>
-    <h1 class="title">Register</h1>
+    <h1 class="title" translate="T_ACCOUNTS_REGISTER"></h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeRegister()">Close</button>
+      <button class="button button-clear" ng-click="closeRegister()" translate="T_ACCOUNTS_BTN_CLOSE"></button>
     </div>
   </ion-header-bar>
   <ion-content>
     <form ng-submit="doRegister()">
       <div class="list">
         <label class="item item-input">
-          <span class="input-label">Username</span>
+          <span class="input-label" translate="T_ACCOUNTS_LOGIN"></span>
           <input type="text" ng-model="loginData.username" ng-required="true">
           <span class="input-label">{{mailsuffix}}</span>
         </label>
         <label class="item item-input">
-          <span class="input-label">LastName</span>
+          <span class="input-label" translate="T_ACCOUNTS_LASTNAME"></span>
           <input type="text" ng-model="loginData.lastname">
         </label>
         <label class="item item-input">
-          <span class="input-label">FirstName</span>
+          <span class="input-label" translate="T_ACCOUNTS_FIRSTNAME"></span>
           <input type="text" ng-model="loginData.firstname">
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Register</button>
+          <button class="button button-block button-positive" type="submit" translate="T_ACCOUNTS_BTN_REGISTER"></button>
         </label>
       </div>
     </form>

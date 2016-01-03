@@ -1,53 +1,6 @@
 'use strict'
 
 angular.module('common.accounts.services', []);
-angular.module('common.accounts.services').factory('socket', function($rootScope, WEBSOCKET_ENDPOINT) {
-  var socket = io(WEBSOCKET_ENDPOINT);
-  return {
-    on: function(eventName, callback) {
-      socket.on(eventName, function() {
-        var args = arguments;
-        $rootScope.$apply(function() {
-          callback.apply(socket, args);
-        });
-      });
-    },
-    emit: function(eventName, data, callback) {
-      socket.emit(eventName, data, function() {
-        var args = arguments;
-        $rootScope.$apply(function() {
-          if (callback) {
-            callback.apply(socket, args);
-          }
-        });
-      });
-    }
-  };
-});
-angular.module('common.accounts.services').factory('persistService', function() {
-  var persist = {};
-  persist.set = function(key, value) {
-    if (window.localStorage) {
-      window.localStorage.setItem(key, JSON.stringify(value));
-    }
-  };
-  persist.get = function(key) {
-    var value = '';
-    if (!value) {
-      if (window.localStorage) {
-        value = JSON.parse(window.localStorage.getItem(key));
-      }
-    }
-    return value;
-  };
-  persist.remove = function(key) {
-    if (window.localStorage) {
-      window.localStorage.removeItem(key);
-    }
-  };
-  return persist;
-});
-
 angular.module('common.accounts.services').factory('authService', function(REGISTER_ENDPOINT, LOGIN_ENDPOINT, LOGOUT_ENDPOINT, FORGOTPASSWORD_ENDPOINT, RESETPASSWORD_ENDPOINT, HTML_ENDPOINT, persistService, $http, $rootScope) {
   var auth = {};
   auth.register = function(username, password, firstname, lastname) {
@@ -128,9 +81,6 @@ angular.module('common.accounts.services').factory('ApplyUser', function(APPLY_E
   };
   return apply;
 });
-
-angular.module('common.accounts.services').value('HTML_ENDPOINT', 'http://127.0.0.1:5000');
-angular.module('common.accounts.services').value('WEBSOCKET_ENDPOINT', 'http://127.0.0.1:4000');
 
 angular.module('common.accounts.services').value('MAIL_SUFFIX', '@163.com');
 angular.module('common.accounts.services').value('APPLY_ENDPOINT', '/users/apply');

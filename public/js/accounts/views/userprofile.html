@@ -1,14 +1,15 @@
-<ion-view view-title="User Profile">
+<ion-view>
+  <ion-nav-title translate="T_ACCOUNTS_USERPROFILE"></ion-nav-title>
   <ion-content>
     <form ng-submit="doUpdate()" name="profileForm">
       <div class="list">
         <label class="item item-input">
-          <span class="input-label">Username</span>
+          <span class="input-label" translate="T_ACCOUNTS_USERNAME"></span>
           <input type="text" ng-model="username" readonly="true">
           <span class="input-label">{{mailsuffix}}</span>
         </label>
         <label class="item item-toggle" ng-if="permission.admin">
-          Valid
+          <span translate="T_ACCOUNTS_VALID"></span>
           <label class="toggle toggle-positive">
             <input type="checkbox" ng-model="puser.valid">
             <div class="track">
@@ -17,16 +18,16 @@
           </label>
         </label>
         <label class="item item-input">
-          <span class="input-label">LastName</span>
+          <span class="input-label" translate="T_ACCOUNTS_LASTNAME"></span>
           <input type="text" ng-model="puser.last_name">
         </label>
         <label class="item item-input">
-          <span class="input-label">FirstName</span>
+          <span class="input-label" translate="T_ACCOUNTS_FIRSTNAME"></span>
           <input type="text" ng-model="puser.first_name">
         </label>
         <permission-edit permission="{{puser.permission}}" editable="{{permission.admin}}" updater="updatePermission(args)"></permission-edit>
         <label class="item">
-          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit">Update</button>
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_ACCOUNTS_BTN_UPDATE"></button>
         </label>
     </form>
   </ion-content>
