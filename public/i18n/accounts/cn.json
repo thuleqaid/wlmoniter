@@ -14,6 +14,9 @@
   "T_ACCOUNTS_REJECT":          "拒绝",
   "T_ACCOUNTS_VALID":           "有效",
   "T_ACCOUNTS_USERPROFILE":     "用户信息",
+  "T_ACCOUNTS_VALIDUSER":       "有效用户",
+  "T_ACCOUNTS_INVALIDUSER":     "无效用户",
+  "T_ACCOUNTS_APPLYUSER":       "申请用户",
   "T_ACCOUNTS_PRVLG_MODIFY":    "修改权限",
   "T_ACCOUNTS_PRVLG_CREATE":    "创建权限",
   "T_ACCOUNTS_PRVLG_USERADMIN": "用户管理权限",
@@ -23,5 +26,6 @@
   "T_ACCOUNTS_BTN_REGISTER":    "注册",
   "T_ACCOUNTS_BTN_RESET":       "重置",
   "T_ACCOUNTS_BTN_UPDATE":      "更新",
-  "T_ACCOUNTS_ERR_LOGIN":       "用户名/密码错误"
+  "T_ACCOUNTS_ERR_LOGIN":       "用户名/密码错误",
+  "T_ACCOUNTS_MSG_RESETFINISH": "重置完成"
 }

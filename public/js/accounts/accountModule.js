@@ -18,7 +18,7 @@ angular.module('common.accounts', [
       url: '/search',
       views: {
         'menuContent': {
-          template: '<ion-view view-title="Search"><ion-content><h1>Search</h1></ion-content></ion-view>'
+          template: '<ion-view view-title="T.B.D"><ion-content><h1>T.B.D</h1></ion-content></ion-view>'
         }
       }
     })
