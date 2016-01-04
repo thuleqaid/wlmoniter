@@ -1,0 +1,75 @@
+# -*- coding: utf-8 -*-
+* 设计资料：
+** 客户端
+*** service层
+    1. authService
+       用户注册、登录、注销、密码重置服务
+       函数接口：
+       + register(email, password, firstname, lastname)
+         用户注册（password未使用）
+       + login(email, password)
+         用户登录
+         登录成功时，使用persistService保存返回数据（用户个人信息及访问token）
+       + logout()
+         用户退出
+         删除persistService中保存的数据（用户个人信息及访问token）
+       + forgotpassword(email, flag_send_mail)
+         遗忘密码处理
+         返回密码重置code
+       + resetpassword(email, password, resetcode)
+         密码重置
+    2. tokenInterceptor
+       访问token自动插入数据请求中
+    3. User
+       用户数据表操作
+    4. ApplyUser
+       申请用户数据表操作
+*** controller层
+    1. NavController
+       用户登录、注销、密码重置申请页面，用户个人信息自动更新
+    2. ResetPasswordController
+       密码重置页面
+    3. UserAdminController
+       用户管理页面（需要admin权限）
+    4. UserProfileController
+       用户信息修改页面（一般用户只能修改自己的，admin权限用户可以修改所有人的）
+** 服务器端
+*** API一览
+    1. POST:/users/login
+       验证用户数据库
+       更新访问token数据库
+    2. POST:/users/logout
+       验证访问token数据库
+       删除访问token数据库
+    3. POST:/users/register
+       更新申请用户数据库/用户数据库
+    4. POST:/users/resetpassword
+       更新用户数据库
+    5. POST:/users/forgotpassword
+       更新用户数据库
+    6. GET: /users/apply
+       取得申请用户列表
+       验证访问token数据库
+       需要用户管理权限
+    7. POST:/users/apply
+       同意/拒绝某个申请用户
+       验证访问token数据库
+       需要用户管理权限
+    8. GET:/users/api
+       取得用户列表
+       验证访问token数据库
+       不返回密码和密码重置code
+       无用户管理权限时，不返回用户权限
+    9. POST:/users/api
+       添加用户（不支持）
+    10. GET:/users/api/:id
+        取得特定用户信息
+        验证访问token数据库
+        不返回密码和密码重置code
+    11. PUT:/users/api/:id
+        更新特定用户信息
+        验证访问token数据库
+        不更新密码
+        无用户管理权限时，不更新用户权限
+    12. DELETE:/users/api/:id
+        删除特定用户（不支持）

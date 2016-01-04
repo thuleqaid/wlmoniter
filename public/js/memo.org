@@ -1,0 +1,73 @@
+# -*- coding: utf-8 -*-
+* 设计资料：
+** 客户端
+*** service层
+    1. transit
+       函数接口：
+       + goHome()
+         返回Home页面（不可返回）
+       + goBack()
+         返回前一个页面
+    2. socket
+       WebSocket通信服务
+       函数接口：
+       + on('MSG-NAME', function(json-data) {})
+         接受服务器端消息
+       + emit('MSG-NAME', data, callback)
+         发送消息给服务器端（目前未使用）
+    3. persistService
+       客户端数据存取
+       函数接口：
+       + set(key, value)
+       + get(key)
+       + remove(key)
+*** 常量
+    1. HTML_ENDPOINT
+    2. WEBSOCKET_ENDPOINT
+*** 配置内容
+    1. 多语言
+       翻译文件保存在'i18n/{part}/{lang}.json'中
+       启动时从window.localStorage中取得用户设置的语言
+       用户切换语言时，自动刷新网站全体语言
+       网页中多语言使用方法：<ANY translate="translate-id"></ANY>
+
+** 模块架构
+*** 目录结构
+    1. js/xxx/css
+       模块用到的css文件
+    2. js/xxx/img
+       模块用到的图像文件
+    3. js/xxx/js
+       + controllers.js
+       + directives.js
+       + filters.js
+       + services.js
+    4. js/xxx/views
+       模块用到的网页模板
+       "d_"开头的是directive用到的模板
+    5. js/xxx/xxxModule.js
+       配置模块的路由表
+    6. js/xxx/xxxMemo.org
+       模块的设计资料
+    7. i18n/xxx/{lang}.json
+       模块的多语言翻译
+       文件格式：{"translate-id":"text", ...}
+       translate-id的格式：T_XXX（模块名）_任意字符串
+*** 路由配置
+    1. 先定义一个父状态，对应左侧菜单
+    2. 定义子状态，对应各个菜单项
+*** services.js
+    1. 与服务器之间的交互功能
+    2. 模块级常量定义
+*** controllers.js
+    按下面要求定义每个Controller
+    1. 常量直接定义并赋值
+    2. 变量的赋值/初期化定义在refreshData()函数中
+    3. 监听'$ionicView.enter'事件，并在这个事件中调用refreshData()函数
+    4. 定义其他处理函数
+    5. 调用"$translatePartialLoader.addPart('accounts');"装载翻译文件
+       只有父状态对应的Controller需要
+*** filters.js
+    页面显示内容的最后整理（非必须）
+*** directives.js
+    页面部件的模块化（非必须）

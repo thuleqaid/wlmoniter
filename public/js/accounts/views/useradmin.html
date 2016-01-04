@@ -3,7 +3,7 @@
   <ion-content>
     <div class="list card" ng-if="currentIdx == 0">
       <div class="item row" ng-repeat="user in users track by $index" ng-if="user.valid">
-        <a class="col" ui-sref="app.userprofile({id:user._id})">{{user.email|stripMail}}</a>
+        <a class="col" ui-sref="account.userprofile({id:user._id})">{{user.email|stripMail}}</a>
         <span class="col">{{user.last_name}} {{user.first_name}}</span>
         <div class="col">
           <permission-view permission="{{user.permission}}"></permission-view>
@@ -13,7 +13,7 @@
     </div>
     <div class="list card" ng-if="currentIdx == 1">
       <div class="item row" ng-repeat="user in users track by $index" ng-if="!user.valid">
-        <a class="col" ui-sref="app.userprofile({id:user._id})">{{user.email|stripMail}}</a>
+        <a class="col" ui-sref="account.userprofile({id:user._id})">{{user.email|stripMail}}</a>
         <span class="col">{{user.last_name}} {{user.first_name}}</span>
         <div class="col">
           <permission-view permission="{{user.permission}}"></permission-view>

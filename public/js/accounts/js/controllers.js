@@ -1,6 +1,7 @@
 'use strict'
 
-angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, $translate, transit, socket, persistService, authService, User, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, $translate, $translatePartialLoader, transit, socket, persistService, authService, User, MAIL_SUFFIX) {
+  $translatePartialLoader.addPart('accounts');
   var refreshData = function() {
     $scope.mailsuffix = MAIL_SUFFIX;
     $scope.user = persistService.get('user');

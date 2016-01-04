@@ -24,16 +24,16 @@
         <ion-item menu-close ng-click="login()" ng-if="!user">
           <pre translate="T_ACCOUNTS_LOGIN"></pre>
         </ion-item>
-        <ion-item menu-close href="#/app/resetpassword//" ng-if="!user">
+        <ion-item menu-close href="#/account/resetpassword//" ng-if="!user">
           <pre translate="T_ACCOUNTS_RESETPASSWORD"></pre>
         </ion-item>
-        <ion-item menu-close href="#/app/userprofile/{{user._id}}" ng-if="user">
+        <ion-item menu-close href="#/account/userprofile/{{user._id}}" ng-if="user">
           {{user.last_name}} {{user.first_name}}
         </ion-item>
-        <ion-item menu-close ng-if="user && user.permission.indexOf('admin')>=0" href="#/app/useradmin">
+        <ion-item menu-close ng-if="user && user.permission.indexOf('admin')>=0" href="#/account/useradmin">
           <pre translate="T_ACCOUNTS_USERADMIN"></pre>
         </ion-item>
-        <ion-item menu-close href="#/app/search">
+        <ion-item menu-close href="#/account/search">
           T.B.D
         </ion-item>
         <ion-item menu-close ng-click="logout()" ng-if="user">

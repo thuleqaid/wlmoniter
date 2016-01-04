@@ -8,13 +8,13 @@ angular.module('common.accounts', [
 ])
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-    .state('app', {
-      url: '/app',
+    .state('account', {
+      url: '/account',
       abstract: true,
       templateUrl: 'js/accounts/views/menu.html',
       controller: 'NavController'
     })
-    .state('app.search', {
+    .state('account.search', {
       url: '/search',
       views: {
         'menuContent': {
@@ -22,7 +22,7 @@ angular.module('common.accounts', [
         }
       }
     })
-    .state('app.resetpassword', {
+    .state('account.resetpassword', {
       url: '/resetpassword/:resetcode/:email',
       views: {
         'menuContent': {
@@ -31,7 +31,7 @@ angular.module('common.accounts', [
         }
       }
     })
-    .state('app.useradmin', {
+    .state('account.useradmin', {
       url: '/useradmin',
       views: {
         'menuContent': {
@@ -45,7 +45,7 @@ angular.module('common.accounts', [
         }]
       }
     })
-    .state('app.userprofile', {
+    .state('account.userprofile', {
       url: '/userprofile/:id',
       views: {
         'menuContent': {
@@ -59,7 +59,7 @@ angular.module('common.accounts', [
         }]
       }
     });
-  $urlRouterProvider.otherwise('/app/search');
+  $urlRouterProvider.otherwise('/account/search');
 });
 
 angular.module('common.accounts').run(function($rootScope, transit, persistService, authService, User) {

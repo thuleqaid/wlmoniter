@@ -9,7 +9,7 @@ angular.module('starter').factory('transit', function($state, $ionicHistory) {
       disableBack: true,
       historyRoot: true
     });
-    $state.go('app.search');
+    $state.go('account.search');
   };
   transit.goBack = function() {
     var history = $ionicHistory.viewHistory();
@@ -67,9 +67,8 @@ angular.module('starter').factory('persistService', function() {
   };
   return persist;
 });
-angular.module('starter').config(function($translateProvider, $translatePartialLoaderProvider) {
+angular.module('starter').config(function($translateProvider) {
   var lang = JSON.parse(window.localStorage.getItem('lang')) || 'en';
-  $translatePartialLoaderProvider.addPart('accounts');
   $translateProvider.useLoader('$translatePartialLoader', {
     urlTemplate: 'i18n/{part}/{lang}.json'
   });
