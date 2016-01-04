@@ -368,6 +368,12 @@ module.exports = function(io) {
             if (err) {
               return res.send(err);
             }
+            if (!user) {
+              return res.status(401).json({error:'Invalid UserID'});
+            }
+            if (curuser.permission.indexOf('admin') < 0 && curuser._id != user._id) {
+              return res.status(401).json({error:'No Permission'});
+            }
             /* update each field of record */
             for (var prop in req.body) {
               if (prop != 'password') {

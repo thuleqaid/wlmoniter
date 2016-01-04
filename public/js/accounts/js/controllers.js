@@ -1,11 +1,20 @@
 'use strict'
 
-angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, $translate, $translatePartialLoader, transit, socket, persistService, authService, User, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, $translate, $translatePartialLoader, transit, socket, persistService, authService, User, ApplyUser, MAIL_SUFFIX) {
   $translatePartialLoader.addPart('accounts');
+  $scope.mailsuffix = MAIL_SUFFIX;
   var refreshData = function() {
-    $scope.mailsuffix = MAIL_SUFFIX;
     $scope.user = persistService.get('user');
     $scope.loginData = {};
+    if ($scope.user && $scope.user.permission.indexOf('admin') >= 0) {
+      ApplyUser.query().success(function(data, status, config, headers) {
+        $scope.applyflag = (data.length > 0);
+      }).error(function(data, status, config, headers) {
+        $scope.applyflag = false;
+      });
+    } else {
+      $scope.applyflag = false;
+    }
   };
   $scope.$on('$ionicView.enter', function(e) {
     refreshData();
@@ -21,8 +30,9 @@ angular.module('common.accounts.controllers',[]).controller('NavController', fun
       });
     }
   });
+  socket.on('table-applyuser', refreshData);
   $scope.$on('authorize_changed', function(event, data) {
-    $scope.user = persistService.get('user');
+    refreshData();
   });
 
   // Create the login modal that we will use later

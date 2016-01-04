@@ -3,7 +3,6 @@
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
       </ion-nav-back-button>
-
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
@@ -19,25 +18,25 @@
     <ion-content>
       <ion-list>
         <ion-item menu-close ng-click="register()" ng-if="!user">
-          <pre translate="T_ACCOUNTS_REGISTER"></pre>
+          <span translate="T_ACCOUNTS_REGISTER"></span>
         </ion-item>
         <ion-item menu-close ng-click="login()" ng-if="!user">
-          <pre translate="T_ACCOUNTS_LOGIN"></pre>
+          <span translate="T_ACCOUNTS_LOGIN"></span>
         </ion-item>
         <ion-item menu-close href="#/account/resetpassword//" ng-if="!user">
-          <pre translate="T_ACCOUNTS_RESETPASSWORD"></pre>
+          <span translate="T_ACCOUNTS_RESETPASSWORD"></span>
         </ion-item>
         <ion-item menu-close href="#/account/userprofile/{{user._id}}" ng-if="user">
           {{user.last_name}} {{user.first_name}}
         </ion-item>
         <ion-item menu-close ng-if="user && user.permission.indexOf('admin')>=0" href="#/account/useradmin">
-          <pre translate="T_ACCOUNTS_USERADMIN"></pre>
+          <span translate="T_ACCOUNTS_USERADMIN"></span><i class="icon ion-person-add" style="color:rgb(255,0,0);" ng-if="applyflag"></i>
         </ion-item>
         <ion-item menu-close href="#/account/search">
           T.B.D
         </ion-item>
         <ion-item menu-close ng-click="logout()" ng-if="user">
-          <pre translate="T_ACCOUNTS_LOGOUT"></pre>
+          <span translate="T_ACCOUNTS_LOGOUT"></span>
         </ion-item>
         <ion-item menu-close ng-click="switchLang('en')">
           English
