@@ -37,19 +37,18 @@ angular.module('common.accounts.controllers',[]).controller('NavController', fun
   };
   // Open the login modal
   $scope.login = function() {
+    $scope.invalidLogin = false;
     $scope.modalLogin.show();
   };
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     authService.login($scope.loginData.username+MAIL_SUFFIX, $scope.loginData.password).then(function(data) {
-      $scope.invalidLogin = false;
       $scope.user = persistService.get('user');
       $scope.closeLogin();
       transit.goHome();
     }, function(err) {
       $scope.invalidLogin = true;
     }).finally(function() {
-      $scope.buttonText = "Login";
     });
   };
 

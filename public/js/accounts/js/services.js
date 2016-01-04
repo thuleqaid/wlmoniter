@@ -82,7 +82,7 @@ angular.module('common.accounts.services').factory('ApplyUser', function(APPLY_E
   return apply;
 });
 
-angular.module('common.accounts.services').value('MAIL_SUFFIX', '@163.com');
+angular.module('common.accounts.services').value('MAIL_SUFFIX', '@kotei-info.com');
 angular.module('common.accounts.services').value('APPLY_ENDPOINT', '/users/apply');
 angular.module('common.accounts.services').value('USER_ENDPOINT', '/users/api/:id');
 angular.module('common.accounts.services').value('REGISTER_ENDPOINT', '/users/register');
