@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('common.accounts.controllers',[]).controller('NavController', function($scope, $state, $ionicModal, $timeout, $translatePartialLoader, transit, socket, persistService, authService, User, ApplyUser, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers',[]).controller('AccountNavController', function($scope, $state, $ionicModal, $timeout, $translatePartialLoader, transit, socket, persistService, authService, User, ApplyUser, MAIL_SUFFIX) {
   $translatePartialLoader.addPart('accounts');
   $scope.mailsuffix = MAIL_SUFFIX;
   var refreshData = function() {
@@ -128,7 +128,7 @@ angular.module('common.accounts.controllers',[]).controller('NavController', fun
   };
 });
 
-angular.module('common.accounts.controllers').controller('ResetPasswordController', function($scope, $stateParams, $timeout, transit, authService, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers').controller('AccountResetPasswordController', function($scope, $stateParams, $timeout, transit, authService, MAIL_SUFFIX) {
   $scope.mailsuffix = MAIL_SUFFIX;
   $scope.finishReset = false;
   $scope.credentials = {
@@ -146,7 +146,7 @@ angular.module('common.accounts.controllers').controller('ResetPasswordControlle
   };
 });
 
-angular.module('common.accounts.controllers').controller('UserAdminController', function($scope, $ionicPopup, socket, authService, User, ApplyUser) {
+angular.module('common.accounts.controllers').controller('AccountUserAdminController', function($scope, $ionicPopup, socket, authService, User, ApplyUser) {
   $scope.prevTab = function() {
     if ($scope.currentIdx > 0) {
       $scope.currentIdx -= 1;
@@ -196,7 +196,7 @@ angular.module('common.accounts.controllers').controller('UserAdminController', 
       });
   };
 });
-angular.module('common.accounts.controllers').controller('UserProfileController', function($scope, $stateParams, transit, User, persistService, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers').controller('AccountUserProfileController', function($scope, $stateParams, transit, User, persistService, MAIL_SUFFIX) {
   var refreshData = function() {
     $scope.mailsuffix = MAIL_SUFFIX;
     $scope.puser = User.get({id:$stateParams.id}, function(user) {

@@ -12,7 +12,7 @@ angular.module('common.accounts', [
       url: '/account',
       abstract: true,
       templateUrl: 'js/accounts/views/menu.html',
-      controller: 'NavController'
+      controller: 'AccountNavController'
     })
     .state('account.search', {
       url: '/search',
@@ -27,7 +27,7 @@ angular.module('common.accounts', [
       views: {
         'menuContent': {
           templateUrl: 'js/accounts/views/resetpassword.html',
-          controller: 'ResetPasswordController'
+          controller: 'AccountResetPasswordController'
         }
       }
     })
@@ -36,7 +36,7 @@ angular.module('common.accounts', [
       views: {
         'menuContent': {
           templateUrl: 'js/accounts/views/useradmin.html',
-          controller: 'UserAdminController'
+          controller: 'AccountUserAdminController'
         }
       },
       resolve: {
@@ -50,7 +50,7 @@ angular.module('common.accounts', [
       views: {
         'menuContent': {
           templateUrl: 'js/accounts/views/userprofile.html',
-          controller: 'UserProfileController'
+          controller: 'AccountUserProfileController'
         }
       },
       resolve: {
