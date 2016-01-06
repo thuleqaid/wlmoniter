@@ -1,6 +1,6 @@
 // Ionic Starter App
 
-angular.module('starter', ['ionic', 'pascalprecht.translate', 'common.accounts', 'homes']);
+angular.module('starter', ['ionic', 'pascalprecht.translate', 'common.accounts', 'homes', 'projects']);
 angular.module('starter').factory('transit', function($state, $ionicHistory) {
   var transit = {};
   transit.go = function(statename) {

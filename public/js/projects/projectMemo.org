@@ -1,0 +1,55 @@
+# -*- coding: utf-8 -*-
+* 设计资料：
+** 客户端
+*** service层
+*** controller层
+** 服务器端
+*** API一览
+*** 数据库设计
+    一个项目（Project）分解成多个步骤（Package）,每个步骤内的工作可以用同一组Checklist。
+    例如：UT的项目可以拆分成环境作成、用例设计、用例实施、成果物整理。
+**** Project表
+     字段：
+     + 客户名
+     + 客户项目名
+     + 客户窗口
+     + 光庭项目名
+     + 光庭窗口
+     + 光庭项目Leader
+     + 项目成员
+     + 项目计划（启动日期，交付日期，预算）
+     + 项目实绩（启动日期，可交付日期，开销）
+     + Memo（合议事项等）
+     + Action Item List
+     + Package List
+**** Package表
+     + 所属Project
+     + 步骤标题
+     + 步骤计划（启动日期，交付日期，预算）
+     + 步骤实绩（启动日期，可交付日期，开销）
+     + 步骤成员
+     + Checklist模板列表
+     + 子任务默认规模
+     + 子任务列表（标题，描述，担当，规模）
+**** CheckList表
+     + 所属Project
+     + 所属Package
+     + 所属子任务
+     + Checklist模板
+     + 成果物版本
+     + Check担当
+     + Check结果
+     + 指摘列表
+**** CheckItem表
+**** CheckListTemplate表
+     + CheckItem分组信息
+     + CheckItem回答选项
+     + 指摘状态
+**** ActionItem表
+     + 发布人
+     + 对应人
+     + 标题
+     + 内容
+     + 回答
+     + 状态
+     + 定位信息
