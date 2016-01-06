@@ -35,34 +35,6 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
     refreshData();
   });
 
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('js/accounts/views/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modalLogin = modal;
-  });
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.loginData = {};
-    $scope.modalLogin.hide();
-  };
-  // Open the login modal
-  $scope.login = function() {
-    $scope.invalidLogin = false;
-    $scope.modalLogin.show();
-  };
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    authService.login($scope.loginData.username+MAIL_SUFFIX, $scope.loginData.password).then(function(data) {
-      $scope.user = persistService.get('user');
-      $scope.closeLogin();
-      transit.goHome();
-    }, function(err) {
-      $scope.invalidLogin = true;
-    }).finally(function() {
-    });
-  };
-
   $scope.logout = function() {
     authService.logout();
     transit.goHome();
@@ -75,22 +47,22 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
       });
   };
 
-  // Create the login modal that we will use later
+  // Create the register modal that we will use later
   $ionicModal.fromTemplateUrl('js/accounts/views/register.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modalRegister = modal;
   });
-  // Triggered in the login modal to close it
+  // Triggered in the register modal to close it
   $scope.closeRegister = function() {
     $scope.loginData = {};
     $scope.modalRegister.hide();
   };
-  // Open the login modal
+  // Open the register modal
   $scope.register = function() {
     $scope.modalRegister.show();
   };
-  // Perform the login action when the user submits the login form
+  // Perform the register action when the user submits the register form
   $scope.doRegister = function() {
     authService.register($scope.loginData.username+MAIL_SUFFIX, "12345678", $scope.loginData.firstname, $scope.loginData.lastname)
       .finally(function() {
@@ -98,23 +70,23 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
       });
   };
 
-  // Create the login modal that we will use later
+  // Create the change password modal that we will use later
   $ionicModal.fromTemplateUrl('js/accounts/views/changepassword.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modalChange = modal;
   });
-  // Triggered in the login modal to close it
+  // Triggered in the change password modal to close it
   $scope.closeChange = function() {
     $scope.loginData = {};
     $scope.modalChange.hide();
   };
-  // Open the login modal
+  // Open the change password modal
   $scope.changepassword = function() {
     $scope.invalidLogin = false;
     $scope.modalChange.show();
   };
-  // Perform the login action when the user submits the login form
+  // Perform the change password action when the user submits the change password form
   $scope.doChange = function() {
     authService.changepassword($scope.loginData.password0, $scope.loginData.password1)
       .finally(function() {
@@ -125,6 +97,25 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
 
   $scope.goHome = function() {
     transit.goHome();
+  };
+});
+
+angular.module('common.accounts.controllers').controller('AccountLoginController', function($scope, transit, persistService, authService, MAIL_SUFFIX) {
+  $scope.mailsuffix = MAIL_SUFFIX;
+  var refreshData = function() {
+    $scope.loginData = {};
+  };
+  $scope.$on('$ionicView.enter', function(e) {
+    refreshData();
+  });
+  $scope.doLogin = function() {
+    authService.login($scope.loginData.username+MAIL_SUFFIX, $scope.loginData.password).then(function(data) {
+      $scope.user = persistService.get('user');
+      transit.goHome();
+    }, function(err) {
+      $scope.invalidLogin = true;
+    }).finally(function() {
+    });
   };
 });
 

@@ -16,11 +16,18 @@ angular.module('common.accounts.services').factory('authService', function(REGIS
     });
   };
   auth.logout = function() {
-    return $http.post(HTML_ENDPOINT+LOGOUT_ENDPOINT, {token:persistService.get('token')}).finally(function(response, status) {
+    var token = persistService.get('token');
+    if (token) {
+      return $http.post(HTML_ENDPOINT+LOGOUT_ENDPOINT, {token:token}).finally(function(response, status) {
+        persistService.remove('user');
+        persistService.remove('token');
+        $rootScope.$broadcast('authorize_changed', 'logout');
+      });
+    } else {
       persistService.remove('user');
       persistService.remove('token');
       $rootScope.$broadcast('authorize_changed', 'logout');
-    });
+    }
   };
   auth.forgotpassword = function(username, flag_mail) {
     return $http.post(HTML_ENDPOINT+FORGOTPASSWORD_ENDPOINT, {username:username, sendmail:flag_mail}).then(function(response, status) {

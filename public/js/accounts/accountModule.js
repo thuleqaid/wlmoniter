@@ -22,6 +22,20 @@ angular.module('common.accounts', [
         }
       }
     })
+    .state('account.login', {
+      url: '/login',
+      views: {
+        'menuContent': {
+          templateUrl: 'js/accounts/views/login.html',
+          controller: 'AccountLoginController'
+        }
+      },
+      resolve: {
+        'bkUser': ['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') && $q.reject({authorized:true});
+        }]
+      }
+    })
     .state('account.resetpassword', {
       url: '/resetpassword/:resetcode/:email',
       views: {
@@ -73,9 +87,12 @@ angular.module('common.accounts').run(function($rootScope, transit, persistServi
     });
   }
   $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+    if (error.authorized) {
+      transit.goHome();
+    }
     if (error.unAuthorized) {
       authService.logout();
-      transit.goHome();
+      transit.go('account.login');
     }
   });
 });
