@@ -1,4 +1,5 @@
 {
+  "T_ACCOUNTS_HOME":            "HomePage",
   "T_ACCOUNTS_LOGIN":           "Login",
   "T_ACCOUNTS_REGISTER":        "Register",
   "T_ACCOUNTS_LOGOUT":          "Logout",

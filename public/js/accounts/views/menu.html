@@ -41,11 +41,8 @@
         <ion-item menu-close ng-click="logout()" ng-if="user">
           <span translate="T_ACCOUNTS_LOGOUT"></span>
         </ion-item>
-        <ion-item menu-close ng-click="switchLang('en')">
-          English
-        </ion-item>
-        <ion-item menu-close ng-click="switchLang('cn')">
-          中文
+        <ion-item menu-close ng-click="goHome()">
+          <span translate="T_ACCOUNTS_HOME"></span>
         </ion-item>
       </ion-list>
     </ion-content>

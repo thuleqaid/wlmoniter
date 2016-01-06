@@ -1,15 +1,18 @@
 // Ionic Starter App
 
-angular.module('starter', ['ionic', 'pascalprecht.translate', 'common.accounts']);
+angular.module('starter', ['ionic', 'pascalprecht.translate', 'common.accounts', 'homes']);
 angular.module('starter').factory('transit', function($state, $ionicHistory) {
   var transit = {};
-  transit.goHome = function() {
+  transit.go = function(statename) {
     $ionicHistory.nextViewOptions({
       disableAnimate: false,
       disableBack: true,
       historyRoot: true
     });
-    $state.go('account.search');
+    $state.go(statename);
+  };
+  transit.goHome = function() {
+    transit.go('home');
   };
   transit.goBack = function() {
     var history = $ionicHistory.viewHistory();

@@ -59,7 +59,7 @@ angular.module('common.accounts', [
         }]
       }
     });
-  $urlRouterProvider.otherwise('/account/search');
+  // $urlRouterProvider.otherwise('/account/search');
 });
 
 angular.module('common.accounts').run(function($rootScope, transit, persistService, authService, User) {

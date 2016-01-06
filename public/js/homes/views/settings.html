@@ -1,0 +1,26 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title" translate="T_HOMES_ITEM_SETTING"></h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeSetting()" translate="T_HOMES_BTN_CLOSE"></button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doSetting()">
+      <div class="list">
+        <label class="item item-input item-select">
+          <div class="input-label">
+            <span translate="T_HOMES_SETTING_LANGUAGE"></span>
+          </div>
+          <select ng-model="settingData.lang">
+            <option value="en">English</option>
+            <option value="cn">中文</option>
+          </select>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit" translate="T_HOMES_BTN_SETTING"></button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
