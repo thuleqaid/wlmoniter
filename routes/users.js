@@ -212,6 +212,41 @@ module.exports = function(io) {
     }
   });
 
+  router.route('/changepassword').post(function(req, res, next) {
+    var oldpassword = req.body.oldpassword;
+    var newpassword = req.body.newpassword;
+    passport.authenticate('bearer', {session:false}, function(err, token) {
+      if (err) {
+        return next(err);
+      }
+      if (!token) {
+        return res.status(401).json({error:'wrong token'});
+      }
+      User.findOne({_id:token.userid}).exec(function(err, user) {
+        if (err) {
+          return res.send(err);
+        }
+        if (!user) {
+          return res.json({message:'No Permission'});
+        }
+        if (!user.validatePassword(oldpassword)) {
+          return res.json({message:'Wrong Password'});
+        } else {
+          user.reset_code = '';
+          user.password = newpassword;
+          user.save(function(err) {
+            AccessToken.remove({userid:user._id}, function(err) {
+              if (err) {
+                /* console.log("Remove Error:"+err); */
+              }
+            });
+          });
+          res.json({message:'ok'});
+        }
+      });
+    })(req, res, next);
+  });
+
   router.route('/forgotpassword').post(function(req, res, next) {
     var email = req.body.username;
     var flag_email = req.body.sendmail || false;

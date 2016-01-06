@@ -98,6 +98,31 @@ angular.module('common.accounts.controllers',[]).controller('NavController', fun
       });
   };
 
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('js/accounts/views/changepassword.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modalChange = modal;
+  });
+  // Triggered in the login modal to close it
+  $scope.closeChange = function() {
+    $scope.loginData = {};
+    $scope.modalChange.hide();
+  };
+  // Open the login modal
+  $scope.changepassword = function() {
+    $scope.invalidLogin = false;
+    $scope.modalChange.show();
+  };
+  // Perform the login action when the user submits the login form
+  $scope.doChange = function() {
+    authService.changepassword($scope.loginData.password0, $scope.loginData.password1)
+      .finally(function() {
+        $scope.closeChange();
+        $scope.logout();
+      });
+  };
+
   $scope.switchLang = function(lang) {
     persistService.set('lang', lang);
     $translate.use(lang);

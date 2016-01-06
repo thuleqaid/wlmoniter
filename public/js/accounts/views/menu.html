@@ -35,6 +35,9 @@
         <ion-item menu-close href="#/account/search">
           T.B.D
         </ion-item>
+        <ion-item menu-close ng-click="changepassword()" ng-if="user">
+          <span translate="T_ACCOUNTS_CHANGEPASSWORD"></span>
+        </ion-item>
         <ion-item menu-close ng-click="logout()" ng-if="user">
           <span translate="T_ACCOUNTS_LOGOUT"></span>
         </ion-item>

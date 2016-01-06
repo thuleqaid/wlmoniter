@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('common.accounts.services', []);
-angular.module('common.accounts.services').factory('authService', function(REGISTER_ENDPOINT, LOGIN_ENDPOINT, LOGOUT_ENDPOINT, FORGOTPASSWORD_ENDPOINT, RESETPASSWORD_ENDPOINT, HTML_ENDPOINT, persistService, $http, $rootScope) {
+angular.module('common.accounts.services').factory('authService', function(REGISTER_ENDPOINT, LOGIN_ENDPOINT, LOGOUT_ENDPOINT, FORGOTPASSWORD_ENDPOINT, RESETPASSWORD_ENDPOINT, CHANGEPASSWORD_ENDPOINT, HTML_ENDPOINT, persistService, $http, $rootScope) {
   var auth = {};
   auth.register = function(username, password, firstname, lastname) {
     return $http.post(HTML_ENDPOINT+REGISTER_ENDPOINT, {username:username, password:password, firstname:firstname, lastname:lastname}).then(function(response, status) {
@@ -33,6 +33,10 @@ angular.module('common.accounts.services').factory('authService', function(REGIS
   };
   auth.resetpassword = function(username, password, resetcode) {
     return $http.post(HTML_ENDPOINT+RESETPASSWORD_ENDPOINT, {username:username, password:password, resetcode:resetcode}).then(function(response, status) {
+    });
+  };
+  auth.changepassword = function(oldpassword, newpassword) {
+    return $http.post(HTML_ENDPOINT+CHANGEPASSWORD_ENDPOINT, {oldpassword:oldpassword, newpassword:newpassword}).then(function(response, status) {
     });
   };
   return auth;
@@ -90,4 +94,5 @@ angular.module('common.accounts.services').value('LOGIN_ENDPOINT', '/users/login
 angular.module('common.accounts.services').value('LOGOUT_ENDPOINT', '/users/logout');
 angular.module('common.accounts.services').value('FORGOTPASSWORD_ENDPOINT', '/users/forgotpassword');
 angular.module('common.accounts.services').value('RESETPASSWORD_ENDPOINT', '/users/resetpassword');
+angular.module('common.accounts.services').value('CHANGEPASSWORD_ENDPOINT', '/users/changepassword');
 
