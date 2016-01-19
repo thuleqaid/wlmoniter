@@ -1,4 +1,8 @@
 {
   "T_PROJECTS_HOME":            "HomePage",
-  "T_PROJECTS_LIST":            "Project List"
+  "T_PROJECTS_LIST":            "Project List",
+  "T_PROJECTS_DETAIL":          "Project Detail",
+  "T_PROJECTS_CUSTOMER":        "Customer",
+  "T_PROJECTS_PRJNAMEC":        "Customer Project Name",
+  "T_PROJECTS_PRJNAMEK":        "Kotei Project Name"
 }

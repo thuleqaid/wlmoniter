@@ -96,6 +96,6 @@ angular.module('starter').run(function($ionicPlatform, $rootScope, $translate) {
   });
 });
 
-angular.module('starter').value('HTML_ENDPOINT', 'http://192.168.20.73:5000');
-angular.module('starter').value('WEBSOCKET_ENDPOINT', 'http://192.168.20.73:4000');
+angular.module('starter').value('HTML_ENDPOINT', 'http://192.168.60.32:5000');
+angular.module('starter').value('WEBSOCKET_ENDPOINT', 'http://192.168.60.32:4000');
 

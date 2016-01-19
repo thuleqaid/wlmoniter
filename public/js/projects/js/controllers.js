@@ -8,7 +8,11 @@ angular.module('projects.controllers',[]).controller('ProjectNavController', fun
   };
 });
 
-angular.module('projects.controllers').controller('ProjectListController', function($scope) {
-  $scope.mailsuffix = '1234';
+angular.module('projects.controllers').controller('ProjectListController', function($scope, projectService) {
+  $scope.projects = projectService.projects;
+});
+
+angular.module('projects.controllers').controller('ProjectItemController', function($scope, $stateParams, projectService) {
+  $scope.project = projectService.getProject($stateParams.id);
 });
 

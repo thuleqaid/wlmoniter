@@ -1,4 +1,8 @@
 {
   "T_PROJECTS_HOME":            "主页",
-  "T_PROJECTS_LIST":            "项目一览"
+  "T_PROJECTS_LIST":            "项目一览",
+  "T_PROJECTS_DETAIL":          "项目详细",
+  "T_PROJECTS_CUSTOMER":        "客户",
+  "T_PROJECTS_PRJNAMEC":        "客户项目名",
+  "T_PROJECTS_PRJNAMEK":        "光庭项目名"
 }
