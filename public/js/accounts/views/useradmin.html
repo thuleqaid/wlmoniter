@@ -36,17 +36,15 @@
     </div>
   </ion-content>
   <ion-footer-bar>
-    <div class="buttons">
-      <button class="button" ng-click="prevTab();">
-        <i class="icon ion-chevron-left"></i>
+    <div class="buttons row">
+      <button class="button button-assertive {{currentIdx == 2?'button-outline':''}} col" ng-click="currentIdx = 2;">
+        <span translate="T_ACCOUNTS_APPLYUSER"></span>
       </button>
-    </div>
-    <h1 class="title" ng-if="currentIdx == 0" translate="T_ACCOUNTS_VALIDUSER"></h1>
-    <h1 class="title" ng-if="currentIdx == 1" translate="T_ACCOUNTS_INVALIDUSER"></h1>
-    <h1 class="title" ng-if="currentIdx == 2" translate="T_ACCOUNTS_APPLYUSER"></h1>
-    <div class="buttons">
-      <button class="button" ng-click="nextTab();">
-        <i class="icon ion-chevron-right"></i>
+      <button class="button button-balanced {{currentIdx == 0?'button-outline':''}} col" ng-click="currentIdx = 0;">
+        <span translate="T_ACCOUNTS_VALIDUSER"></span>
+      </button>
+      <button class="button button-dark {{currentIdx == 1?'button-outline':''}} col" ng-click="currentIdx = 1;">
+        <span translate="T_ACCOUNTS_INVALIDUSER"></span>
       </button>
     </div>
   </ion-footer-bar>

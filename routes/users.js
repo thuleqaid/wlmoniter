@@ -12,7 +12,7 @@ module.exports = function(io) {
   var router = express.Router();
   var sendMail = function(to, reset_code) {
     var subject = process.env.MAIL_SUBJECT;
-    var address = 'http://'+process.env.HOST+':'+process.env.PORT+'/#/app/resetpassword/'+reset_code+'/'+to.substr(0,to.lastIndexOf('@'));
+    var address = 'http://'+process.env.HOST+':'+process.env.PORT+'/#/account/resetpassword/'+reset_code+'/'+to.substr(0,to.lastIndexOf('@'));
     var html = '<a href="'+address+'">Reset Link</a>';
     var transport = nodemailer.createTransport("SMTP", {
       host: process.env.MAIL_HOST,
@@ -113,6 +113,9 @@ module.exports = function(io) {
                     password:random_password,
                     reset_code:reset_code,
                     permission:['modify','create','admin'],
+                    salary: {
+                      base: 5000
+                    },
                     date_update:Date.now()}).save(function(err) {
                       if (err) {
                         res.json({message:'ng'});
@@ -144,6 +147,9 @@ module.exports = function(io) {
                               last_name:lastname,
                               password:random_password,
                               reset_code:reset_code,
+                              salary: {
+                                base: 5000
+                              },
                               date_update:Date.now()}).save(function(err) {
                                 sendMail(username, reset_code);
                                 io.sockets.emit('table-user', {message:'add', email:username});
@@ -169,6 +175,9 @@ module.exports = function(io) {
                               last_name:lastname,
                               password:random_password,
                               reset_code:reset_code,
+                              salary: {
+                                base: 5000
+                              },
                               date_update:Date.now()}).save(function(err) {
                                 sendMail(username, reset_code);
                                 io.sockets.emit('table-user', {message:'add', email:username});
@@ -264,9 +273,13 @@ module.exports = function(io) {
         /* console.log('reset mail:'+email+':'+reset_code); */
         if (flag_email) {
           sendMail(email, reset_code);
+          res.json({message:'ok'});
+        } else {
+          res.json({message:'ok', reset_code:reset_code});
         }
+      } else {
+        res.json({message:'ok'});
       }
-      res.json({message:'ok', reset_code:reset_code});
     });
   });
 
@@ -342,6 +355,9 @@ module.exports = function(io) {
                           last_name:lastname,
                           password:random_password,
                           reset_code:reset_code,
+                          salary: {
+                            base: 5000
+                          },
                           updater:user.id,
                           date_update:Date.now()}).save(function(err) {
                             sendMail(username, reset_code);
@@ -369,7 +385,7 @@ module.exports = function(io) {
           }
           var fields = {'password':0, 'reset_code':0};
           if (!user || user.permission.indexOf('admin') < 0) {
-            fields.permission = 0;
+            fields.salary = 0;
           }
           User.find({}, fields).sort('email').exec(function(err, users) {
             if (err) {
@@ -390,6 +406,7 @@ module.exports = function(io) {
           return next(err);
         }
         if (!token) {
+          // console.log("User Update: Wrong Token");
           return res.status(401).json({error:'wrong token'});
         }
         User.findOne({_id:token.userid}).exec(function(err, curuser) {
@@ -397,6 +414,11 @@ module.exports = function(io) {
             return res.send(err);
           }
           if (!curuser) {
+            // console.log("User Update: No Permission");
+            return res.status(401).json({error:'No Permission'});
+          }
+          if ((curuser.permission.indexOf('admin') < 0) && (token.userid != req.params.id)) {
+            // console.log("User Update: No Permission 2");
             return res.status(401).json({error:'No Permission'});
           }
           User.findOne({_id:req.params.id}).exec(function(err, user) {
@@ -404,17 +426,19 @@ module.exports = function(io) {
               return res.send(err);
             }
             if (!user) {
+              // console.log("User Update: Invalid UserID");
               return res.status(401).json({error:'Invalid UserID'});
-            }
-            if (curuser.permission.indexOf('admin') < 0 && curuser._id != user._id) {
-              return res.status(401).json({error:'No Permission'});
             }
             /* update each field of record */
             for (var prop in req.body) {
               if (prop != 'password') {
-                if (prop == 'permission' && curuser.permission.indexOf('admin') < 0) {
-                } else {
+                if (curuser.permission.indexOf('admin') >= 0) {
                   user[prop] = req.body[prop];
+                } else {
+                  if (prop == 'permission' || prop == 'salary') {
+                  } else {
+                    user[prop] = req.body[prop];
+                  }
                 }
               }
             }
@@ -440,13 +464,35 @@ module.exports = function(io) {
         });
       })(req, res, next);
     })
-    .get(passport.authenticate('bearer', {session:false}), function(req, res) {
-      User.findOne({_id:req.params.id}, {'password':0, 'reset_code':0}).exec(function(err, user) {
+    .get(function(req, res, next) {
+      passport.authenticate('bearer', {session:false}, function(err, token) {
         if (err) {
-          return res.send(err);
+          return next(err);
         }
-        res.json(user);
-      });
+        if (!token) {
+          // console.log("User Update: Wrong Token");
+          return res.status(401).json({error:'wrong token'});
+        }
+        User.findOne({_id:token.userid}).exec(function(err, curuser) {
+          if (err) {
+            return res.send(err);
+          }
+          if (!curuser) {
+            // console.log("User Update: No Permission");
+            return res.status(401).json({error:'No Permission'});
+          }
+          var fields = {'password':0, 'reset_code':0};
+          if ((curuser.permission.indexOf('admin') < 0) && (token.userid != req.params.id)) {
+            fields.salary = 0;
+          }
+          User.findOne({_id:req.params.id}, fields).exec(function(err, user) {
+            if (err) {
+              return res.send(err);
+            }
+            res.json(user);
+          });
+        });
+      })(req, res, next);
     })
     .delete(function(req, res) {
       res.json({message:'Not Support'});

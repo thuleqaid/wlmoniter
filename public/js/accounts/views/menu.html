@@ -32,9 +32,6 @@
         <ion-item menu-close ng-if="user && user.permission.indexOf('admin')>=0" href="#/account/useradmin">
           <span translate="T_ACCOUNTS_USERADMIN"></span><i class="icon ion-person-add" style="color:rgb(255,0,0);" ng-if="applyflag"></i>
         </ion-item>
-        <ion-item menu-close href="#/account/search">
-          T.B.D
-        </ion-item>
         <ion-item menu-close ng-click="changepassword()" ng-if="user">
           <span translate="T_ACCOUNTS_CHANGEPASSWORD"></span>
         </ion-item>

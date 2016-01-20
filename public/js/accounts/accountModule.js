@@ -14,14 +14,6 @@ angular.module('common.accounts', [
       templateUrl: 'js/accounts/views/menu.html',
       controller: 'AccountNavController'
     })
-    .state('account.search', {
-      url: '/search',
-      views: {
-        'menuContent': {
-          template: '<ion-view view-title="T.B.D"><ion-content><h1>T.B.D</h1></ion-content></ion-view>'
-        }
-      }
-    })
     .state('account.login', {
       url: '/login',
       views: {

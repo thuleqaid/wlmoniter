@@ -138,22 +138,8 @@ angular.module('common.accounts.controllers').controller('AccountResetPasswordCo
 });
 
 angular.module('common.accounts.controllers').controller('AccountUserAdminController', function($scope, $ionicPopup, socket, authService, User, ApplyUser) {
-  $scope.prevTab = function() {
-    if ($scope.currentIdx > 0) {
-      $scope.currentIdx -= 1;
-    } else {
-      $scope.currentIdx += 2;
-    }
-  };
-  $scope.nextTab = function() {
-    if ($scope.currentIdx < 2) {
-      $scope.currentIdx += 1;
-    } else {
-      $scope.currentIdx -= 2;
-    }
-  };
-  $scope.currentIdx = 0;
   var refreshData = function() {
+    $scope.currentIdx = 0;
     $scope.users = User.query();
     ApplyUser.query().success(function(data, status, config, headers) {
       $scope.appusers = data;
@@ -177,7 +163,6 @@ angular.module('common.accounts.controllers').controller('AccountUserAdminContro
   $scope.reset = function(email) {
     authService.forgotpassword(email, false)
       .then(function(resetcode) {
-        console.log(resetcode);
         var alert = $ionicPopup.alert({
           title: 'Reset Code',
           template: '<textarea rows="5" readonly>'+resetcode+'</textarea>'
@@ -190,10 +175,10 @@ angular.module('common.accounts.controllers').controller('AccountUserAdminContro
 angular.module('common.accounts.controllers').controller('AccountUserProfileController', function($scope, $stateParams, transit, User, persistService, MAIL_SUFFIX) {
   var refreshData = function() {
     $scope.mailsuffix = MAIL_SUFFIX;
-    $scope.puser = User.get({id:$stateParams.id}, function(user) {
+    var user = persistService.get('user');
+    $scope.puser = User.get({id:$stateParams.id || user._id}, function(user) {
       $scope.username = user.email.substr(0, user.email.lastIndexOf('@'));
     });
-    var user = persistService.get('user');
     $scope.permission = {
       'modify': (user && user.permission.indexOf('modify') >= 0),
       'create': (user && user.permission.indexOf('create') >= 0),

@@ -13,6 +13,7 @@
   "T_ACCOUNTS_NEWPASSWORD":     "新密码",
   "T_ACCOUNTS_LASTNAME":        "姓",
   "T_ACCOUNTS_FIRSTNAME":       "名",
+  "T_ACCOUNTS_WORKID":          "工号",
   "T_ACCOUNTS_RESETCODE":       "重置码",
   "T_ACCOUNTS_ACCEPT":          "同意",
   "T_ACCOUNTS_REJECT":          "拒绝",
