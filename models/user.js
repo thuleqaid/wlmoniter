@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var HistoryUser = require('./historyUser');
 var crypto = require('crypto');
+var _ = require('underscore');
 var userSchema = mongoose.Schema({
   email: {type:String, required:true, unique:true},
   password: {type:String, required:true},
@@ -19,12 +20,18 @@ var userSchema = mongoose.Schema({
 
 userSchema.pre('save', function(next) {
   var user = this;
-  if (!user.isModified('password')) return next();
-  var chksum = crypto.createHash('sha1');
-  chksum.update(user.password);
-  user.password = chksum.digest('hex');
-  this.__v += 1;
-  return next();
+  var modPaths = _.without(user.modifiedPaths(), 'updater', 'date_update');
+  if (modPaths.length <= 0) return next(new Error('not changed'));
+  if (modPaths.indexOf('password') < 0) {
+    // user.__v += 1;
+    return next();
+  } else {
+    var chksum = crypto.createHash('sha1');
+    chksum.update(user.password);
+    user.password = chksum.digest('hex');
+    user.__v += 1;
+    return next();
+  }
 });
 
 userSchema.post('save', function(user) {
