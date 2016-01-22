@@ -21,7 +21,9 @@
       </div>
     </form>
   </ion-content>
-  <ion-footer-bar class="bar-assertive" ng-show="invalidLogin">
-    <div class="title" translate="T_ACCOUNTS_ERR_LOGIN"></div>
+  <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
+    <div class="title" translate="T_ACCOUNTS_ERR_LOGIN" ng-if="invalidLogin"></div>
+    <div class="title" translate="T_ACCOUNTS_ERR_FORGOT" ng-if="invalidForgot"></div>
+    <div class="title" translate="T_ACCOUNTS_MSG_FORGOTFINISH" ng-if="finishForgot"></div>
   </ion-footbar-bar>
 </ion-view>

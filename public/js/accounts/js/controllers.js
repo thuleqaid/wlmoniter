@@ -40,13 +40,6 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
     transit.goHome();
   };
 
-  $scope.forgot = function() {
-    authService.forgotpassword($scope.loginData.username+MAIL_SUFFIX, true)
-      .finally(function() {
-        $scope.closeLogin();
-      });
-  };
-
   // Create the register modal that we will use later
   $ionicModal.fromTemplateUrl('js/accounts/views/register.html', {
     scope: $scope
@@ -83,16 +76,29 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
   };
   // Open the change password modal
   $scope.changepassword = function() {
-    $scope.invalidLogin = false;
+    $scope.finishChange = false;
+    $scope.invalidChange = false;
+    $scope.showFooterbar = false;
+    $scope.classFooterbar = 'bar-assertive';
     $scope.modalChange.show();
   };
   // Perform the change password action when the user submits the change password form
   $scope.doChange = function() {
-    authService.changepassword($scope.loginData.password0, $scope.loginData.password1)
-      .finally(function() {
+    authService.changepassword($scope.loginData.password0, $scope.loginData.password1).then(function(data) {
+      $scope.finishChange = true;
+      $scope.invalidChange = false;
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-balanced';
+      $timeout(function() {
         $scope.closeChange();
         $scope.logout();
-      });
+      }, 1000);
+    },function(err) {
+      $scope.finishChange = false;
+      $scope.invalidChange = true;
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-assertive';
+    });
   };
 
   $scope.goHome = function() {
@@ -100,21 +106,51 @@ angular.module('common.accounts.controllers',[]).controller('AccountNavControlle
   };
 });
 
-angular.module('common.accounts.controllers').controller('AccountLoginController', function($scope, transit, persistService, authService, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers').controller('AccountLoginController', function($scope, $timeout, transit, persistService, authService, MAIL_SUFFIX) {
   $scope.mailsuffix = MAIL_SUFFIX;
   var refreshData = function() {
     $scope.loginData = {};
+    $scope.invalidLogin = false;
+    $scope.invalidForgot = false;
+    $scope.finishForgot = false;
+    $scope.showFooterbar = false;
+    $scope.classFooterbar = 'bar-assertive';
   };
   $scope.$on('$ionicView.enter', function(e) {
     refreshData();
   });
   $scope.doLogin = function() {
+    $scope.showFooterbar = false;
     authService.login($scope.loginData.username+MAIL_SUFFIX, $scope.loginData.password).then(function(data) {
+      $scope.invalidLogin = false;
       $scope.user = persistService.get('user');
       transit.goHome();
     }, function(err) {
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-assertive';
       $scope.invalidLogin = true;
     }).finally(function() {
+      $scope.invalidForgot = false;
+      $scope.finishForgot = false;
+    });
+  };
+  $scope.forgot = function() {
+    $scope.showFooterbar = false;
+    authService.forgotpassword($scope.loginData.username+MAIL_SUFFIX, true).then(function(data) {
+      $scope.invalidForgot = false;
+      $scope.finishForgot = true;
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-balanced';
+      $timeout(function() {
+        transit.goHome();
+      }, 1000);
+    }, function(err) {
+      $scope.finishForgot = false;
+      $scope.invalidForgot = true;
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-assertive';
+    }).finally(function() {
+      $scope.invalidLogin = false;
     });
   };
 });
@@ -172,9 +208,13 @@ angular.module('common.accounts.controllers').controller('AccountUserAdminContro
       });
   };
 });
-angular.module('common.accounts.controllers').controller('AccountUserProfileController', function($scope, $stateParams, transit, User, persistService, MAIL_SUFFIX) {
+angular.module('common.accounts.controllers').controller('AccountUserProfileController', function($scope, $stateParams, $timeout, transit, User, persistService, MAIL_SUFFIX) {
   var refreshData = function() {
     $scope.mailsuffix = MAIL_SUFFIX;
+    $scope.invalidProfile = false;
+    $scope.finishProfile = false;
+    $scope.showFooterbar = false;
+    $scope.classFooterbar = 'bar-balanced';
     var user = persistService.get('user');
     $scope.puser = User.get({id:$stateParams.id || user._id}, function(user) {
       $scope.username = user.email.substr(0, user.email.lastIndexOf('@'));
@@ -190,7 +230,18 @@ angular.module('common.accounts.controllers').controller('AccountUserProfileCont
   });
   $scope.doUpdate = function() {
     $scope.puser.$update(function() {
-      transit.goBack();
+      $scope.invalidProfile = false;
+      $scope.finishProfile = true;
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-balanced';
+      $timeout(function() {
+        transit.goBack();
+      }, 1000);
+    },function(err) {
+      $scope.invalidProfile = true;
+      $scope.finishProfile = false;
+      $scope.showFooterbar = true;
+      $scope.classFooterbar = 'bar-assertive';
     });
   };
   $scope.updatePermission = function(args) {

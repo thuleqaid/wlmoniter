@@ -239,7 +239,7 @@ module.exports = function(io) {
           return res.json({message:'No Permission'});
         }
         if (!user.validatePassword(oldpassword)) {
-          return res.json({message:'Wrong Password'});
+          return res.status(401).json({message:'Wrong Password'});
         } else {
           user.reset_code = '';
           user.password = newpassword;

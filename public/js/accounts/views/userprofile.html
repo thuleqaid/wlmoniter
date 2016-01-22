@@ -33,7 +33,12 @@
         <label class="item">
           <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_ACCOUNTS_BTN_UPDATE"></button>
         </label>
+      </div>
     </form>
   </ion-content>
+  <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
+    <div class="title" translate="T_ACCOUNTS_ERR_PROFILE" ng-if="invalidProfile"></div>
+    <div class="title" translate="T_ACCOUNTS_MSG_PROFILEFINISH" ng-if="finishProfile"></div>
+  </ion-footbar-bar>
 </ion-view>
 
