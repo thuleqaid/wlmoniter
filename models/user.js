@@ -22,14 +22,13 @@ userSchema.pre('save', function(next) {
   var user = this;
   var modPaths = _.without(user.modifiedPaths(), 'updater', 'date_update');
   if (modPaths.length <= 0) return next(new Error('not changed'));
+  user.increment();
   if (modPaths.indexOf('password') < 0) {
-    // user.__v += 1;
     return next();
   } else {
     var chksum = crypto.createHash('sha1');
     chksum.update(user.password);
     user.password = chksum.digest('hex');
-    user.__v += 1;
     return next();
   }
 });
