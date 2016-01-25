@@ -1,5 +1,43 @@
 # -*- coding: utf-8 -*-
 * 设计资料：
+** 时序图
+    #+BEGIN_SRC plantuml :file ./memo_seq.svg
+    actor Client as c
+    participant BusinessServer as bs
+    participant FileServer as fs
+    database Database as db
+    
+    note over c, db #Gray : 网页访问（传统架构）
+    loop
+      c -> bs : 网页请求
+        bs -> db : CRUD操作
+        bs <-- db : 操作结果
+        bs -> fs : 读取网页文件模板
+        bs <-- fs : 网页文件模板
+        bs -> bs : 生成网页文件（填充数据）
+      c <-- bs : 网页文件
+      c -> c : 页面渲染
+      note over c : 网页可见
+    end
+    
+    note over c, db : 网页访问（REST架构）
+    group 可以打包成桌面应用或者手机应用
+      c -> bs : 网页请求
+        bs -> fs : 读取网页文件
+        bs <-- fs : 网页文件
+      c <-- bs : 网页文件
+      c -> c : 页面渲染
+      note over c : 网页可见（没有数据）
+    end
+    loop
+      c -> bs : 数据操作请求
+        bs -> db : CRUD操作
+        bs <-- db : 操作结果
+      c <- bs : 数据
+      c -> c : 更新页面
+      note over c : 网页可见
+    end
+    #+END_SRC
 ** 客户端
 *** service层
     1. transit
@@ -22,8 +60,8 @@
        + get(key)
        + remove(key)
 *** 常量
-    1. HTML_ENDPOINT
-    2. WEBSOCKET_ENDPOINT
+    1. =HTML_ENDPOINT=
+    2. =WEBSOCKET_ENDPOINT=
 *** 配置内容
     1. 多语言
        翻译文件保存在'i18n/{part}/{lang}.json'中
@@ -52,7 +90,7 @@
     7. i18n/xxx/{lang}.json
        模块的多语言翻译
        文件格式：{"translate-id":"text", ...}
-       translate-id的格式：T_XXX（模块名）_任意字符串
+       translate-id的格式： =T_XXX（模块名）_任意字符串=
 *** 路由配置
     1. 先定义一个父状态，对应左侧菜单
     2. 定义子状态，对应各个菜单项
@@ -71,3 +109,189 @@
     页面显示内容的最后整理（非必须）
 *** directives.js
     页面部件的模块化（非必须）
+* 代码模板
+** xxxModule.js
+   #+BEGIN_SRC javascript
+   angular.module('xxx', [
+     'ionic',
+     'ngResource',
+     'xxx.services',
+     'xxx.controllers'
+   ]) 
+   .config(function($stateProvider, $urlRouterProvider) {
+     $stateProvider
+       .state('xxx', {
+         url: '/xxx',
+         abstract: true,
+         templateUrl: 'js/xxx/views/menu.html',
+         controller: 'XXXNavController'
+       })
+       .state('xxx.records', {
+         url: '/records',
+         views: {
+           'menuContent': {
+             templateUrl: 'js/xxx/views/records.html',
+             controller: 'XXXRecordListController'
+           }
+         },
+         resolve: {
+           'bkUser': ['persistService', '$q', function(persistService, $q) {
+             return persistService.get('user') || $q.reject({unAuthorized:true});
+           }]
+         }
+       })
+       .state('xxx.record', {
+         url: '/record/:id',
+         views: {
+           'menuContent': {
+             templateUrl: 'js/xxx/views/record.html',
+             controller: 'XXXRecordProfileController'
+           }
+         },
+         resolve: {
+           'bkUser': ['persistService', '$q', function(persistService, $q) {
+             return persistService.get('user') || $q.reject({unAuthorized:true});
+           }]
+         }
+       });
+   });
+   angular.module('xxx').run(function($rootScope, transit, authService) {
+     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+       if (error.unAuthorized) {
+         authService.logout();
+         transit.go('account.login');
+       }
+     });
+   });
+   #+END_SRC
+** services.js
+   #+BEGIN_SRC javascript
+   angular.module('xxx.services', [])
+   .factory('Record', function(XXX_RECORD_ENDPOINT, $resource) {
+     return $resource(XXX_RECORD_ENDPOINT,
+                      {id:'@_id'},
+                      {
+                        update: {
+                          method: 'PUT'
+                        }
+                      },
+                      {stripTrailingSplashes: true});
+   }) 
+   .value('XXX_RECORD_ENDPOINT', 'http://127.0.0.1:8000/crms/company/:id');
+   #+END_SRC
+** controllers.js
+   #+BEGIN_SRC javascript
+   angular.module('crms.controllers',[]).controller('CRMNavController', function($scope, $translatePartialLoader, transit) {
+     $translatePartialLoader.addPart('crms');
+     $scope.goHome = function() {
+       transit.goHome();
+     };
+   });
+   angular.module('xxx.controllers').controller('XXXListController', function($scope, Record) {
+     var refreshData = function() {
+       $scope.records = Record.query();
+     };
+     $scope.$on('$ionicView.enter', function(e) {
+       refreshData();
+     });
+   });
+   angular.module('xxx.controllers').controller('XXXProfileController', function($scope, $stateParams, $timeout, transit, persistService, Record) {
+     var refreshData = function() {
+       var user = persistService.get('user');
+       $scope.record = Record.get({id:$stateParams.id}, function() { });
+       $scope.permission = {
+         'modify': (user && user.permission.indexOf('modify') >= 0),
+         'create': (user && user.permission.indexOf('create') >= 0),
+         'admin': (user && user.permission.indexOf('admin') >= 0)
+       };
+     };
+     $scope.$on('$ionicView.enter', function(e) {
+       refreshData();
+     });
+     $scope.doUpdate = function() {
+       $scope.customer.$update(function() {
+         // update successed
+         $timeout(function() {
+           transit.goBack();
+         }, 1000);
+       },function(err) {
+         // update failed
+       });
+     };
+   });
+   #+END_SRC
+** menu.html
+   #+BEGIN_SRC html
+   <ion-side-menus enable-menu-with-back-views="false">
+     <ion-side-menu-content>
+       <ion-nav-bar class="bar-stable">
+         <ion-nav-back-button>
+         </ion-nav-back-button>
+         <ion-nav-buttons side="left">
+           <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+           </button>
+         </ion-nav-buttons>
+       </ion-nav-bar>
+       <ion-nav-view name="menuContent"></ion-nav-view>
+     </ion-side-menu-content>
+     <ion-side-menu side="left">
+       <ion-header-bar class="bar-stable">
+         <h1 class="title">Menu</h1>
+       </ion-header-bar>
+       <ion-content>
+         <ion-list>
+           <ion-item menu-close href="#/xxx/records">
+             <span translate="T_XXX_LIST_RECORD"></span>
+           </ion-item>
+           <ion-item menu-close ng-click="goHome()">
+             <span translate="T_XXX_HOME"></span>
+           </ion-item>
+         </ion-list>
+       </ion-content>
+     </ion-side-menu>
+   </ion-side-menus>
+   #+END_SRC
+** records.html
+   #+BEGIN_SRC html
+   <ion-view>
+     <ion-nav-title translate="T_XXX_LIST_RECORD"></ion-nav-title>
+     <ion-content>
+       <div class="list">
+         <div class="item" ng-repeat="record in records track by $index">
+           <a ui-sref="xxx.record({id:record._id})">{{record._id}}</a>
+         </div>
+       </div>
+     </ion-content>
+   </ion-view>
+   #+END_SRC
+** record.html
+   #+BEGIN_SRC html
+   <ion-view>
+     <ion-nav-title translate="T_XXX_PROFILE_RECORD"></ion-nav-title>
+     <ion-content>
+       <form ng-submit="doUpdate()" name="profileForm">
+         <div class="list">
+           <label class="item item-input">
+             <span class="input-label" translate="T_XXX_RECORD_PROPERTY"></span>
+             <input type="text" ng-model="record.property">
+           </label>
+           <label class="item item-toggle" ng-if="permission.admin">
+             <span translate="T_XXX_RECORD_VALID"></span>
+             <label class="toggle toggle-positive">
+               <input type="checkbox" ng-model="record.valid">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+           </label>
+           <label class="item">
+             <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_XXX_BTN_UPDATE"></button>
+           </label>
+         </div>
+       </form>
+     </ion-content>
+     <ion-footer-bar ng-class="bar-balanced">
+       <div class="title" translate="T_XXX_MESSAGE"></div>
+     </ion-footbar-bar>
+   </ion-view>
+   #+END_SRC

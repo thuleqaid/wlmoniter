@@ -1,8 +1,8 @@
 angular.module('crms', [
   'ionic',
   'ngResource',
-  // 'projects.directives',
-  // 'projects.filters',
+  // 'crms.directives',
+  // 'crms.filters',
   'crms.services',
   'crms.controllers'
 ])
@@ -72,7 +72,7 @@ angular.module('crms', [
     });
 });
 
-angular.module('projects').run(function($rootScope, transit, authService) {
+angular.module('crms').run(function($rootScope, transit, authService) {
   $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
     if (error.unAuthorized) {
       authService.logout();
