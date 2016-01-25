@@ -1,0 +1,10 @@
+<ion-view>
+  <ion-nav-title translate="T_CRMS_LIST_CUSTOMER"></ion-nav-title>
+  <ion-content>
+    <div class="list">
+      <div class="item" ng-repeat="customer in customers track by $index">
+        <a ui-sref="crm.customer({id:customer._id})">{{customer.last_name}}{{customer.first_name?" "+customer.first_name:""}}</a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,42 @@
+<ion-view>
+  <ion-nav-title translate="T_CRMS_PROFILE_CUSTOMER"></ion-nav-title>
+  <ion-content>
+    <form ng-submit="doUpdate()" name="profileForm">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label" translate="T_CRMS_CUSTOMER_LASTNAME"></span>
+          <input type="text" ng-model="customer.last_name">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_CRMS_CUSTOMER_FIRSTNAME"></span>
+          <input type="text" ng-model="customer.first_name">
+        </label>
+        <label class="item item-toggle" ng-if="permission.admin">
+          <span translate="T_CRMS_CUSTOMER_VALID"></span>
+          <label class="toggle toggle-positive">
+            <input type="checkbox" ng-model="customer.valid">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_CRMS_CUSTOMER_EMAIL"></span>
+          <input type="text" ng-model="customer.email">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_CRMS_CUSTOMER_MEMO"></span>
+          <input type="text" ng-model="customer.memo">
+        </label>
+        <label class="item">
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE"></button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+  <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
+    <div class="title" translate="T_CRMS_ERR_CUSTOMER_PROFILE" ng-if="invalidProfile"></div>
+    <div class="title" translate="T_CRMS_MSG_CUSTOMER_PROFILEFINISH" ng-if="finishProfile"></div>
+  </ion-footbar-bar>
+</ion-view>
+

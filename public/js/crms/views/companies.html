@@ -1,0 +1,10 @@
+<ion-view>
+  <ion-nav-title translate="T_CRMS_LIST_COMPANY"></ion-nav-title>
+  <ion-content>
+    <div class="list">
+      <div class="item" ng-repeat="company in companies track by $index">
+        <a ui-sref="crm.company({id:company._id})">{{company.name}}</a>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

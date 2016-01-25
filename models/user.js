@@ -38,7 +38,7 @@ userSchema.post('save', function(user) {
   histobj.baseid = histobj._id;
   histobj.version = histobj.__v;
   delete histobj._id;
-  new HistoryUser(histobj).save(function(err) {console.log(err);});
+  new HistoryUser(histobj).save(function(err) {if (err) console.log(err);});
 });
 
 userSchema.methods.validatePassword = function(password) {

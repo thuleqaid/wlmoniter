@@ -1,0 +1,20 @@
+{
+  "T_CRMS_HOME":                       "主页",
+  "T_CRMS_LIST_COMPANY":               "公司一览",
+  "T_CRMS_LIST_CUSTOMER":              "客户一览",
+  "T_CRMS_PROFILE_COMPANY":            "公司信息",
+  "T_CRMS_COMPANY_NAME":               "公司名",
+  "T_CRMS_COMPANY_VALID":              "有效",
+  "T_CRMS_COMPANY_MEMO":               "备注",
+  "T_CRMS_PROFILE_CUSTOMER":           "客户信息",
+  "T_CRMS_CUSTOMER_LASTNAME":          "姓",
+  "T_CRMS_CUSTOMER_FIRSTNAME":         "名",
+  "T_CRMS_CUSTOMER_VALID":             "有效",
+  "T_CRMS_CUSTOMER_EMAIL":             "邮箱",
+  "T_CRMS_CUSTOMER_MEMO":              "备注",
+  "T_CRMS_BTN_UPDATE":                 "更新",
+  "T_CRMS_ERR_COMPANY_PROFILE":        "公司信息更新失败",
+  "T_CRMS_ERR_CUSTOMER_PROFILE":       "客户信息更新失败",
+  "T_CRMS_MSG_COMPANY_PROFILEFINISH":  "公司信息更新完成",
+  "T_CRMS_MSG_CUSTOMER_PROFILEFINISH": "客户信息更新完成"
+}

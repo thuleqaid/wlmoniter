@@ -1,0 +1,39 @@
+<ion-view>
+  <ion-nav-title translate="T_CRMS_PROFILE_COMPANY"></ion-nav-title>
+  <ion-content>
+    <form ng-submit="doUpdate()" name="profileForm">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label" translate="T_CRMS_COMPANY_NAME"></span>
+          <input type="text" ng-model="company.name" readonly="true">
+        </label>
+        <label class="item item-toggle" ng-if="permission.admin">
+          <span translate="T_CRMS_COMPANY_VALID"></span>
+          <label class="toggle toggle-positive">
+            <input type="checkbox" ng-model="company.valid">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_CRMS_COMPANY_MEMO"></span>
+          <input type="text" ng-model="company.memo">
+        </label>
+        <label class="item">
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE"></button>
+        </label>
+      </div>
+    </form>
+    <div class="list card">
+      <div class="item" ng-repeat="customer in customers track by $index" ng-if="customer.companyid == company._id">
+        <a ui-sref="crm.customer({id:customer._id})">{{customer.last_name}}{{customer.first_name?" "+customer.first_name:""}}</a>
+      </div>
+    </div>
+  </ion-content>
+  <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
+    <div class="title" translate="T_CRMS_ERR_COMPANY_PROFILE" ng-if="invalidProfile"></div>
+    <div class="title" translate="T_CRMS_MSG_COMPANY_PROFILEFINISH" ng-if="finishProfile"></div>
+  </ion-footbar-bar>
+</ion-view>
+
