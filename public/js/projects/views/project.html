@@ -1,0 +1,82 @@
+<ion-view>
+  <ion-nav-title translate="T_PROJECTS_DETAIL"></ion-nav-title>
+  <ion-content>
+    <form ng-submit="doUpdate()" name="profileForm">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_NAME"></span>
+          <input type="text" ng-model="project.name">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_STATUS"></span>
+          <input type="text" ng-model="project.status">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_CONTENT"></span>
+          <input type="text" ng-model="project.content">
+        </label>
+        <div class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_CUSTOMER"></span>
+          <input type="text" ng-model="project.customerid" readonly="true">
+          <button class="button button-positive" type="button" ng-click="chooseCustomer()" translate="T_PROJECTS_BTN_CHOOSE"></button>
+        </div>
+        <div class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_LEADER"></span>
+          <input type="text" value="{{project.leaderid | name_member : users}}" readonly="true">
+          <button class="button button-positive" type="button" ng-click="chooseMember(false)" translate="T_PROJECTS_BTN_CHOOSE"></button>
+        </div>
+        <div class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_MEMBER"></span>
+          <input type="text" value="{{project.memberid | name_member : users}}" readonly="true">
+          <button class="button button-positive" type="button" ng-click="chooseMember(true)" translate="T_PROJECTS_BTN_CHOOSE"></button>
+        </div>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_STARTDATE_PUBLIC"></span>
+          <input type="date" ng-model="project.startdate_public">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_ENDDATE_PUBLIC"></span>
+          <input type="date" ng-model="project.enddate_public">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_COST_PUBLIC"></span>
+          <input type="number" ng-model="project.cost_public">
+          <span class="input-label" translate="T_PROJECTS_COST_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_STARTDATE_PLAN"></span>
+          <input type="date" ng-model="project.startdate_plan">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_ENDDATE_PLAN"></span>
+          <input type="date" ng-model="project.enddate_plan">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_COST_PLAN"></span>
+          <input type="number" ng-model="project.cost_plan">
+          <span class="input-label" translate="T_PROJECTS_COST_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_STARTDATE_FACT"></span>
+          <input type="date" ng-model="project.startdate_fact">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_ENDDATE_FACT"></span>
+          <input type="date" ng-model="project.enddate_fact">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_COST_FACT"></span>
+          <input type="number" ng-model="project.cost_fact">
+          <span class="input-label" translate="T_PROJECTS_COST_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_PROJECTS_WORKPLACE"></span>
+          <input type="text" ng-model="project.work_place">
+        </label>
+        <label class="item">
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_PROJECTS_BTN_UPDATE"></button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

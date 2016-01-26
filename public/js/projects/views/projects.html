@@ -3,7 +3,7 @@
   <ion-content>
     <div class="list">
       <div class="item" ng-repeat="project in projects track by $index">
-        <a ui-sref="project.item({id:project._id})">{{project.name_k}}</a>
+        <a ui-sref="project.project({id:project._id})">{{project.name}}</a>
       </div>
     </div>
   </ion-content>

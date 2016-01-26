@@ -29,7 +29,7 @@ var Company = mongoose.model('Company', companySchema);
 
 /* initial data */
 Company.find(function(err, customers) {
-  // Ã»ÓĞÊı¾İÊ±£¬´Óinit-company.txtÖĞ¶ÁÈ¡¿Í»§¹«Ë¾Êı¾İ£¬¶ººÅ·Ö¸ô£¬µÚ1ÁĞÊÇ¹«Ë¾Ãû
+  // æ²¡æœ‰æ•°æ®æ—¶ï¼Œä»init-company.txtä¸­è¯»å–å®¢æˆ·å…¬å¸æ•°æ®ï¼Œé€—å·åˆ†éš”ï¼Œç¬¬1åˆ—æ˜¯å…¬å¸å
   if (customers.length) {
     return;
   }

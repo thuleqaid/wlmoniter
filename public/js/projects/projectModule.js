@@ -2,7 +2,7 @@ angular.module('projects', [
   'ionic',
   'ngResource',
   // 'projects.directives',
-  // 'projects.filters',
+  'projects.filters',
   'projects.services',
   'projects.controllers'
 ])
@@ -14,12 +14,12 @@ angular.module('projects', [
       templateUrl: 'js/projects/views/menu.html',
       controller: 'ProjectNavController'
     })
-    .state('project.list', {
-      url: '/list',
+    .state('project.projects', {
+      url: '/projects',
       views: {
         'menuContent': {
-          templateUrl: 'js/projects/views/list.html',
-          controller: 'ProjectListController'
+          templateUrl: 'js/projects/views/projects.html',
+          controller: 'ProjectProjectListController'
         }
       },
       resolve: {
@@ -28,12 +28,12 @@ angular.module('projects', [
         }]
       }
     })
-    .state('project.item', {
-      url: '/item/:id',
+    .state('project.project', {
+      url: '/projectprofile/:id',
       views: {
         'menuContent': {
-          templateUrl: 'js/projects/views/item.html',
-          controller: 'ProjectItemController'
+          templateUrl: 'js/projects/views/project.html',
+          controller: 'ProjectProjectProfileController'
         }
       },
       resolve: {

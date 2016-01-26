@@ -32,7 +32,7 @@ var Customer = mongoose.model('Customer', customerSchema);
 
 /* initial data */
 Customer.find(function(err, customers) {
-  // Ã»ÓĞÊı¾İÊ±£¬´Óinit-customer.txtÖĞ¶ÁÈ¡ÓÃ»§Êı¾İ£¬¶ººÅ·Ö¸ô£¬µÚ1ÁĞÊÇ¹«Ë¾Ãû£¬µÚ2ÁĞÊÇÓÊÏä£¬µÚ3ÁĞÊÇĞÕ£¬µÚ4ÁĞÊÇÃû
+  // æ²¡æœ‰æ•°æ®æ—¶ï¼Œä»init-customer.txtä¸­è¯»å–ç”¨æˆ·æ•°æ®ï¼Œé€—å·åˆ†éš”ï¼Œç¬¬1åˆ—æ˜¯å…¬å¸åï¼Œç¬¬2åˆ—æ˜¯é‚®ç®±ï¼Œç¬¬3åˆ—æ˜¯å§“ï¼Œç¬¬4åˆ—æ˜¯å
   if (customers.length) {
     return;
   }
