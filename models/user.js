@@ -7,6 +7,7 @@ var userSchema = mongoose.Schema({
   password: {type:String, required:true},
   first_name: {type:String, required:true},
   last_name: {type:String, required:true},
+  gender: {type:Boolean, default:true},
   workid: {type:String, default:''},
   reset_code: {type:String, default:''},
   permission: {type:[String], required:true, default:['modify']}, /* modify/create/admin */
@@ -53,7 +54,7 @@ var User = mongoose.model('User', userSchema);
 
 /* initial data */
 User.find(function(err, users) {
-  // 没有数据时，从init-user.txt中读取用户数据，逗号分隔，第1列是用户名，第2列是姓，第3列是名，第4列是工号，第5列是基本工资
+  // 没有数据时，从init-user.txt中读取用户数据，逗号分隔，第1列是用户名，第2列是姓，第3列是名，第4列是性别，第5列是工号，第6列是基本工资
   if (users.length) {
     return;
   }
@@ -63,31 +64,33 @@ User.find(function(err, users) {
   var cnt = 0;
   for (var i = 0; i < lines.length; i++) {
     var parts = lines[i].split(',');
-    if (parts.length >= 4) {
+    if (parts.length >= 5) {
       cnt += 1;
       if (cnt <= 1) {
         // 第1个用户给予用户管理权限
         new User({email:parts[0] + '@kotei-info.com',
                   first_name:parts[2],
                   last_name:parts[1],
+                  gender:eval(parts[3]),
                   password:'123456',
                   reset_code:'',
                   salary: {
-                    base: eval(parts[4]) || 5000
+                    base: eval(parts[5]) || 5000
                   },
                   permission:['modify','create','admin'],
-                  workid:parts[3],
+                  workid:parts[4],
                   date_update:Date.now()}).save();
       } else {
         new User({email:parts[0] + '@kotei-info.com',
                   first_name:parts[2],
                   last_name:parts[1],
+                  gender:eval(parts[3]),
                   password:'123456',
                   reset_code:'',
                   salary: {
-                    base: eval(parts[4]) || 5000
+                    base: eval(parts[5]) || 5000
                   },
-                  workid:parts[3],
+                  workid:parts[4],
                   date_update:Date.now()}).save();
       }
     }
