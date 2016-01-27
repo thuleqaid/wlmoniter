@@ -41,6 +41,20 @@ angular.module('projects', [
           return persistService.get('user') || $q.reject({unAuthorized:true});
         }]
       }
+    })
+    .state('project.newproject', {
+      url: '/newproject',
+      views: {
+        'menuContent': {
+          templateUrl: 'js/projects/views/project.html',
+          controller: 'ProjectProjectNewController'
+        }
+      },
+      resolve: {
+        'bkUser': ['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') || $q.reject({unAuthorized:true});
+        }]
+      }
     });
 });
 

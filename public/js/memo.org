@@ -109,9 +109,24 @@
     页面显示内容的最后整理（非必须）
 *** directives.js
     页面部件的模块化（非必须）
+** 权限控制
+   | 模块     | 功能         | 用户管理 | 创建 | 修改 | 无                   |
+   |----------+--------------+----------+------+------+----------------------|
+   | /        |              | <        |      |      | >                    |
+   | 帐户管理 | 用户基础数据 | R/W      | -    | -    | R(all)/W(self)       |
+   |          | 用户机密数据 | R/W      | -    | -    | -                    |
+   |          | 用户申请     | R/W      | -    | -    | -                    |
+   |          | 密码管理     | W        | -    | -    | W(self)              |
+   |----------+--------------+----------+------+------+----------------------|
+   | 客户管理 | 公司数据     | -        | R/W  | -    | R                    |
+   |          | 客户数据     | -        | R/W  | -    | R                    |
+   |----------+--------------+----------+------+------+----------------------|
+   | 项目管理 | 项目全体数据 | -        | R/W  | -    | R                    |
+   |          | 项目实时数据 | -        | -    | R/W  | R                    |
+   |----------+--------------+----------+------+------+----------------------|
 * 代码模板
 ** xxxModule.js
-   #+BEGIN_SRC javascript
+   #+BEGIN_SRC js
    angular.module('xxx', [
      'ionic',
      'ngResource',
@@ -165,7 +180,7 @@
    });
    #+END_SRC
 ** services.js
-   #+BEGIN_SRC javascript
+   #+BEGIN_SRC js
    angular.module('xxx.services', [])
    .factory('Record', function(XXX_RECORD_ENDPOINT, $resource) {
      return $resource(XXX_RECORD_ENDPOINT,
@@ -180,7 +195,7 @@
    .value('XXX_RECORD_ENDPOINT', 'http://127.0.0.1:8000/crms/company/:id');
    #+END_SRC
 ** controllers.js
-   #+BEGIN_SRC javascript
+   #+BEGIN_SRC js
    angular.module('crms.controllers',[]).controller('CRMNavController', function($scope, $translatePartialLoader, transit) {
      $translatePartialLoader.addPart('crms');
      $scope.goHome = function() {
@@ -221,7 +236,7 @@
    });
    #+END_SRC
 ** menu.html
-   #+BEGIN_SRC html
+   #+BEGIN_SRC
    <ion-side-menus enable-menu-with-back-views="false">
      <ion-side-menu-content>
        <ion-nav-bar class="bar-stable">
@@ -252,7 +267,7 @@
    </ion-side-menus>
    #+END_SRC
 ** records.html
-   #+BEGIN_SRC html
+   #+BEGIN_SRC
    <ion-view>
      <ion-nav-title translate="T_XXX_LIST_RECORD"></ion-nav-title>
      <ion-content>
@@ -265,7 +280,7 @@
    </ion-view>
    #+END_SRC
 ** record.html
-   #+BEGIN_SRC html
+   #+BEGIN_SRC
    <ion-view>
      <ion-nav-title translate="T_XXX_PROFILE_RECORD"></ion-nav-title>
      <ion-content>

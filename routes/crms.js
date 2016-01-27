@@ -18,14 +18,14 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
           }
           Company.find().sort('_id').exec(function(err, companies) {
             if (err) {
-              res.send(err);
+              return res.status(401).send(err);
             }
             res.json(companies);
           });
@@ -33,7 +33,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .post(function(req, res) {
-      res.json({message:'Not Support'});
+      res.status(401).json({message:'Not Support'});
     });
   router.route('/company/:id')
     .put(function(req, res, next) {
@@ -46,7 +46,7 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
@@ -56,7 +56,7 @@ module.exports = function(io) {
           }
           Company.findOne({_id:req.params.id}).exec(function(err, company) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             if (!company) {
               return res.status(401).json({error:'Invalid CompanyID'});
@@ -71,9 +71,9 @@ module.exports = function(io) {
             /* save record */
             company.save(function(err) {
               if (err) {
-                return res.send(err);
+                return res.status(401).send(err);
               }
-              res.json({message:'Successful'});
+              res.json({message:'ok'});
             });
           });
         });
@@ -89,14 +89,14 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
           }
           Company.findOne({_id:req.params.id}).exec(function(err, company) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             res.json(company);
           });
@@ -118,14 +118,14 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
           }
           Customer.find().sort('_id').exec(function(err, customers) {
             if (err) {
-              res.send(err);
+              return res.status(401).send(err);
             }
             res.json(customers);
           });
@@ -133,7 +133,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .post(function(req, res) {
-      res.json({message:'Not Support'});
+      res.status(401).json({message:'Not Support'});
     });
   router.route('/customer/:id')
     .put(function(req, res, next) {
@@ -146,7 +146,7 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
@@ -156,7 +156,7 @@ module.exports = function(io) {
           }
           Customer.findOne({_id:req.params.id}).exec(function(err, customer) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             if (!customer) {
               return res.status(401).json({error:'Invalid CustomerID'});
@@ -171,7 +171,7 @@ module.exports = function(io) {
             /* save record */
             customer.save(function(err) {
               if (err) {
-                return res.send(err);
+                return res.status(401).send(err);
               }
               res.json({message:'Successful'});
             });
@@ -189,14 +189,14 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
           }
           Customer.findOne({_id:req.params.id}).exec(function(err, customer) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             res.json(customer);
           });
@@ -204,7 +204,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .delete(function(req, res) {
-      res.json({message:'Not Support'});
+      res.status(401).json({message:'Not Support'});
     });
   return router;
 };

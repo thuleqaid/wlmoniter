@@ -79,9 +79,16 @@
           <input type="text" ng-model="project.work_place">
         </label>
         <label class="item">
-          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_PROJECTS_BTN_UPDATE"></button>
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_PROJECTS_BTN_UPDATE" ng-if="formType=='update'"></button>
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_PROJECTS_BTN_ADD" ng-if="formType=='new'"></button>
         </label>
       </div>
     </form>
   </ion-content>
+  <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
+    <div class="title" translate="T_PROJECTS_ERR_PROFILE" ng-if="invalidProfile"></div>
+    <div class="title" translate="T_PROJECTS_MSG_PROFILEFINISH" ng-if="finishProfile"></div>
+    <div class="title" translate="T_PROJECTS_ERR_ADD" ng-if="invalidAdd"></div>
+    <div class="title" translate="T_PROJECTS_MSG_ADDFINISH" ng-if="finishAdd"></div>
+  </ion-footbar-bar>
 </ion-view>

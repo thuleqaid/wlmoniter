@@ -69,6 +69,7 @@ module.exports = function(io) {
                                           clientid:clientid});
       access_token.save(function(err) {
         if (err) {
+          console.log("New AccessToken Error:"+err);
           return next(err);
         }
       });
@@ -210,6 +211,9 @@ module.exports = function(io) {
         user.reset_code = '';
         user.password = password;
         user.save(function(err) {
+          if (err) {
+            console.log("Reset Password Error:"+err);
+          }
           AccessToken.remove({userid:user._id}, function(err) {
             if (err) {
               /* console.log("Remove Error:"+err); */
@@ -233,10 +237,10 @@ module.exports = function(io) {
       }
       User.findOne({_id:token.userid}).exec(function(err, user) {
         if (err) {
-          return res.send(err);
+          return res.status(401).send(err);
         }
         if (!user) {
-          return res.json({message:'No Permission'});
+          return res.status(401).json({message:'No Permission'});
         }
         if (!user.validatePassword(oldpassword)) {
           return res.status(401).json({message:'Wrong Password'});
@@ -244,6 +248,9 @@ module.exports = function(io) {
           user.reset_code = '';
           user.password = newpassword;
           user.save(function(err) {
+            if (err) {
+              console.log("Change Password Error:"+err);
+            }
             AccessToken.remove({userid:user._id}, function(err) {
               if (err) {
                 /* console.log("Remove Error:"+err); */
@@ -294,17 +301,17 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user) {
-            return res.json({message:'No Permission'});
+            return res.status(401).json({message:'No Permission'});
           }
           if (user.permission.indexOf('admin') < 0) {
-            res.json({message:'No Permission'});
+            res.status(401).json({message:'No Permission'});
           } else {
             ApplyUser.find().sort('email').exec(function(err, appusers) {
               if (err) {
-                res.send(err);
+                res.status(401).send(err);
               } else {
                 res.json(appusers);
               }
@@ -323,22 +330,22 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user) {
-            return res.json({message:'No Permission'});
+            return res.status(401).json({message:'No Permission'});
           }
           if (user.permission.indexOf('admin') < 0) {
-            res.json({message:'No Permission'});
+            res.status(401).json({message:'No Permission'});
           } else {
             var appid = req.body.appid;
             var action = req.body.action;
             ApplyUser.findOne({_id:appid}, function(err, appuser) {
               if (err) {
-                return res.send(err);
+                return res.status(401).send(err);
               }
               if (!appuser) {
-                return res.json({message:'Wrong ApplyID'});
+                return res.status(401).json({message:'Wrong ApplyID'});
               }
               var username = appuser.email;
               var firstname = appuser.first_name;
@@ -360,11 +367,15 @@ module.exports = function(io) {
                           },
                           updater:user.id,
                           date_update:Date.now()}).save(function(err) {
+                            if (err) {
+                              console.log("Allow User Error:"+err);
+                            }
                             sendMail(username, reset_code);
                             io.sockets.emit('table-user', {message:'add', email:username});
                           });
               }
             });
+            res.json({message:'ok'});
           }
         });
       })(req, res, next);
@@ -381,7 +392,7 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           var fields = {'password':0, 'reset_code':0};
           if (!user || user.permission.indexOf('admin') < 0) {
@@ -389,7 +400,7 @@ module.exports = function(io) {
           }
           User.find({}, fields).sort('email').exec(function(err, users) {
             if (err) {
-              res.send(err);
+              res.status(401).send(err);
             }
             res.json(users);
           });
@@ -397,7 +408,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .post(function(req, res) {
-      res.json({message:'Not Support'});
+      res.status(401).json({message:'Not Support'});
     });
   router.route('/api/:id')
     .put(function(req, res, next) {
@@ -411,7 +422,7 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, curuser) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!curuser) {
             // console.log("User Update: No Permission");
@@ -423,7 +434,7 @@ module.exports = function(io) {
           }
           User.findOne({_id:req.params.id}).exec(function(err, user) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             if (!user) {
               // console.log("User Update: Invalid UserID");
@@ -442,13 +453,17 @@ module.exports = function(io) {
                 }
               }
             }
+            if (curuser.permission.indexOf('admin') >= 0 && !user['permission']) {
+              user['permission'] = [];
+            }
             /* set updater and update date */
             user.updater = curuser._id;
             user.date_update = Date.now();
             /* save record */
             user.save(function(err) {
               if (err) {
-                return res.send(err);
+                console.log("Update User Error:"+err);
+                return res.status(401).send(err);
               }
               if (!user.valid) {
                 AccessToken.remove({userid:user._id}, function(err) {
@@ -458,7 +473,7 @@ module.exports = function(io) {
                 });
               }
               io.sockets.emit('table-user', {message:'chg', email:user.email});
-              res.json({message:'Successful'});
+              res.json({message:'ok'});
             });
           });
         });
@@ -475,7 +490,7 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, curuser) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!curuser) {
             // console.log("User Update: No Permission");
@@ -487,7 +502,7 @@ module.exports = function(io) {
           }
           User.findOne({_id:req.params.id}, fields).exec(function(err, user) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             res.json(user);
           });
@@ -495,7 +510,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .delete(function(req, res) {
-      res.json({message:'Not Support'});
+      res.status(401).json({message:'Not Support'});
     });
   return router;
 };

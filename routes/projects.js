@@ -17,22 +17,50 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
           }
           Project.find().sort('_id').exec(function(err, projects) {
             if (err) {
-              res.send(err);
+              return res.status(401).send(err);
             }
             res.json(projects);
           });
         });
       })(req, res, next);
     })
-    .post(function(req, res) {
-      res.json({message:'Not Support'});
+    .post(function(req, res, next) {
+      passport.authenticate('bearer', {session:false}, function(err, token) {
+        if (err) {
+          return next(err);
+        }
+        if (!token) {
+          return res.status(401).json({error:'wrong token'});
+        }
+        User.findOne({_id:token.userid}).exec(function(err, user) {
+          if (err) {
+            return res.status(401).send(err);
+          }
+          if (!user || !user.valid) {
+            return res.status(401).json({error:'invalid user'});
+          }
+          if (user.permission.indexOf('create') < 0) {
+            return res.status(401).json({error:'No Permission'});
+          }
+          var project = new Project(req.body);
+          project.updater = user._id;
+          project.date_update = Date.now();
+          project.save(function(err, projects) {
+            if (err) {
+              console.log(err);
+              return res.status(401).send(err);
+            }
+            res.json({message:'ok'});
+          });
+        });
+      })(req, res, next);
     });
   router.route('/project/:id')
     .put(function(req, res, next) {
@@ -45,7 +73,7 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
@@ -55,7 +83,7 @@ module.exports = function(io) {
           }
           Project.findOne({_id:req.params.id}).exec(function(err, project) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             if (!project) {
               return res.status(401).json({error:'Invalid ProjectID'});
@@ -70,9 +98,9 @@ module.exports = function(io) {
             /* save record */
             project.save(function(err) {
               if (err) {
-                return res.send(err);
+                return res.status(401).send(err);
               }
-              res.json({message:'Successful'});
+              res.json({message:'ok'});
             });
           });
         });
@@ -88,14 +116,14 @@ module.exports = function(io) {
         }
         User.findOne({_id:token.userid}).exec(function(err, user) {
           if (err) {
-            return res.send(err);
+            return res.status(401).send(err);
           }
           if (!user || !user.valid) {
             return res.status(401).json({error:'invalid user'});
           }
           Project.findOne({_id:req.params.id}).exec(function(err, project) {
             if (err) {
-              return res.send(err);
+              return res.status(401).send(err);
             }
             res.json(project);
           });
@@ -103,7 +131,7 @@ module.exports = function(io) {
       })(req, res, next);
     })
     .delete(function(req, res) {
-      res.json({message:'Not Support'});
+      res.status(401).json({message:'Not Support'});
     });
   return router;
 };

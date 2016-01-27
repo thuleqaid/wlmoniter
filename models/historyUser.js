@@ -7,7 +7,7 @@ var userSchema = mongoose.Schema({
   gender: {type:String, default:'male'},
   workid: {type:String, default:''},
   reset_code: {type:String, default:''},
-  permission: {type:[String], required:true, default:['modify']}, /* modify/create/admin */
+  permission: {type:[String], default:['modify']}, /* modify/create/admin */
   valid: {type:Boolean, required:true, default:true},
   salary: {type: {
     base: {type:Number, default: 0}

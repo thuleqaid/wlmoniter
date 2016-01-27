@@ -10,7 +10,7 @@ var userSchema = mongoose.Schema({
   gender: {type:String, default:'male'},
   workid: {type:String, default:''},
   reset_code: {type:String, default:''},
-  permission: {type:[String], required:true, default:['modify']}, /* modify/create/admin */
+  permission: {type:[String], default:['modify']}, /* modify/create/admin */
   valid: {type:Boolean, required:true, default:true},
   salary: {type: {
     base: {type:Number, default: 0}
@@ -54,7 +54,7 @@ var User = mongoose.model('User', userSchema);
 
 /* initial data */
 User.find(function(err, users) {
-  // ﾃｻﾓﾐﾊｾﾝﾊｱ｣ｬｴﾓinit-user.txtﾖﾐｶﾁﾈ｡ﾓﾃｻｧﾊｾﾝ｣ｬｶｺｺﾅｷﾖｸｬｵﾚ1ﾁﾐﾊﾇﾓﾃｻｧﾃ訒ｬｵﾚ2ﾁﾐﾊﾇﾐﾕ｣ｬｵﾚ3ﾁﾐﾊﾇﾃ訒ｬｵﾚ4ﾁﾐﾊﾇﾐﾔｱｬｵﾚ5ﾁﾐﾊﾇｹ､ｺﾅ｣ｬｵﾚ6ﾁﾐﾊﾇｻｾｹ､ﾗﾊ
+  // 没有数据时，从init-user.txt中读取用户数据，逗号分隔，第1列是用户名，第2列是姓，第3列是名，第4列是性别，第5列是工号，第6列是基本工资
   if (users.length) {
     return;
   }
@@ -67,7 +67,7 @@ User.find(function(err, users) {
     if (parts.length >= 5) {
       cnt += 1;
       if (cnt <= 1) {
-        // ｵﾚ1ｸﾃｻｧｸ勒ﾃｻｧｹﾜﾀ柀ｨﾏﾞ
+        // 第1个用户给予用户管理权限
         new User({email:parts[0] + '@kotei-info.com',
                   first_name:parts[2],
                   last_name:parts[1],
