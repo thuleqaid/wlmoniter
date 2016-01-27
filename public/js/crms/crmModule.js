@@ -69,6 +69,34 @@ angular.module('crms', [
           return persistService.get('user') || $q.reject({unAuthorized:true});
         }]
       }
+    })
+    .state('crm.newcompany', {
+      url: '/companynew',
+      views: {
+        'menuContent': {
+          templateUrl: 'js/crms/views/company.html',
+          controller: 'CRMCompanyNewController'
+        }
+      },
+      resolve: {
+        'bkUser': ['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') || $q.reject({unAuthorized:true});
+        }]
+      }
+    })
+    .state('crm.newcustomer', {
+      url: '/customernew/:id',
+      views: {
+        'menuContent': {
+          templateUrl: 'js/crms/views/customer.html',
+          controller: 'CRMCustomerNewController'
+        }
+      },
+      resolve: {
+        'bkUser': ['persistService', '$q', function(persistService, $q) {
+          return persistService.get('user') || $q.reject({unAuthorized:true});
+        }]
+      }
     });
 });
 

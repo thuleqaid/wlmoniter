@@ -1,8 +1,8 @@
 {
   "T_HOMES_TITLE":              "部门管理",
   "T_HOMES_ITEM_ACCOUNT":       "帐户管理",
-  "T_HOMES_ITEM_PROJECT":       "项目",
-  "T_HOMES_ITEM_CRM":           "客户关系管理",
+  "T_HOMES_ITEM_PROJECT":       "项目管理",
+  "T_HOMES_ITEM_CRM":           "客户管理",
   "T_HOMES_ITEM_SETTING":       "设定",
   "T_HOMES_SETTING_LANGUAGE":   "语言",
   "T_HOMES_BTN_CLOSE":          "关闭",

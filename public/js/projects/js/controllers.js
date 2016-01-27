@@ -111,19 +111,17 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
   });
   // Triggered in the register modal to close it
   $scope.closeChooseCustomer = function() {
-    $scope.modalData = {};
     $scope.modalCustomer.hide();
   };
   // Open the register modal
   $scope.chooseCustomer = function() {
     $scope.modalData = {};
     if ($scope.customers.length > 0) {
-      $scope.modalData.currentCompany = $scope.customers[0].companyid;
+      $scope.modalData.currentCompany = '';
       var companyCount = {};
       $scope.customers.forEach(function(customer) {
         if ($scope.project.customerid.indexOf(customer._id) >= 0) {
           customer.checked = true;
-          $scope.modalData.currentCompany = customer.companyid;
           if (companyCount[customer.companyid]) {
             companyCount[customer.companyid] += 1;
           } else {
@@ -138,6 +136,9 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
           company.selectedCount = companyCount[company._id];
         } else {
           company.selectedCount = 0;
+        }
+        if (!$scope.modalData.currentCompany && company.valid) {
+          $scope.modalData.currentCompany = company._id;
         }
       });
     }
@@ -172,7 +173,7 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
     });
   };
 });
-angular.module('projects.controllers').controller('ProjectProjectNewController', function($scope, $stateParams, $timeout, $ionicModal, transit, persistService, Project, Company, Customer, User) {
+angular.module('projects.controllers').controller('ProjectProjectNewController', function($scope, $timeout, $ionicModal, transit, persistService, Project, Company, Customer, User) {
   var refreshData = function() {
     $scope.formType = 'new';
     $scope.invalidProfile = false;
@@ -263,19 +264,17 @@ angular.module('projects.controllers').controller('ProjectProjectNewController',
   });
   // Triggered in the register modal to close it
   $scope.closeChooseCustomer = function() {
-    $scope.modalData = {};
     $scope.modalCustomer.hide();
   };
   // Open the register modal
   $scope.chooseCustomer = function() {
     $scope.modalData = {};
     if ($scope.customers.length > 0) {
-      $scope.modalData.currentCompany = $scope.customers[0].companyid;
+      $scope.modalData.currentCompany = '';
       var companyCount = {};
       $scope.customers.forEach(function(customer) {
         if ($scope.project.customerid.indexOf(customer._id) >= 0) {
           customer.checked = true;
-          $scope.modalData.currentCompany = customer.companyid;
           if (companyCount[customer.companyid]) {
             companyCount[customer.companyid] += 1;
           } else {
@@ -290,6 +289,9 @@ angular.module('projects.controllers').controller('ProjectProjectNewController',
           company.selectedCount = companyCount[company._id];
         } else {
           company.selectedCount = 0;
+        }
+        if (!$scope.modalData.currentCompany && company.valid) {
+          $scope.modalData.currentCompany = company._id;
         }
       });
     }

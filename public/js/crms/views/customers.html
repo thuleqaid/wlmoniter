@@ -2,7 +2,12 @@
   <ion-nav-title translate="T_CRMS_LIST_CUSTOMER"></ion-nav-title>
   <ion-content>
     <div class="list">
-      <div class="item" ng-repeat="customer in customers track by $index">
+      <div class="item item-divider" translate="T_CRMS_CUSTOMER_STATUS_VALID"></div>
+      <div class="item" ng-repeat="customer in customers track by $index" ng-if="customer.valid">
+        <a ui-sref="crm.customer({id:customer._id})">{{customer |fullname:' '}}</a>
+      </div>
+      <div class="item item-divider" translate="T_CRMS_CUSTOMER_STATUS_INVALID"></div>
+      <div class="item" ng-repeat="customer in customers track by $index" ng-if="!customer.valid">
         <a ui-sref="crm.customer({id:customer._id})">{{customer |fullname:' '}}</a>
       </div>
     </div>

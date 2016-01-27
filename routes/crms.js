@@ -32,8 +32,36 @@ module.exports = function(io) {
         });
       })(req, res, next);
     })
-    .post(function(req, res) {
-      res.status(401).json({message:'Not Support'});
+    .post(function(req, res, next) {
+      passport.authenticate('bearer', {session:false}, function(err, token) {
+        if (err) {
+          return next(err);
+        }
+        if (!token) {
+          return res.status(401).json({error:'wrong token'});
+        }
+        User.findOne({_id:token.userid}).exec(function(err, user) {
+          if (err) {
+            return res.status(401).send(err);
+          }
+          if (!user || !user.valid) {
+            return res.status(401).json({error:'invalid user'});
+          }
+          if (user.permission.indexOf('create') < 0) {
+            return res.status(401).json({error:'No Permission'});
+          }
+          var company = new Company(req.body);
+          company.updater = user._id;
+          company.date_update = Date.now();
+          company.save(function(err, projects) {
+            if (err) {
+              console.log(err);
+              return res.status(401).send(err);
+            }
+            res.json({message:'ok'});
+          });
+        });
+      })(req, res, next);
     });
   router.route('/company/:id')
     .put(function(req, res, next) {
@@ -132,8 +160,36 @@ module.exports = function(io) {
         });
       })(req, res, next);
     })
-    .post(function(req, res) {
-      res.status(401).json({message:'Not Support'});
+    .post(function(req, res, next) {
+      passport.authenticate('bearer', {session:false}, function(err, token) {
+        if (err) {
+          return next(err);
+        }
+        if (!token) {
+          return res.status(401).json({error:'wrong token'});
+        }
+        User.findOne({_id:token.userid}).exec(function(err, user) {
+          if (err) {
+            return res.status(401).send(err);
+          }
+          if (!user || !user.valid) {
+            return res.status(401).json({error:'invalid user'});
+          }
+          if (user.permission.indexOf('create') < 0) {
+            return res.status(401).json({error:'No Permission'});
+          }
+          var customer = new Customer(req.body);
+          customer.updater = user._id;
+          customer.date_update = Date.now();
+          customer.save(function(err, projects) {
+            if (err) {
+              console.log(err);
+              return res.status(401).send(err);
+            }
+            res.json({message:'ok'});
+          });
+        });
+      })(req, res, next);
     });
   router.route('/customer/:id')
     .put(function(req, res, next) {

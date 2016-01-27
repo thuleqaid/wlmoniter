@@ -1,1 +1,4 @@
 /* Empty. Add your own CSS if you like */
+input.ng-invalid {
+background-color: #FFB6C1;
+}

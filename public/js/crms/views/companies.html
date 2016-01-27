@@ -1,8 +1,16 @@
 <ion-view>
   <ion-nav-title translate="T_CRMS_LIST_COMPANY"></ion-nav-title>
+  <ion-nav-buttons side="right">
+    <a class="button" ui-sref="crm.newcompany()"><i class="icon ion-plus"></i></a>
+  </ion-nav-buttons>
   <ion-content>
     <div class="list">
-      <div class="item" ng-repeat="company in companies track by $index">
+      <div class="item item-divider" translate="T_CRMS_COMPANY_STATUS_VALID"></div>
+      <div class="item" ng-repeat="company in companies track by $index" ng-if="company.valid">
+        <a ui-sref="crm.company({id:company._id})">{{company.name}}</a>
+      </div>
+      <div class="item item-divider" translate="T_CRMS_COMPANY_STATUS_INVALID"></div>
+      <div class="item" ng-repeat="company in companies track by $index" ng-if="!company.valid">
         <a ui-sref="crm.company({id:company._id})">{{company.name}}</a>
       </div>
     </div>

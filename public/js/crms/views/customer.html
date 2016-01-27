@@ -5,7 +5,7 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label" translate="T_CRMS_CUSTOMER_LASTNAME"></span>
-          <input type="text" ng-model="customer.last_name">
+          <input type="text" ng-model="customer.last_name" ng-required="true">
         </label>
         <label class="item item-input">
           <span class="input-label" translate="T_CRMS_CUSTOMER_FIRSTNAME"></span>
@@ -22,14 +22,15 @@
         </label>
         <label class="item item-input">
           <span class="input-label" translate="T_CRMS_CUSTOMER_EMAIL"></span>
-          <input type="text" ng-model="customer.email">
+          <input type="email" ng-model="customer.email" ng-required="true">
         </label>
         <label class="item item-input">
           <span class="input-label" translate="T_CRMS_CUSTOMER_MEMO"></span>
           <textarea rows="5" ng-model="customer.memo"></textarea>
         </label>
         <label class="item">
-          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE"></button>
+          <button ng-disabled="!profileForm.$dirty || profileForm.$invalid" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE" ng-if="formType == 'update'"></button>
+          <button ng-disabled="!profileForm.$dirty || profileForm.$invalid" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_ADD" ng-if="formType == 'new'"></button>
         </label>
       </div>
     </form>
@@ -37,6 +38,8 @@
   <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
     <div class="title" translate="T_CRMS_ERR_CUSTOMER_PROFILE" ng-if="invalidProfile"></div>
     <div class="title" translate="T_CRMS_MSG_CUSTOMER_PROFILEFINISH" ng-if="finishProfile"></div>
+    <div class="title" translate="T_CRMS_ERR_CUSTOMER_ADD" ng-if="invalidAdd"></div>
+    <div class="title" translate="T_CRMS_MSG_CUSTOMER_ADDFINISH" ng-if="finishAdd"></div>
   </ion-footbar-bar>
 </ion-view>
 

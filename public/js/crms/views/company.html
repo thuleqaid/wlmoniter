@@ -5,7 +5,7 @@
       <div class="list">
         <label class="item item-input">
           <span class="input-label" translate="T_CRMS_COMPANY_NAME"></span>
-          <input type="text" ng-model="company.name" readonly="true">
+          <input type="text" ng-model="company.name">
         </label>
         <label class="item item-toggle" ng-if="permission.admin">
           <span translate="T_CRMS_COMPANY_VALID"></span>
@@ -21,12 +21,21 @@
           <textarea rows="5" ng-model="company.memo"></textarea>
         </label>
         <label class="item">
-          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE"></button>
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE" ng-if="formType == 'update'"></button>
+          <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_ADD" ng-if="formType == 'new'"></button>
         </label>
       </div>
     </form>
-    <div class="list card">
-      <div class="item" ng-repeat="customer in customers track by $index" ng-if="customer.companyid == company._id">
+    <div class="list card" ng-if="formType == 'update'">
+      <div class="item item-divider" translate="T_CRMS_CUSTOMER_STATUS_VALID"></div>
+      <div class="item" ng-repeat="customer in customers track by $index" ng-if="customer.companyid == company._id && customer.valid">
+        <a ui-sref="crm.customer({id:customer._id})">{{customer |fullname:' '}}</a>
+      </div>
+      <div class="item" ng-if="company.valid">
+        <a ui-sref="crm.newcustomer({id:company._id})"><i class="icon ion-plus"></i></a>
+      </div>
+      <div class="item item-divider" translate="T_CRMS_CUSTOMER_STATUS_INVALID"></div>
+      <div class="item" ng-repeat="customer in customers track by $index" ng-if="customer.companyid == company._id && !customer.valid">
         <a ui-sref="crm.customer({id:customer._id})">{{customer |fullname:' '}}</a>
       </div>
     </div>
@@ -34,6 +43,8 @@
   <ion-footer-bar ng-class="classFooterbar" ng-show="showFooterbar">
     <div class="title" translate="T_CRMS_ERR_COMPANY_PROFILE" ng-if="invalidProfile"></div>
     <div class="title" translate="T_CRMS_MSG_COMPANY_PROFILEFINISH" ng-if="finishProfile"></div>
+    <div class="title" translate="T_CRMS_ERR_COMPANY_NEW" ng-if="invalidAdd"></div>
+    <div class="title" translate="T_CRMS_MSG_COMPANY_NEWEFINISH" ng-if="finishAdd"></div>
   </ion-footbar-bar>
 </ion-view>
 

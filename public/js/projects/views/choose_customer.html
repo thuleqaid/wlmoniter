@@ -12,9 +12,13 @@
           <div class="col-66">
             <ion-radio ng-repeat="company in companies"
                        ng-value="company._id"
-                       ng-model="modalData.currentCompany">
+                       ng-model="modalData.currentCompany"
+                       ng-if="company.valid">
               {{company.name}}
             </ion-radio>
+            <div class="item">
+              <a ui-sref="crm.newcompany()" ng-click="closeChooseCustomer()"><i class="icon ion-plus"></i></a>
+            </div>
           </div>
           <div class="col-34">
             <ion-checkbox ng-repeat="customer in customers"
@@ -23,6 +27,9 @@
                           ng-if="customer.companyid == modalData.currentCompany && customer.valid">
               {{customer | fullname:' '}}
             </ion-checkbox>
+            <div class="item">
+              <a ui-sref="crm.newcustomer({id:modalData.currentCompany})" ng-click="closeChooseCustomer()"><i class="icon ion-plus"></i></a>
+            </div>
           </div>
         </div>
         <label class="item">
