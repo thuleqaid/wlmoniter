@@ -23,16 +23,19 @@
         <div class="item item-input">
           <span class="input-label" translate="T_PROJECTS_CUSTOMER"></span>
           <input type="text" value="{{project.customerid | name_customer : customers}}" readonly="true">
+          <button class="button" type="button" ng-click="project.customerid = [];dirty()"><i class="icon ion-backspace"></i></button>
           <button class="button button-positive" type="button" ng-click="chooseCustomer()" translate="T_PROJECTS_BTN_CHOOSE"></button>
         </div>
         <div class="item item-input">
           <span class="input-label" translate="T_PROJECTS_LEADER"></span>
           <input type="text" value="{{project.leaderid | name_member : users}}" readonly="true">
+          <button class="button" type="button" ng-click="project.leaderid = '';dirty()"><i class="icon ion-backspace"></i></button>
           <button class="button button-positive" type="button" ng-click="chooseMember(false)" translate="T_PROJECTS_BTN_CHOOSE"></button>
         </div>
         <div class="item item-input">
           <span class="input-label" translate="T_PROJECTS_MEMBER"></span>
           <input type="text" value="{{project.memberid | name_member : users}}" readonly="true">
+          <button class="button" type="button" ng-click="project.memberid = [];dirty()"><i class="icon ion-backspace"></i></button>
           <button class="button button-positive" type="button" ng-click="chooseMember(true)" translate="T_PROJECTS_BTN_CHOOSE"></button>
         </div>
         <label class="item item-input">

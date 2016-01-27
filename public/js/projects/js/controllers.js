@@ -47,6 +47,17 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
     refreshData();
   });
 
+  $scope.dirty = function() {
+    var child = $scope.$$childHead;
+    while (child) {
+      if (child.profileForm) {
+        child.profileForm.$dirty = true;
+        break;
+      }
+      child = child.$$nextSibling;
+    }
+  };
+
   // Create the register modal that we will use later
   $ionicModal.fromTemplateUrl('js/projects/views/choose_member.html', {
     scope: $scope
@@ -88,14 +99,7 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
     } else {
       $scope.project.leaderid = $scope.modalData.selected;
     }
-    var child = $scope.$$childHead;
-    while (child) {
-      if (child.profileForm) {
-        child.profileForm.$dirty = true;
-        break;
-      }
-      child = child.$$nextSibling;
-    }
+    $scope.dirty();
     $scope.closeChooseMember();
   };
 
@@ -147,14 +151,7 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
         $scope.project.customerid.push(customer._id);
       }
     });
-    var child = $scope.$$childHead;
-    while (child) {
-      if (child.profileForm) {
-        child.profileForm.$dirty = true;
-        break;
-      }
-      child = child.$$nextSibling;
-    }
+    $scope.dirty();
     $scope.closeChooseCustomer();
   };
 
@@ -202,6 +199,17 @@ angular.module('projects.controllers').controller('ProjectProjectNewController',
     refreshData();
   });
 
+  $scope.dirty = function() {
+    var child = $scope.$$childHead;
+    while (child) {
+      if (child.profileForm) {
+        child.profileForm.$dirty = true;
+        break;
+      }
+      child = child.$$nextSibling;
+    }
+  };
+
   // Create the register modal that we will use later
   $ionicModal.fromTemplateUrl('js/projects/views/choose_member.html', {
     scope: $scope
@@ -243,14 +251,7 @@ angular.module('projects.controllers').controller('ProjectProjectNewController',
     } else {
       $scope.project.leaderid = $scope.modalData.selected;
     }
-    var child = $scope.$$childHead;
-    while (child) {
-      if (child.profileForm) {
-        child.profileForm.$dirty = true;
-        break;
-      }
-      child = child.$$nextSibling;
-    }
+    $scope.dirty();
     $scope.closeChooseMember();
   };
 
@@ -302,14 +303,7 @@ angular.module('projects.controllers').controller('ProjectProjectNewController',
         $scope.project.customerid.push(customer._id);
       }
     });
-    var child = $scope.$$childHead;
-    while (child) {
-      if (child.profileForm) {
-        child.profileForm.$dirty = true;
-        break;
-      }
-      child = child.$$nextSibling;
-    }
+    $scope.dirty();
     $scope.closeChooseCustomer();
   };
 

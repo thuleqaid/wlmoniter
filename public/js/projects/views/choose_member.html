@@ -12,13 +12,13 @@
         <ion-radio ng-repeat="user in users"
                    ng-value="user._id"
                    ng-model="modalData.selected"
-                   ng-if="!modalData.bMultiple">
+                   ng-if="!modalData.bMultiple && user.valid">
           {{user | fullname:' '}}
         </ion-radio>
         <ion-checkbox ng-repeat="user in users"
                       ng-model="user.checked"
                       ng-checked="user.checked"
-                      ng-if="modalData.bMultiple">
+                      ng-if="modalData.bMultiple && user.valid">
           {{user | fullname:' '}}
         </ion-checkbox>
         <label class="item">

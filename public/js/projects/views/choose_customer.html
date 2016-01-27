@@ -20,7 +20,7 @@
             <ion-checkbox ng-repeat="customer in customers"
                           ng-model="customer.checked"
                           ng-checked="customer.checked"
-                          ng-if="customer.companyid == modalData.currentCompany">
+                          ng-if="customer.companyid == modalData.currentCompany && customer.valid">
               {{customer | fullname:' '}}
             </ion-checkbox>
           </div>
