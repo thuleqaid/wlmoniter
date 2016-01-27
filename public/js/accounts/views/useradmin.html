@@ -4,7 +4,7 @@
     <div class="list card" ng-if="currentIdx == 0">
       <div class="item row" ng-repeat="user in users track by $index" ng-if="user.valid">
         <a class="col" ui-sref="account.userprofile({id:user._id})">{{user.email|stripMail}}</a>
-        <span class="col">{{user.last_name}} {{user.first_name}}</span>
+        <span class="col">{{user |fullname:' '}}</span>
         <div class="col">
           <permission-view permission="{{user.permission}}"></permission-view>
         </div>
@@ -14,7 +14,7 @@
     <div class="list card" ng-if="currentIdx == 1">
       <div class="item row" ng-repeat="user in users track by $index" ng-if="!user.valid">
         <a class="col" ui-sref="account.userprofile({id:user._id})">{{user.email|stripMail}}</a>
-        <span class="col">{{user.last_name}} {{user.first_name}}</span>
+        <span class="col">{{user |fullname:' '}}</span>
         <div class="col">
           <permission-view permission="{{user.permission}}"></permission-view>
         </div>
@@ -23,7 +23,7 @@
     <div class="list card" ng-if="currentIdx == 2">
       <div class="item row" ng-repeat="user in appusers track by $index">
         <span class="col">{{user.email|stripMail}}</span>
-        <span class="col">{{user.last_name}} {{user.first_name}}</span>
+        <span class="col">{{user |fullname:' '}}</span>
         <div class="col">
           <a ng-click="allow(user._id);">
             <i class="icon ion-checkmark-round" translate="T_ACCOUNTS_ACCEPT"></i>

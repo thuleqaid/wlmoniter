@@ -2,7 +2,20 @@
   <ion-nav-title translate="T_PROJECTS_LIST"></ion-nav-title>
   <ion-content>
     <div class="list">
-      <div class="item" ng-repeat="project in projects track by $index">
+      <div class="item item-divider" translate="T_PROJECTS_STATUS_TODO"></div>
+      <div class="item" ng-repeat="project in projects track by $index" ng-if="project.status == 'ToDo'">
+        <a ui-sref="project.project({id:project._id})">{{project.name}}</a>
+      </div>
+      <div class="item item-divider" translate="T_PROJECTS_STATUS_DOING"></div>
+      <div class="item" ng-repeat="project in projects track by $index" ng-if="project.status == 'Doing'">
+        <a ui-sref="project.project({id:project._id})">{{project.name}}</a>
+      </div>
+      <div class="item item-divider" translate="T_PROJECTS_STATUS_DONE"></div>
+      <div class="item" ng-repeat="project in projects track by $index" ng-if="project.status == 'Done'">
+        <a ui-sref="project.project({id:project._id})">{{project.name}}</a>
+      </div>
+      <div class="item item-divider" translate="T_PROJECTS_STATUS_CANCELLED"></div>
+      <div class="item" ng-repeat="project in projects track by $index" ng-if="project.status == 'Cancelled'">
         <a ui-sref="project.project({id:project._id})">{{project.name}}</a>
       </div>
     </div>

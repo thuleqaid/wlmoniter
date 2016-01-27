@@ -1,0 +1,38 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title" translate="T_PROJECTS_CHOOSE_CUSTOMER"></h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeChooseCustomer()" translate="T_PROJECTS_BTN_CLOSE"></button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doChooseCustomer()">
+      <div class="list">
+        <div class="row">
+          <div class="col-66">
+            <ion-radio ng-repeat="company in companies"
+                       ng-value="company._id"
+                       ng-model="modalData.currentCompany">
+              {{company.name}}
+            </ion-radio>
+          </div>
+          <div class="col-34">
+            <ion-checkbox ng-repeat="customer in customers"
+                          ng-model="customer.checked"
+                          ng-checked="customer.checked"
+                          ng-if="customer.companyid == modalData.currentCompany">
+              {{customer | fullname:' '}}
+            </ion-checkbox>
+          </div>
+        </div>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit" translate="T_PROJECTS_BTN_CHOOSE"></button>
+        </label>
+        <div class="item item-divider" translate="T_PROJECTS_PERSON_SELECTED"></div>
+        <div class="item" ng-repeat="customer in customers" ng-if="customer.checked">
+          {{customer | fullname:' '}}
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

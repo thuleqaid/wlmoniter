@@ -7,17 +7,22 @@
           <span class="input-label" translate="T_PROJECTS_NAME"></span>
           <input type="text" ng-model="project.name">
         </label>
-        <label class="item item-input">
+        <label class="item item-select">
           <span class="input-label" translate="T_PROJECTS_STATUS"></span>
-          <input type="text" ng-model="project.status">
+          <select ng-model="project.status">
+            <option value="ToDo" translate="T_PROJECTS_STATUS_TODO"></option>
+            <option value="Doing" translate="T_PROJECTS_STATUS_DOING"></option>
+            <option value="Done" translate="T_PROJECTS_STATUS_DONE"></option>
+            <option value="Cancelled" translate="T_PROJECTS_STATUS_CANCELLED"></option>
+          </select>
         </label>
         <label class="item item-input">
           <span class="input-label" translate="T_PROJECTS_CONTENT"></span>
-          <input type="text" ng-model="project.content">
+          <textarea rows="5" ng-model="project.content"></textarea>
         </label>
         <div class="item item-input">
           <span class="input-label" translate="T_PROJECTS_CUSTOMER"></span>
-          <input type="text" ng-model="project.customerid" readonly="true">
+          <input type="text" value="{{project.customerid | name_customer : customers}}" readonly="true">
           <button class="button button-positive" type="button" ng-click="chooseCustomer()" translate="T_PROJECTS_BTN_CHOOSE"></button>
         </div>
         <div class="item item-input">

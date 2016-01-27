@@ -13,23 +13,23 @@
                    ng-value="user._id"
                    ng-model="modalData.selected"
                    ng-if="!modalData.bMultiple">
-          {{user.last_name + ' ' + user.first_name}}
+          {{user | fullname:' '}}
         </ion-radio>
         <ion-checkbox ng-repeat="user in users"
                       ng-model="user.checked"
                       ng-checked="user.checked"
                       ng-if="modalData.bMultiple">
-          {{user.last_name + ' ' + user.first_name}}
+          {{user | fullname:' '}}
         </ion-checkbox>
         <label class="item">
           <button class="button button-block button-positive" type="submit" translate="T_PROJECTS_BTN_CHOOSE"></button>
         </label>
         <div class="item item-divider" translate="T_PROJECTS_PERSON_SELECTED"></div>
         <div class="item" ng-repeat="user in users" ng-if="user._id == modalData.selected" ng-show="!modalData.bMultiple">
-          {{user.last_name + ' ' + user.first_name}}
+          {{user | fullname:' '}}
         </div>
         <div class="item" ng-repeat="user in users" ng-if="user.checked" ng-show="modalData.bMultiple">
-          {{user.last_name + ' ' + user.first_name}}
+          {{user | fullname:' '}}
         </div>
       </div>
     </form>

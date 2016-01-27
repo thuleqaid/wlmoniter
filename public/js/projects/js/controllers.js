@@ -44,9 +44,6 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
     refreshData();
   });
 
-  $scope.chooseCustomer = function() {
-    console.log("buteosa");
-  };
   // Create the register modal that we will use later
   $ionicModal.fromTemplateUrl('js/projects/views/choose_member.html', {
     scope: $scope
@@ -88,7 +85,74 @@ angular.module('projects.controllers').controller('ProjectProjectProfileControll
     } else {
       $scope.project.leaderid = $scope.modalData.selected;
     }
+    var child = $scope.$$childHead;
+    while (child) {
+      if (child.profileForm) {
+        child.profileForm.$dirty = true;
+        break;
+      }
+      child = child.$$nextSibling;
+    }
     $scope.closeChooseMember();
+  };
+
+  // Create the register modal that we will use later
+  $ionicModal.fromTemplateUrl('js/projects/views/choose_customer.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modalCustomer = modal;
+  });
+  // Triggered in the register modal to close it
+  $scope.closeChooseCustomer = function() {
+    $scope.modalData = {};
+    $scope.modalCustomer.hide();
+  };
+  // Open the register modal
+  $scope.chooseCustomer = function() {
+    $scope.modalData = {};
+    if ($scope.customers.length > 0) {
+      $scope.modalData.currentCompany = $scope.customers[0].companyid;
+      var companyCount = {};
+      $scope.customers.forEach(function(customer) {
+        if ($scope.project.customerid.indexOf(customer._id) >= 0) {
+          customer.checked = true;
+          $scope.modalData.currentCompany = customer.companyid;
+          if (companyCount[customer.companyid]) {
+            companyCount[customer.companyid] += 1;
+          } else {
+            companyCount[customer.companyid] = 1;
+          }
+        } else {
+          customer.checked = false;
+        }
+      });
+      $scope.companies.forEach(function(company) {
+        if (companyCount[company._id]) {
+          company.selectedCount = companyCount[company._id];
+        } else {
+          company.selectedCount = 0;
+        }
+      });
+    }
+    $scope.modalCustomer.show();
+  };
+  // Perform the register action when the user submits the register form
+  $scope.doChooseCustomer = function() {
+    $scope.project.customerid = [];
+    $scope.customers.forEach(function(customer) {
+      if (customer.checked) {
+        $scope.project.customerid.push(customer._id);
+      }
+    });
+    var child = $scope.$$childHead;
+    while (child) {
+      if (child.profileForm) {
+        child.profileForm.$dirty = true;
+        break;
+      }
+      child = child.$$nextSibling;
+    }
+    $scope.closeChooseCustomer();
   };
 
   $scope.doUpdate = function() {

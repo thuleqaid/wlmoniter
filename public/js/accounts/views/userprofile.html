@@ -25,17 +25,12 @@
           <span class="input-label" translate="T_ACCOUNTS_FIRSTNAME"></span>
           <input type="text" ng-model="puser.first_name">
         </label>
-        <label class="item item-toggle" ng-if="permission.admin">
+        <label class="item item-select">
           <span translate="T_ACCOUNTS_GENDER"></span>
-          <label class="toggle toggle-positive">
-            <input type="checkbox" ng-model="puser.gender">
-            <div class="track">
-              <div class="handle">
-                <span class="h3" translate="T_ACCOUNTS_GENDER_MALE" ng-if="puser.gender"></span>
-                <span class="h3" translate="T_ACCOUNTS_GENDER_FEMALE" ng-if="!puser.gender"></span>
-              </div>
-            </div>
-          </label>
+          <select ng-model="puser.gender">
+            <option value="male" translate="T_ACCOUNTS_GENDER_MALE"></option>
+            <option value="female" translate="T_ACCOUNTS_GENDER_FEMALE"></option>
+          </select>
         </label>
         <label class="item item-input">
           <span class="input-label" translate="T_ACCOUNTS_WORKID"></span>

@@ -18,7 +18,7 @@
         </label>
         <label class="item item-input">
           <span class="input-label" translate="T_CRMS_COMPANY_MEMO"></span>
-          <input type="text" ng-model="company.memo">
+          <textarea rows="5" ng-model="company.memo"></textarea>
         </label>
         <label class="item">
           <button ng-disabled="!profileForm.$dirty" class="button button-block button-positive" type="submit" translate="T_CRMS_BTN_UPDATE"></button>
@@ -27,7 +27,7 @@
     </form>
     <div class="list card">
       <div class="item" ng-repeat="customer in customers track by $index" ng-if="customer.companyid == company._id">
-        <a ui-sref="crm.customer({id:customer._id})">{{customer.last_name}}{{customer.first_name?" "+customer.first_name:""}}</a>
+        <a ui-sref="crm.customer({id:customer._id})">{{customer |fullname:' '}}</a>
       </div>
     </div>
   </ion-content>

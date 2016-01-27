@@ -7,7 +7,7 @@ var userSchema = mongoose.Schema({
   password: {type:String, required:true},
   first_name: {type:String, required:true},
   last_name: {type:String, required:true},
-  gender: {type:Boolean, default:true},
+  gender: {type:String, default:'male'},
   workid: {type:String, default:''},
   reset_code: {type:String, default:''},
   permission: {type:[String], required:true, default:['modify']}, /* modify/create/admin */
@@ -71,7 +71,7 @@ User.find(function(err, users) {
         new User({email:parts[0] + '@kotei-info.com',
                   first_name:parts[2],
                   last_name:parts[1],
-                  gender:eval(parts[3]),
+                  gender:parts[3],
                   password:'123456',
                   reset_code:'',
                   salary: {
@@ -84,7 +84,7 @@ User.find(function(err, users) {
         new User({email:parts[0] + '@kotei-info.com',
                   first_name:parts[2],
                   last_name:parts[1],
-                  gender:eval(parts[3]),
+                  gender:parts[3],
                   password:'123456',
                   reset_code:'',
                   salary: {
