@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="row">
+    <div class="col button button-positive" ng-click="showAttrs()">
+      {{ ::year }} - {{ ::month }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col button button-small button-stable" ng-repeat="dayname in weektitle">
+      {{ ::dayname }}
+    </div>
+  </div>
+  <div class="row" ng-repeat="week in weeks" ng-if="!extraInfo">
+    <div class="col button button-small {{day.class}}" ng-repeat="day in week track by $index">
+      {{ ::day.value }}
+    </div>
+  </div>
+  <div class="row" ng-repeat="week in weeks" ng-if="extraInfo">
+    <div class="col" ng-repeat="day in week track by $index">
+      <div class="row button button-small {{day.class}}">
+        <div class="col">
+          {{ ::day.value }}
+        </div>
+      </div>
+      <div class="row" ng-if="day.value">
+      </div>
+    </div>
+  </div>
+</div>
