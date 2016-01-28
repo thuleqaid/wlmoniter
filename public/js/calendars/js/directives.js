@@ -15,8 +15,7 @@
 angular.module('calendars.directives',[]).directive('calendar', function() {
   return {
     restrict: 'E',
-    scope: {
-    },
+    scope: {},
     repalce: true,
     templateUrl: 'js/calendars/views/d_calendar.html',
     link: function(scope, elem, attrs) {
@@ -56,25 +55,25 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
         var cur_workday = workday[mi] || [];                   // 当前月的额外工作日（周一到周五以外）
         var cur_holiday = holiday[mi] || [];                   // 当前月的额外休假（周六和周日以外）
         var cur_studyday = studyday[mi] || [];                 // 当前月的管理培训日
-        weeks.push([{class:color_workday,value:''},
-                    {class:color_workday,value:''},
-                    {class:color_workday,value:''},
-                    {class:color_workday,value:''},
-                    {class:color_workday,value:''},
-                    {class:color_workday,value:''},
-                    {class:color_workday,value:''}]);
+        weeks.push([{class:color_workday,value:'',left:'',right:''},
+                    {class:color_workday,value:'',left:'',right:''},
+                    {class:color_workday,value:'',left:'',right:''},
+                    {class:color_workday,value:'',left:'',right:''},
+                    {class:color_workday,value:'',left:'',right:''},
+                    {class:color_workday,value:'',left:'',right:''},
+                    {class:color_workday,value:'',left:'',right:''}]);
         for (var i = 0; i < endday; i++) {
           var curday = (startday + i) % 7;
           if (i == 0) {
           } else {
             if (curday == weekstart) {
-              weeks.push([{class:color_workday,value:''},
-                          {class:color_workday,value:''},
-                          {class:color_workday,value:''},
-                          {class:color_workday,value:''},
-                          {class:color_workday,value:''},
-                          {class:color_workday,value:''},
-                          {class:color_workday,value:''}]);
+              weeks.push([{class:color_workday,value:'',left:'',right:''},
+                          {class:color_workday,value:'',left:'',right:''},
+                          {class:color_workday,value:'',left:'',right:''},
+                          {class:color_workday,value:'',left:'',right:''},
+                          {class:color_workday,value:'',left:'',right:''},
+                          {class:color_workday,value:'',left:'',right:''},
+                          {class:color_workday,value:'',left:'',right:''}]);
             }
           }
           /* 设置日期 */
@@ -117,10 +116,38 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
       } else {
         scope.calmode = 'simple';
       }
+      scope.selectinfo = {multiselect:false,
+                          toolselect:0,
+                          lastselect:[]};
       /* 点击事件处理函数 */
       scope.click = function(year, month, day) {
         if (day.value) {
-          console.log(year, month, day);
+          /* 点击日期有效 */
+          if (scope.selectinfo.multiselect) {
+            /* 复选模式 */
+            if (scope.selectinfo.lastselect.length <= 0) {
+              /* 复选模式的第1次点击 */
+              scope.selectinfo.lastselect = [year, month, day.value];
+            } else {
+              /* 复选模式的第2次点击 */
+              if (year == scope.selectinfo.lastselect[0] && month == scope.selectinfo.lastselect[1] && day.value == scope.selectinfo.lastselect[2]) {
+                /* 两次点击在同一日期，清除选择记录 */
+              } else {
+                scope.selectinfo.lastselect.push(year, month, day.value);
+                console.log(scope.selectinfo.lastselect);
+              }
+              scope.selectinfo.lastselect = [];
+            }
+          } else {
+            /* 单选模式 */
+            console.log(year, month, day);
+          }
+        } else {
+          /* 点击日期无效 */
+          if (scope.selectinfo.multiselect) {
+            /* 复选模式下，清除选择记录 */
+            scope.selectinfo.lastselect = [];
+          }
         }
       };
     }

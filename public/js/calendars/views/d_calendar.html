@@ -1,28 +1,36 @@
-<div class="row" ng-repeat="calrow in cal track by $index">
-  <div class="col card" ng-repeat="cell in calrow track by $index">
-    <div class="row" ng-show="cell.year">
-      <div class="col button button-positive">
-        {{ ::cell.year }} - {{ ::cell.month }}
-      </div>
-    </div>
-    <div class="row" ng-show="cell.year">
-      <div class="col button button-small button-stable" ng-repeat="dayname in weektitle">
-        {{ ::dayname }}
-      </div>
-    </div>
-    <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode == 'simple'" ng-show="cell.year">
-      <div class="col button button-small {{day.class}}" ng-repeat="day in week track by $index" ng-click="click(cell.year, cell.month, day)">
-        {{ ::day.value }}
-      </div>
-    </div>
-    <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode != 'simple'" ng-show="cell.year">
-      <div class="col" ng-repeat="day in week track by $index" ng-click="click(cell.year, cell.month, day)">
-        <div class="row button button-small {{day.class}}">
-          <div class="col">
-            {{ ::day.value }}
-          </div>
+<div>
+  <div class="buttons row" ng-if="calmode=='edit'">
+    <button class="button col button-calm" ng-click="selectinfo.multiselect = !selectinfo.multiselect">{{selectinfo.multiselect?"M":"S"}}</button>
+    <button class="button col {{selectinfo.toolselect == 0?'button-outline':''}}" ng-click="selectinfo.toolselect = 0">Workday</button>
+    <button class="button col {{selectinfo.toolselect == 1?'button-outline':''}}" ng-click="selectinfo.toolselect = 1">Studyday</button>
+    <button class="button col {{selectinfo.toolselect == 2?'button-outline':''}}" ng-click="selectinfo.toolselect = 2">Holiday</button>
+  </div>
+  <div class="row" ng-repeat="calrow in cal track by $index">
+    <div class="col card" ng-repeat="cell in calrow track by $index">
+      <div class="row" ng-show="cell.year">
+        <div class="col button button-positive">
+          {{ ::cell.year }} - {{ ::cell.month }}
         </div>
-        <div class="row" ng-if="day.value">
+      </div>
+      <div class="row" ng-show="cell.year">
+        <div class="col button button-small button-stable" ng-repeat="dayname in weektitle">
+          {{ ::dayname }}
+        </div>
+      </div>
+      <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode == 'simple'" ng-show="cell.year">
+        <div class="col button button-small {{day.class}}" ng-repeat="day in week track by $index" ng-click="click(cell.year, cell.month, day)">
+          {{ ::day.value }}
+        </div>
+      </div>
+      <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode != 'simple'" ng-show="cell.year">
+        <div class="col" ng-repeat="day in week track by $index" ng-click="click(cell.year, cell.month, day)">
+          <div class="row button button-small {{day.class}}">
+            <div class="col">
+              {{ ::day.value }}
+            </div>
+          </div>
+          <div class="row" ng-if="day.value">
+          </div>
         </div>
       </div>
     </div>
