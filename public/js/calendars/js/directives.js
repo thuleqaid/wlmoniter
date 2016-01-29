@@ -55,25 +55,25 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
         var cur_workday = workday[mi] || [];                   // 当前月的额外工作日（周一到周五以外）
         var cur_holiday = holiday[mi] || [];                   // 当前月的额外休假（周六和周日以外）
         var cur_studyday = studyday[mi] || [];                 // 当前月的管理培训日
-        weeks.push([{class:color_workday,value:'',left:'',right:''},
-                    {class:color_workday,value:'',left:'',right:''},
-                    {class:color_workday,value:'',left:'',right:''},
-                    {class:color_workday,value:'',left:'',right:''},
-                    {class:color_workday,value:'',left:'',right:''},
-                    {class:color_workday,value:'',left:'',right:''},
-                    {class:color_workday,value:'',left:'',right:''}]);
+        weeks.push([{class:color_workday,value:'',cell:[],inner:[]},
+                    {class:color_workday,value:'',cell:[],inner:[]},
+                    {class:color_workday,value:'',cell:[],inner:[]},
+                    {class:color_workday,value:'',cell:[],inner:[]},
+                    {class:color_workday,value:'',cell:[],inner:[]},
+                    {class:color_workday,value:'',cell:[],inner:[]},
+                    {class:color_workday,value:'',cell:[],inner:[]}]);
         for (var i = 0; i < endday; i++) {
           var curday = (startday + i) % 7;
           if (i == 0) {
           } else {
             if (curday == weekstart) {
-              weeks.push([{class:color_workday,value:'',left:'',right:''},
-                          {class:color_workday,value:'',left:'',right:''},
-                          {class:color_workday,value:'',left:'',right:''},
-                          {class:color_workday,value:'',left:'',right:''},
-                          {class:color_workday,value:'',left:'',right:''},
-                          {class:color_workday,value:'',left:'',right:''},
-                          {class:color_workday,value:'',left:'',right:''}]);
+              weeks.push([{class:color_workday,value:'',cell:[],inner:[]},
+                          {class:color_workday,value:'',cell:[],inner:[]},
+                          {class:color_workday,value:'',cell:[],inner:[]},
+                          {class:color_workday,value:'',cell:[],inner:[]},
+                          {class:color_workday,value:'',cell:[],inner:[]},
+                          {class:color_workday,value:'',cell:[],inner:[]},
+                          {class:color_workday,value:'',cell:[],inner:[]}]);
             }
           }
           /* 设置日期 */
@@ -109,16 +109,34 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
         }
       }
       /* 设置显示模式 */
-      if (attrs['mode'] == 'edit') {
-        scope.calmode = 'edit';
-      } else if (attrs['mode'] == 'view'){
-        scope.calmode = 'view';
+      if (attrs['mode'] == 'edit_workload') {
+        scope.calmode = 'edit_workload';
+      } else if (attrs['mode'] == 'view_workload'){
+        scope.calmode = 'view_workload';
+      } else if (attrs['mode'] == 'edit_calendar') {
+        scope.calmode = 'edit_calendar';
       } else {
-        scope.calmode = 'simple';
+        scope.calmode = 'view_calendar';
       }
       scope.selectinfo = {multiselect:false,
-                          toolselect:0,
+                          toolselect:'ion-briefcase',
                           lastselect:[]};
+      var findCell = function(year, month, day) {
+        for (var i = 0; i < scope.cal.length; i++) {
+          for (var j = 0; j < scope.cal[i].length; j++) {
+            if (scope.cal[i][j]['year'] == year && scope.cal[i][j]['month'] == month) {
+              for (var k = 0; k < scope.cal[i][j]['weeks'].length; k++) {
+                for (var l = 0; l < scope.cal[i][j]['weeks'][k].length; l++) {
+                  if (scope.cal[i][j]['weeks'][k][l].value == day) {
+                    return [i,j,k,l];
+                  }
+                }
+              }
+            }
+          }
+        }
+        return [-1, -1, -1, -1];
+      };
       /* 点击事件处理函数 */
       scope.click = function(year, month, day) {
         if (day.value) {
@@ -134,13 +152,48 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
                 /* 两次点击在同一日期，清除选择记录 */
               } else {
                 scope.selectinfo.lastselect.push(year, month, day.value);
-                console.log(scope.selectinfo.lastselect);
+                var pos1 = findCell(scope.selectinfo.lastselect[0], scope.selectinfo.lastselect[1], scope.selectinfo.lastselect[2]);
+                var pos2 = findCell(scope.selectinfo.lastselect[3], scope.selectinfo.lastselect[4], scope.selectinfo.lastselect[5]);
+                var curpos, stoppos;
+                if ((((pos1[0] * 100 + pos1[1]) * 100 + pos1[2]) * 100 + pos1[3]) > (((pos2[0] * 100 + pos2[1]) * 100 + pos2[2]) * 100 + pos2[3])) {
+                  curpos = pos2;
+                  stoppos = pos1;
+                } else {
+                  curpos = pos1;
+                  stoppos = pos2;
+                }
+                while (curpos[0] != stoppos[0] || curpos[1] != stoppos[1] || curpos[2] != stoppos[2] || curpos[3] != stoppos[3]) {
+                  if (scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]][curpos[3]].value) {
+                    scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]][curpos[3]].cell[0] = scope.selectinfo.toolselect;
+                  }
+                  curpos[3] += 1;
+                  if (curpos[3] >= scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]].length) {
+                    curpos[3] = 0;
+                    curpos[2] += 1;
+                    if (curpos[2] >= scope.cal[curpos[0]][curpos[1]]['weeks'].length) {
+                      curpos[2] = 0;
+                      curpos[1] += 1;
+                      if (curpos[1] >= scope.cal[curpos[0]].length) {
+                        curpos[1] = 0;
+                        curpos[0] += 1;
+                        if (curpos[0] >= scope.cal.length) {
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
               }
+              day.cell[0] = scope.selectinfo.toolselect;
               scope.selectinfo.lastselect = [];
             }
           } else {
             /* 单选模式 */
-            console.log(year, month, day);
+            if (day.cell[0] == scope.selectinfo.toolselect) {
+              day.cell = [];
+            } else {
+              day.cell[0] = scope.selectinfo.toolselect;
+            }
           }
         } else {
           /* 点击日期无效 */
