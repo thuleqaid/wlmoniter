@@ -2,6 +2,7 @@ var express = require('express');
 var passport = require('passport');
 var Project = require('../models/project');
 var User = require('../models/user');
+var WorkCalendar = require('../models/workCalendar');
 
 module.exports = function(io) {
   var router = express.Router();
