@@ -1,0 +1,12 @@
+{
+  "T_FINANCES_HOME":                       "主页",
+  "T_FINANCES_OVERVIEW":                   "概要",
+  "T_FINANCES_CURRENCY_UNIT":              "万元",
+  "T_FINANCES_SALES_TARGET":               "销售额目标",
+  "T_FINANCES_SALES_AMOUNT":               "实际销售额",
+  "T_FINANCES_COST":                       "成本",
+  "T_FINANCES_GROSS_PROFIT_RATE":          "毛利率",
+  "T_FINANCES_DONE":                       "已完成",
+  "T_FINANCES_DOING":                      "进行中",
+  "T_FINANCES_TODO":                       "计划中"
+}

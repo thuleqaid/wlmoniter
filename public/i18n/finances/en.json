@@ -1,0 +1,12 @@
+{
+  "T_FINANCES_HOME":                       "HomePage",
+  "T_FINANCES_OVERVIEW":                   "Overview",
+  "T_FINANCES_CURRENCY_UNIT":              "10K Yuan",
+  "T_FINANCES_SALES_TARGET":               "Sales Target",
+  "T_FINANCES_SALES_AMOUNT":               "Sales Amount",
+  "T_FINANCES_COST":                       "Cost",
+  "T_FINANCES_GROSS_PROFIT_RATE":          "Gross Profit Rate",
+  "T_FINANCES_DONE":                       "Done",
+  "T_FINANCES_DOING":                      "Doing",
+  "T_FINANCES_TODO":                       "Todo"
+}

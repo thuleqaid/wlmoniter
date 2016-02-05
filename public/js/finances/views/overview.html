@@ -1,0 +1,61 @@
+<ion-view>
+  <ion-nav-title translate="T_FINANCES_OVERVIEW"></ion-nav-title>
+  <ion-content>
+    <div class="list">
+      <div class="item item-divider" translate="T_FINANCES_OVERVIEW"></div>
+      <label class="item item-input">
+        <span class="input-label" translate="T_FINANCES_SALES_TARGET"></span>
+        <input type="text" class="text-right" ng-model="current.sales_target" readonly="true">
+        <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+      </label>
+      <label class="item item-divider item-input">
+        <span class="input-label" translate="T_FINANCES_SALES_AMOUNT"></span>
+        <input type="text" class="text-right" ng-model="current.sales_amount" readonly="true">
+        <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+      </label>
+      <div class="item card">
+        <label class="item item-input">
+          <span class="input-label" translate="T_FINANCES_DONE"></span>
+          <input type="text" class="text-right" ng-model="current.sales_done" readonly="true">
+          <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_FINANCES_DOING"></span>
+          <input type="text" class="text-right" ng-model="current.sales_doing" readonly="true">
+          <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_FINANCES_TODO"></span>
+          <input type="text" class="text-right" ng-model="current.sales_todo" readonly="true">
+          <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+        </label>
+      </div>
+      <label class="item item-divider item-input">
+        <span class="input-label" translate="T_FINANCES_COST"></span>
+        <input type="text" class="text-right" ng-model="current.cost" readonly="true">
+        <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+      </label>
+      <div class="item card">
+        <label class="item item-input">
+          <span class="input-label" translate="T_FINANCES_DONE"></span>
+          <input type="text" class="text-right" ng-model="current.cost_done" readonly="true">
+          <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_FINANCES_DOING"></span>
+          <input type="text" class="text-right" ng-model="current.cost_doing" readonly="true">
+          <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label" translate="T_FINANCES_TODO"></span>
+          <input type="text" class="text-right" ng-model="current.cost_todo" readonly="true">
+          <span class="input-label" translate="T_FINANCES_CURRENCY_UNIT"></span>
+        </label>
+      </div>
+      <label class="item item-input">
+        <span class="input-label" translate="T_FINANCES_GROSS_PROFIT_RATE"></span>
+        <input type="text" class="text-right" ng-model="current.gross_profit_rate" readonly="true">
+      </label>
+    </div>
+  </ion-content>
+</ion-view>
