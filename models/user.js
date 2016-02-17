@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var UserHour = require('./userHour');
 var HistoryUser = require('./historyUser');
 var crypto = require('crypto');
 var _ = require('underscore');
@@ -24,6 +25,46 @@ userSchema.pre('save', function(next) {
   var modPaths = _.without(user.modifiedPaths(), 'updater', 'date_update');
   if (modPaths.length <= 0) return next(new Error('not changed'));
   user.increment();
+  var start_date = new Date(user.date_update.getFullYear(), user.date_update.getMonth(), user.date_update.getDate());
+  if (typeof(user.__v) === 'undefined') {
+    /* 新建用户数据 */
+    var userhour = new UserHour({user:user._id,
+                                 start_date:start_date,
+                                 hour:8,
+                                 updater:user.updater,
+                                 date_update:user.date_update});
+    userhour.save(function(err) {if (err) console.log(err);});
+  } else {
+    /* 修改用户数据 */
+    if (modPaths.indexOf('valid') >= 0) {
+      /* 修改用户有效性 */
+      UserHour.findOne({user:user.id, start_date:start_date}, function(err, userhour) {
+        if (err) {
+          console.log('Find UserHour Error(user:'+user.id+',start_date:'+start_date+')');
+        }
+        if (userhour) {
+          if (user.valid) {
+            userhour.hour = 8;
+          } else {
+            userhour.hour = 0;
+          }
+          userhour.updater = user.updater;
+          userhour.date_update = user.date_update;
+          userhour.save(function(err) {if (err) console.log(err);});
+          return;
+        }
+        userhour = new UserHour({user:user._id,
+                                 start_date:start_date,
+                                 hour:0,
+                                 updater:user.updater,
+                                 date_update:user.date_update});
+        if (user.valid) {
+          userhour.hour = 8;
+        }
+        userhour.save(function(err) {if (err) console.log(err);});
+      });
+    }
+  }
   if (modPaths.indexOf('password') < 0) {
     return next();
   } else {
@@ -59,6 +100,9 @@ User.find(function(err, users) {
     return;
   }
   var fs = require('fs');
+  if (!fs.existsSync('./models/init-user.txt')) {
+    return;
+  }
   var content = fs.readFileSync('./models/init-user.txt','utf-8');
   var lines = content.split('\n');
   var cnt = 0;

@@ -47,6 +47,9 @@ Project.find(function(err, projects) {
     return;
   }
   var fs = require('fs');
+  if (!fs.existsSync('./models/init-project.txt')) {
+    return;
+  }
   var content = fs.readFileSync('./models/init-project.txt','utf-8');
   var lines = content.split('\n');
   var cnt = 0;

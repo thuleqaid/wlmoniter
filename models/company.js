@@ -34,6 +34,9 @@ Company.find(function(err, customers) {
     return;
   }
   var fs = require('fs');
+  if (!fs.existsSync('./models/init-company.txt')) {
+    return;
+  }
   var content = fs.readFileSync('./models/init-company.txt','utf-8');
   var lines = content.split('\n');
   var cnt = 0;

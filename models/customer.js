@@ -36,10 +36,13 @@ Customer.find(function(err, customers) {
   if (customers.length) {
     return;
   }
+  var fs = require('fs');
+  if (!fs.existsSync('./models/init-customer.txt')) {
+    return;
+  }
   var Company = require('./company');
   Company.find(function(err, companies) {
     if (companies.length) {
-      var fs = require('fs');
       var content = fs.readFileSync('./models/init-customer.txt','utf-8');
       var lines = content.split('\n');
       var cnt = 0;

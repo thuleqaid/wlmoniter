@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var HistoryWorkCalendar = require('./historyWorkCalendar');
+var UserHour = require('./userHour');
 var _ = require('underscore');
 var calendarSchema = mongoose.Schema({
   year: {type:Number, required:true},
@@ -38,27 +39,26 @@ calendarSchema.methods.workdays = function(start_day, end_day) {
     day2 = date2.getDate();
   }
   var date1 = new Date(this.year, this.month-1, day1);
+  var workdaylist = [];
   if (day1 > day2) {
-    return -1;
   } else {
     var weekday = date1.getDay();
-    var days = 0;
     for (var day3 = day1; day3 <= day2; day3++) {
       if (weekday == 6 || weekday == 0) {
         if (this.workday.indexOf(day3) >= 0) {
-          days += 1;
+          workdaylist.push(new Date(this.year, this.month - 1, day3));
         } else {
         }
       } else {
         if (this.holiday.indexOf(day3) >= 0) {
         } else {
-          days += 1;
+          workdaylist.push(new Date(this.year, this.month - 1, day3));
         }
       }
       weekday = (weekday + 1) % 7;
     }
-    return days;
   }
+  return workdaylist;
 };
 
 calendarSchema.statics.filterCalendar = function(year_start, month_start, year_end, month_end, cb) {
@@ -122,34 +122,22 @@ calendarSchema.statics.countWorkdays = function(year_start, month_start, day_sta
   if (typeof(cb) != 'function') {
     return;
   }
-  var date1 = new Date(year_start, month_start - 1, day_start);
-  var date2 = new Date(year_end, month_end - 1, day_end);
   var year1, year2, month1, month2, day1, day2;
-  /* 输入日期排序 */
-  if (date1 > date2) {
-    year1 = year_end;
-    month1 = month_end;
-    day1 = day_end;
-    year2 = year_start;
-    month2 = month_start;
-    day2 = day_start;
-  } else {
-    year1 = year_start;
-    month1 = month_start;
-    day1 = day_start;
-    year2 = year_end;
-    month2 = month_end;
-    day2 = day_end;
-  }
+  year1 = year_start;
+  month1 = month_start;
+  day1 = day_start;
+  year2 = year_end;
+  month2 = month_end;
+  day2 = day_end;
   this.filterCalendar(year1, month1, year2, month2, function(calendars) {
     var days = [];
     for (var i = 0; i < calendars.length; i++) {
       if (i == 0) {
-        days.push(calendars[i].workdays(day1));
+        days.push(calendars[i].workdays(day1).length);
       } else if (i == calendars.length - 1) {
-        days.push(calendars[i].workdays(1, day2));
+        days.push(calendars[i].workdays(1, day2).length);
       } else {
-        days.push(calendars[i].workdays());
+        days.push(calendars[i].workdays().length);
       }
     }
     days.unshift(days.reduce(function(a, b) {return a+b;}, 0));
@@ -160,25 +148,14 @@ calendarSchema.statics.calendarInfo = function(year_start, month_start, year_end
   if (typeof(cb) != 'function') {
     return;
   }
-  var date1 = new Date(year_start, month_start - 1, 1);
   var date2 = new Date(year_end, month_end, 0);
   var year1, year2, month1, month2, day1, day2;
-  /* 输入日期排序 */
-  if (date1 > date2) {
-    year1 = year_end;
-    month1 = month_end;
-    day1 = date2.getDate();
-    year2 = year_start;
-    month2 = month_start;
-    day2 = date1.getDate();
-  } else {
-    year1 = year_start;
-    month1 = month_start;
-    day1 = date1.getDate();
-    year2 = year_end;
-    month2 = month_end;
-    day2 = date2.getDate();
-  }
+  year1 = year_start;
+  month1 = month_start;
+  day1 = 1;
+  year2 = year_end;
+  month2 = month_end;
+  day2 = date2.getDate();
   this.filterCalendar(year1, month1, year2, month2, function(calendars) {
     var info = {workday:[],
                 studyday:[],
@@ -204,6 +181,31 @@ calendarSchema.statics.calendarInfo = function(year_start, month_start, year_end
       }
     }
     cb(info);
+  });
+};
+calendarSchema.statics.workloadInfo = function(year_start, month_start, year_end, month_end, cb) {
+  if (typeof(cb) != 'function') {
+    return;
+  }
+  this.filterCalendar(year_start, month_start, year_end, month_end, function(calendars) {
+    var workdays = [];
+    for (var i = 0; i < calendars.length; i++) {
+      var tmpworkdays = calendars[i].workdays();
+      for (var j = 0; j < tmpworkdays.length; j++) {
+        workdays.push(tmpworkdays[j].valueOf());
+      }
+    }
+    UserHour.filterUser(new Date(year_start, month_start - 1, 1), new Date(year_end, month_end, 1), function(data) {
+      for (var i = 0; i < data.length; i++) {
+        if (workdays.indexOf(data[i].date.valueOf()) < 0) {
+          for (var j = 0; j < data[i].detail.length; j++) {
+            data[i].detail[j].total = 0;
+            data[i].detail[j].available = 0;
+          }
+        }
+      }
+      cb(data);
+    });
   });
 };
 
@@ -256,12 +258,18 @@ WorkCalendar.find(function(err, calendars) {
     }
   }
 });
-
 // WorkCalendar.countWorkdays(2015, 12, 13, 2016, 2, 23, function(days) {
 //   console.log(days);
 // });
 // WorkCalendar.calendarInfo(2015,12,2016,3,function(info) {
 //   console.log(info);
 // });
-
+// WorkCalendar.workloadInfo(2016,2,2016,2,function(data) {
+//   for (var i = 0; i < data.length; i++) {
+//     console.log(data[i].date);
+//     for (var j = 0; j < data[i].detail.length; j++) {
+//       console.log(j,data[i].detail[j]);
+//     }
+//   }
+// });
 module.exports = WorkCalendar;
