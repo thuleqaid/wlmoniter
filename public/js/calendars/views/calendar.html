@@ -1,0 +1,20 @@
+<ion-pane>
+  <ion-header-bar class="bar-stable">
+    <h1 class="title">Ionic Blank Starter</h1>
+  </ion-header-bar>
+  <ion-content>
+    <div class="buttons row">
+      <button class="button col" ng-click="stepYear(-5)"><i class="icon ion-ios-rewind"></i></button>
+      <button class="button col" ng-click="stepYear(-1)"><i class="icon ion-arrow-left-b"></i></button>
+      <button class="button col" ng-click="stepYear(0)"><i class="icon ion-ios-clock"></i></button>
+      <button class="button col" ng-click="stepYear(1)"><i class="icon ion-arrow-right-b"></i></button>
+      <button class="button col" ng-click="stepYear(5)"><i class="icon ion-ios-fastforward"></i></button>
+    </div>
+    <calendar data-mode="view_calendar"
+              data-start-day="Sun"
+              data-year="{{current.year}}"
+              data-month="1"
+              data-columns="3"
+              data-info="{{current.info}}"></calendar>
+  </ion-content>
+</ion-pane>

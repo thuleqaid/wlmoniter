@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var users = require('./routes/users');
 var crms = require('./routes/crms');
 var projects = require('./routes/projects');
+var calendars = require('./routes/calendars');
 
 var mongoose = require('mongoose');
 var opts = {
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users', users(io));
 app.use('/crms', crms(io));
 app.use('/projects', projects(io));
+app.use('/calendars', calendars(io));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
