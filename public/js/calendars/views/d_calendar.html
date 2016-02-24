@@ -1,10 +1,4 @@
 <div>
-  <div class="buttons row" ng-if="calmode=='edit_calendar'">
-    <button class="button col button-calm" ng-click="selectinfo.multiselect = !selectinfo.multiselect">{{selectinfo.multiselect?"M":"S"}}</button>
-    <button class="button col {{selectinfo.toolselect == 'ion-briefcase'?'button-outline':''}}" ng-click="selectinfo.toolselect = 'ion-briefcase'"><i class="icon ion-briefcase">Workday</i></button>
-    <button class="button col {{selectinfo.toolselect == 'ion-ios-book'?'button-outline':''}}" ng-click="selectinfo.toolselect = 'ion-ios-book'"><i class="icon ion-ios-book">Studyday</i></button>
-    <button class="button col {{selectinfo.toolselect == 'ion-ios-home'?'button-outline':''}}" ng-click="selectinfo.toolselect = 'ion-ios-home'"><i class="icon ion-ios-home">Holiday</i></button>
-  </div>
   <div class="row" ng-repeat="calrow in cal track by $index">
     <div class="col card" ng-repeat="cell in calrow track by $index">
       <div class="row" ng-show="cell.year">
@@ -17,12 +11,12 @@
           {{ dayname }}
         </div>
       </div>
-      <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode == 'view_calendar'" ng-show="cell.year">
+      <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode == 'view'" ng-show="cell.year">
         <div class="col button button-small {{day.class}}" ng-repeat="day in week track by $index" ng-click="click(cell.year, cell.month, day)">
           {{ day.value }}
         </div>
       </div>
-      <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode == 'edit_calendar'" ng-show="cell.year">
+      <div class="row" ng-repeat="week in cell.weeks track by $index" ng-if="calmode == 'view-extra'" ng-show="cell.year">
         <div class="col" ng-repeat="day in week track by $index" ng-click="click(cell.year, cell.month, day)">
           <div class="row button button-small {{day.class}}">
             <div class="col">
@@ -30,7 +24,8 @@
             </div>
           </div>
           <div class="row" ng-if="day.value">
-            <i class="col icon {{c}}" ng-repeat="c in day.cell track by $index"></i>
+            <span class="col badge badge-balanced" ng-if="day.cell[0] > 0">{{day.cell[0]}}</span>
+            <span class="col badge {{day.cell[0] > day.cell[1] ? 'badge-assertive' : 'badge-balanced'}}" ng-if="day.cell[0] > 0">{{day.cell[1]}}</span>
           </div>
         </div>
       </div>

@@ -1,4 +1,8 @@
 {
   "T_CALENDARS_HOME":                       "HomePage",
-  "T_CALENDARS_CALENDAR":                   "Calendar"
+  "T_CALENDARS_CALENDAR":                   "Calendar",
+  "T_CALENDARS_WORKLOAD":                   "Workload",
+  "T_CALENDARS_WORKLOAD_FULL":              "Fully Participate",
+  "T_CALENDARS_WORKLOAD_PART":              "Partly Participate",
+  "T_CALENDARS_WORKLOAD_ZERO":              "Available"
 }

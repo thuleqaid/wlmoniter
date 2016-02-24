@@ -19,7 +19,9 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
     restrict: 'E',
     scope: {
       info:'@',
-      year:'@'
+      year:'@',
+      month:'@',
+      extra:'@'
     },
     repalce: true,
     templateUrl: 'js/calendars/views/d_calendar.html',
@@ -40,6 +42,7 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
         }
 
         var info = JSON.parse(attrs['info']);
+        var extra = JSON.parse(attrs['extra'] || "{}");
         var workday = info.workday || [[]];
         var holiday = info.holiday || [[]];
         var studyday = info.studyday || [[]];
@@ -85,6 +88,11 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
             }
             /* 设置日期 */
             weeks[weeks.length - 1][(curday + 7 - weekstart) % 7].value = i+1;
+            var tmpdate = new Date(year, month-1, i+1);
+            if (extra[tmpdate]) {
+              weeks[weeks.length - 1][(curday + 7 - weekstart) % 7].cell.push(extra[tmpdate][0]);
+              weeks[weeks.length - 1][(curday + 7 - weekstart) % 7].cell.push(extra[tmpdate][1]);
+            }
             /* 设置普通工作日和休假的颜色 */
             if (curday == 0 || curday == 6) {
               weeks[weeks.length - 1][(curday + 7 - weekstart) % 7].class = color_holiday;
@@ -135,79 +143,80 @@ angular.module('calendars.directives',[]).directive('calendar', function() {
       /* 点击事件处理函数 */
       scope.click = function(year, month, day) {
         if (day.value) {
-          scope.$emit("CALENDAR_CELL_CLICK", {year:year, month:month, day:day.value});
-          /* 点击日期有效 */
-          if (scope.selectinfo.multiselect) {
-            /* 复选模式 */
-            if (scope.selectinfo.lastselect.length <= 0) {
-              /* 复选模式的第1次点击 */
-              scope.selectinfo.lastselect = [year, month, day.value];
-            } else {
-              /* 复选模式的第2次点击 */
-              if (year == scope.selectinfo.lastselect[0] && month == scope.selectinfo.lastselect[1] && day.value == scope.selectinfo.lastselect[2]) {
-                /* 两次点击在同一日期，清除选择记录 */
-              } else {
-                scope.selectinfo.lastselect.push(year, month, day.value);
-                var pos1 = findCell(scope.selectinfo.lastselect[0], scope.selectinfo.lastselect[1], scope.selectinfo.lastselect[2]);
-                var pos2 = findCell(scope.selectinfo.lastselect[3], scope.selectinfo.lastselect[4], scope.selectinfo.lastselect[5]);
-                var curpos, stoppos;
-                if ((((pos1[0] * 100 + pos1[1]) * 100 + pos1[2]) * 100 + pos1[3]) > (((pos2[0] * 100 + pos2[1]) * 100 + pos2[2]) * 100 + pos2[3])) {
-                  curpos = pos2;
-                  stoppos = pos1;
-                } else {
-                  curpos = pos1;
-                  stoppos = pos2;
-                }
-                while (curpos[0] != stoppos[0] || curpos[1] != stoppos[1] || curpos[2] != stoppos[2] || curpos[3] != stoppos[3]) {
-                  if (scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]][curpos[3]].value) {
-                    scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]][curpos[3]].cell[0] = scope.selectinfo.toolselect;
-                  }
-                  curpos[3] += 1;
-                  if (curpos[3] >= scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]].length) {
-                    curpos[3] = 0;
-                    curpos[2] += 1;
-                    if (curpos[2] >= scope.cal[curpos[0]][curpos[1]]['weeks'].length) {
-                      curpos[2] = 0;
-                      curpos[1] += 1;
-                      if (curpos[1] >= scope.cal[curpos[0]].length) {
-                        curpos[1] = 0;
-                        curpos[0] += 1;
-                        if (curpos[0] >= scope.cal.length) {
-                          break;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              day.cell[0] = scope.selectinfo.toolselect;
-              scope.selectinfo.lastselect = [];
-            }
-          } else {
-            /* 单选模式 */
-            if (day.cell[0] == scope.selectinfo.toolselect) {
-              day.cell = [];
-            } else {
-              day.cell[0] = scope.selectinfo.toolselect;
-            }
-          }
-        } else {
-          /* 点击日期无效 */
-          if (scope.selectinfo.multiselect) {
-            /* 复选模式下，清除选择记录 */
-            scope.selectinfo.lastselect = [];
-          }
+          scope.$emit("CALENDAR_CELL_CLICK", new Date(year, month-1, day.value));
+        //   /* 点击日期有效 */
+        //   if (scope.selectinfo.multiselect) {
+        //     /* 复选模式 */
+        //     if (scope.selectinfo.lastselect.length <= 0) {
+        //       /* 复选模式的第1次点击 */
+        //       scope.selectinfo.lastselect = [year, month, day.value];
+        //     } else {
+        //       /* 复选模式的第2次点击 */
+        //       if (year == scope.selectinfo.lastselect[0] && month == scope.selectinfo.lastselect[1] && day.value == scope.selectinfo.lastselect[2]) {
+        //         /* 两次点击在同一日期，清除选择记录 */
+        //       } else {
+        //         scope.selectinfo.lastselect.push(year, month, day.value);
+        //         var pos1 = findCell(scope.selectinfo.lastselect[0], scope.selectinfo.lastselect[1], scope.selectinfo.lastselect[2]);
+        //         var pos2 = findCell(scope.selectinfo.lastselect[3], scope.selectinfo.lastselect[4], scope.selectinfo.lastselect[5]);
+        //         var curpos, stoppos;
+        //         if ((((pos1[0] * 100 + pos1[1]) * 100 + pos1[2]) * 100 + pos1[3]) > (((pos2[0] * 100 + pos2[1]) * 100 + pos2[2]) * 100 + pos2[3])) {
+        //           curpos = pos2;
+        //           stoppos = pos1;
+        //         } else {
+        //           curpos = pos1;
+        //           stoppos = pos2;
+        //         }
+        //         while (curpos[0] != stoppos[0] || curpos[1] != stoppos[1] || curpos[2] != stoppos[2] || curpos[3] != stoppos[3]) {
+        //           if (scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]][curpos[3]].value) {
+        //             scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]][curpos[3]].cell[0] = scope.selectinfo.toolselect;
+        //           }
+        //           curpos[3] += 1;
+        //           if (curpos[3] >= scope.cal[curpos[0]][curpos[1]]['weeks'][curpos[2]].length) {
+        //             curpos[3] = 0;
+        //             curpos[2] += 1;
+        //             if (curpos[2] >= scope.cal[curpos[0]][curpos[1]]['weeks'].length) {
+        //               curpos[2] = 0;
+        //               curpos[1] += 1;
+        //               if (curpos[1] >= scope.cal[curpos[0]].length) {
+        //                 curpos[1] = 0;
+        //                 curpos[0] += 1;
+        //                 if (curpos[0] >= scope.cal.length) {
+        //                   break;
+        //                 }
+        //               }
+        //             }
+        //           }
+        //         }
+        //       }
+        //       day.cell[0] = scope.selectinfo.toolselect;
+        //       scope.selectinfo.lastselect = [];
+        //     }
+        //   } else {
+        //     /* 单选模式 */
+        //     if (day.cell[0] == scope.selectinfo.toolselect) {
+        //       day.cell = [];
+        //     } else {
+        //       day.cell[0] = scope.selectinfo.toolselect;
+        //     }
+        //   }
+        // } else {
+        //   /* 点击日期无效 */
+        //   if (scope.selectinfo.multiselect) {
+        //     /* 复选模式下，清除选择记录 */
+        //     scope.selectinfo.lastselect = [];
+        //   }
         }
       };
       /* 设置显示模式 */
-      if (attrs['mode'] == 'edit_workload') {
-        scope.calmode = 'edit_workload';
-      } else if (attrs['mode'] == 'view_workload'){
-        scope.calmode = 'view_workload';
-      } else if (attrs['mode'] == 'edit_calendar') {
-        scope.calmode = 'edit_calendar';
-      } else {
-        scope.calmode = 'view_calendar';
+      if (attrs['mode'] == 'view') {
+        scope.calmode = 'view';
+        scope.$watchCollection('info', function(value, oldvalue) {
+          if (value != oldvalue) {
+            drawViewCalendar();
+          }
+        });
+      } else if (attrs['mode'] == 'view-extra') {
+        scope.calmode = 'view-extra';
         scope.$watchCollection('info', function(value, oldvalue) {
           if (value != oldvalue) {
             drawViewCalendar();

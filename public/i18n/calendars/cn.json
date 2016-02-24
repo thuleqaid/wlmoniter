@@ -1,4 +1,8 @@
 {
   "T_CALENDARS_HOME":                       "主页",
-  "T_CALENDARS_CALENDAR":                   "年历"
+  "T_CALENDARS_CALENDAR":                   "年历",
+  "T_CALENDARS_WORKLOAD":                   "工作负荷",
+  "T_CALENDARS_WORKLOAD_FULL":              "全投入",
+  "T_CALENDARS_WORKLOAD_PART":              "部分投入",
+  "T_CALENDARS_WORKLOAD_ZERO":              "可投入"
 }

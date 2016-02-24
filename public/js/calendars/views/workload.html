@@ -1,0 +1,55 @@
+<ion-view>
+  <ion-nav-title translate="T_CALENDARS_WORKLOAD"></ion-nav-title>
+  <ion-content>
+    <div>
+      <!-- <select name="userid" ng-mode="mode.userid" ng-options="user.id as user.name for user in users"> -->
+      <!-- </select> -->
+      <select name="userid" ng-model="mode.userid">
+        <option value="{{user._id}}" ng-repeat="user in users track by $index">{{user |fullname:' '}}</option>
+      </select>
+    </div>
+    <div class="buttons row">
+      <button class="button col" ng-click="stepYear(-1, 0)"><i class="icon ion-ios-rewind"></i></button>
+      <button class="button col" ng-click="stepYear(0, -1)"><i class="icon ion-arrow-left-b"></i></button>
+      <button class="button col" ng-click="stepYear(0, 0)"><i class="icon ion-ios-clock"></i></button>
+      <button class="button col" ng-click="stepYear(0, 1)"><i class="icon ion-arrow-right-b"></i></button>
+      <button class="button col" ng-click="stepYear(1, 0)"><i class="icon ion-ios-fastforward"></i></button>
+    </div>
+    <calendar data-mode="view-extra"
+              data-start-day="Sun"
+              data-year="{{current.year}}"
+              data-month="{{current.month}}"
+              data-columns="1"
+              data-info="{{current.info}}"
+              data-extra="{{current.extra}}"></calendar>
+    <div class="list">
+      <div class="item item-divider" translate="T_CALENDARS_WORKLOAD_FULL"></div>
+      <div class="item row" ng-repeat="item in list.full track by $index" ng-if="!mode.userid">
+        <a class="col">{{item.user |fullname:' '}}</a>
+        <span class="col">{{item.available}}</span>
+      </div>
+      <div class="item row" ng-repeat="item in list.full track by $index" ng-if="mode.userid">
+        <a class="col">{{item.project}}</a>
+        <span class="col">{{item.hour}}</span>
+      </div>
+      <div class="item item-divider" translate="T_CALENDARS_WORKLOAD_PART"></div>
+      <div class="item row" ng-repeat="item in list.part track by $index" ng-if="!mode.userid">
+        <a class="col">{{item.user |fullname:' '}}</a>
+        <span class="col">{{item.available}}</span>
+      </div>
+      <div class="item row" ng-repeat="item in list.part track by $index" ng-if="mode.userid">
+        <a class="col">{{item.project}}</a>
+        <span class="col">{{item.hour}}</span>
+      </div>
+      <div class="item item-divider" translate="T_CALENDARS_WORKLOAD_ZERO"></div>
+      <div class="item row" ng-repeat="item in list.zero track by $index" ng-if="!mode.userid">
+        <a class="col">{{item.user |fullname:' '}}</a>
+        <span class="col">{{item.available}}</span>
+      </div>
+      <div class="item row" ng-repeat="item in list.zero track by $index" ng-if="mode.userid">
+        <span class="col"></span>
+        <span class="col">{{item.available}}</span>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

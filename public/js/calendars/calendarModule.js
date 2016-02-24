@@ -21,12 +21,12 @@ angular.module('calendars', [
         }
       }
     })
-    .state('calendar.overview', {
-      url: '/overview',
+    .state('calendar.workload', {
+      url: '/workload',
       views: {
         'menuContent': {
-          templateUrl: 'js/calendars/views/overview.html',
-          controller: 'CalendarOverviewController'
+          templateUrl: 'js/calendars/views/workload.html',
+          controller: 'CalendarWorkloadController'
         }
       },
       resolve: {

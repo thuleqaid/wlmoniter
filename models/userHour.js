@@ -26,7 +26,7 @@ userHourSchema.post('save', function(user) {
 });
 
 userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
-  /* ²éÕÒÖ¸¶¨ÆÚ¼äÄÚÓĞĞ§ÓÃ»§£¨¿ÉÍ¶Èë¹¤Ê±´óÓÚ0,²»¿¼ÂÇĞİ¼Ù£© */
+  /* æŸ¥æ‰¾æŒ‡å®šæœŸé—´å†…æœ‰æ•ˆç”¨æˆ·ï¼ˆå¯æŠ•å…¥å·¥æ—¶å¤§äº0,ä¸è€ƒè™‘ä¼‘å‡ï¼‰ */
   if (typeof(cb) != 'function') {
     return;
   }
@@ -36,8 +36,8 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
       cb();
       return;
     }
-    /* ³õÊ¼»¯Êä³öÊı×é */
-    /* Êä³öÊı¾İ¸ñÊ½ */
+    /* åˆå§‹åŒ–è¾“å‡ºæ•°ç»„ */
+    /* è¾“å‡ºæ•°æ®æ ¼å¼ */
     /* [{'date'   : date_start,
          'detail' : [{'user'      : userid,
                       'total'     : hours,
@@ -55,55 +55,58 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
       validusers.push({'date':new Date(idxdate),'detail':[]});
       idxdate.setTime(idxdate.getTime() + 86400000);
     }
-    /* ÉèÖÃÊä³öÊı×é */
+    /* è®¾ç½®è¾“å‡ºæ•°ç»„ */
     var lastuser = '';
     var curuser = [];
     for (var i = 0; i < records.length; i++) {
       if (lastuser != records[i].user) {
         if (curuser.length > 0) {
-          /* ÅĞ¶Ïµ±Ç°userÔÚÖ¸¶¨ÆÚ¼äÄÚÊÇ·ñÓĞĞ§ */
+          /* åˆ¤æ–­å½“å‰useråœ¨æŒ‡å®šæœŸé—´å†…æ˜¯å¦æœ‰æ•ˆ */
           if (curuser[0].start_date > date_end) {
-            /* ÓĞĞ§ÆÚ¼äÔÚÖ¸¶¨ÆÚ¼äÖ®Íâ */
+            /* æœ‰æ•ˆæœŸé—´åœ¨æŒ‡å®šæœŸé—´ä¹‹å¤– */
           } else {
             if (curuser.length == 1) {
-              /* Ö»ÓĞÒ»Ìõ¼ÇÂ¼ */
+              /* åªæœ‰ä¸€æ¡è®°å½• */
               if (curuser[0].hour <= 0) {
-                /* Ò»Ö±´¦ÓÚ²»¼ÆËã¹¤Ê±×´Ì¬ */
+                /* ä¸€ç›´å¤„äºä¸è®¡ç®—å·¥æ—¶çŠ¶æ€ */
               } else {
-                /* ¼ÆËãÃ¿Ò»ÌìµÄ×Ü¹¤Ê± */
+                /* è®¡ç®—æ¯ä¸€å¤©çš„æ€»å·¥æ—¶ */
                 for (daycnt = 0; daycnt < validusers.length; daycnt++) {
                   if (validusers[daycnt]['date'] < curuser[0].start_date) {
                     validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                        'total':0,
-                                                       'available':0});
+                                                       'available':0,
+                                                       'projects':[]});
                   } else {
                     validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                        'total':curuser[0].hour,
-                                                       'available':curuser[0].hour});
+                                                       'available':curuser[0].hour,
+                                                       'projects':[]});
                   }
                 }
               }
             } else {
-              /* ÓĞ¶àÌõ¼ÇÂ¼ */
-              /* ²éÕÒºÏÊÊµÄ¼ÇÂ¼¿ªÊ¼index */
+              /* æœ‰å¤šæ¡è®°å½• */
+              /* æŸ¥æ‰¾åˆé€‚çš„è®°å½•å¼€å§‹index */
               reccnt = 0;
               while (reccnt < curuser.length && curuser[reccnt].start_date < date_start) {
                 reccnt += 1;
               }
-              /* ¼ÆËãÃ¿Ò»ÌìµÄ×Ü¹¤Ê± */
+              /* è®¡ç®—æ¯ä¸€å¤©çš„æ€»å·¥æ—¶ */
               if (reccnt >= curuser.length) {
-                /* ×îºóÒ»ÌõÓĞĞ§ÆÚ¼ä¼ÇÂ¼±ÈÖ¸¶¨ÆÚ¼äÔç */
+                /* æœ€åä¸€æ¡æœ‰æ•ˆæœŸé—´è®°å½•æ¯”æŒ‡å®šæœŸé—´æ—© */
                 secthour = curuser[reccnt - 1].hour;
                 if (secthour > 0) {
                   for (daycnt = 0; daycnt < validusers.length; daycnt++) {
                     validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                        'total':secthour,
-                                                       'available':secthour});
+                                                       'available':secthour,
+                                                       'projects':[]});
                   }
                 }
               } else {
                 if (reccnt <= 0) {
-                  /* ÓĞĞ§ÆÚ¼äÊÇ´ÓÖ¸¶¨ÆÚ¼äÖĞÍ¾¿ªÊ¼ */
+                  /* æœ‰æ•ˆæœŸé—´æ˜¯ä»æŒ‡å®šæœŸé—´ä¸­é€”å¼€å§‹ */
                   secthour = 0;
                 } else {
                   secthour = curuser[reccnt - 1].hour;
@@ -117,7 +120,8 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
                   }
                   validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                      'total':secthour,
-                                                     'available':secthour});
+                                                     'available':secthour,
+                                                     'projects':[]});
                 }
               }
             }
@@ -128,51 +132,54 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
       }
       curuser.push(records[i]);
     }
-    /* ×îºóÒ»¸öÓÃ»§Êı¾İ */
+    /* æœ€åä¸€ä¸ªç”¨æˆ·æ•°æ® */
     if (curuser.length > 0) {
-      /* ÅĞ¶Ïµ±Ç°userÔÚÖ¸¶¨ÆÚ¼äÄÚÊÇ·ñÓĞĞ§ */
+      /* åˆ¤æ–­å½“å‰useråœ¨æŒ‡å®šæœŸé—´å†…æ˜¯å¦æœ‰æ•ˆ */
       if (curuser[0].start_date > date_end) {
-        /* ÓĞĞ§ÆÚ¼äÔÚÖ¸¶¨ÆÚ¼äÖ®Íâ */
+        /* æœ‰æ•ˆæœŸé—´åœ¨æŒ‡å®šæœŸé—´ä¹‹å¤– */
       } else {
         if (curuser.length == 1) {
-          /* Ö»ÓĞÒ»Ìõ¼ÇÂ¼ */
+          /* åªæœ‰ä¸€æ¡è®°å½• */
           if (curuser[0].hour <= 0) {
-            /* Ò»Ö±´¦ÓÚ²»¼ÆËã¹¤Ê±×´Ì¬ */
+            /* ä¸€ç›´å¤„äºä¸è®¡ç®—å·¥æ—¶çŠ¶æ€ */
           } else {
-            /* ¼ÆËãÃ¿Ò»ÌìµÄ×Ü¹¤Ê± */
+            /* è®¡ç®—æ¯ä¸€å¤©çš„æ€»å·¥æ—¶ */
             for (daycnt = 0; daycnt < validusers.length; daycnt++) {
               if (validusers[daycnt]['date'] < curuser[0].start_date) {
                 validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                    'total':0,
-                                                   'available':0});
+                                                   'available':0,
+                                                   'projects':[]});
               } else {
                 validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                    'total':curuser[0].hour,
-                                                   'available':curuser[0].hour});
+                                                   'available':curuser[0].hour,
+                                                   'projects':[]});
               }
             }
           }
         } else {
-          /* ÓĞ¶àÌõ¼ÇÂ¼ */
-          /* ²éÕÒºÏÊÊµÄ¼ÇÂ¼¿ªÊ¼index */
+          /* æœ‰å¤šæ¡è®°å½• */
+          /* æŸ¥æ‰¾åˆé€‚çš„è®°å½•å¼€å§‹index */
           reccnt = 0;
           while (reccnt < curuser.length && curuser[reccnt].start_date < date_start) {
             reccnt += 1;
           }
-          /* ¼ÆËãÃ¿Ò»ÌìµÄ×Ü¹¤Ê± */
+          /* è®¡ç®—æ¯ä¸€å¤©çš„æ€»å·¥æ—¶ */
           if (reccnt >= curuser.length) {
-            /* ×îºóÒ»ÌõÓĞĞ§ÆÚ¼ä¼ÇÂ¼±ÈÖ¸¶¨ÆÚ¼äÔç */
+            /* æœ€åä¸€æ¡æœ‰æ•ˆæœŸé—´è®°å½•æ¯”æŒ‡å®šæœŸé—´æ—© */
             secthour = curuser[reccnt - 1].hour;
             if (secthour > 0) {
               for (daycnt = 0; daycnt < validusers.length; daycnt++) {
                 validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                    'total':secthour,
-                                                   'available':secthour});
+                                                   'available':secthour,
+                                                   'projects':[]});
               }
             }
           } else {
             if (reccnt <= 0) {
-              /* ÓĞĞ§ÆÚ¼äÊÇ´ÓÖ¸¶¨ÆÚ¼äÖĞÍ¾¿ªÊ¼ */
+              /* æœ‰æ•ˆæœŸé—´æ˜¯ä»æŒ‡å®šæœŸé—´ä¸­é€”å¼€å§‹ */
               secthour = 0;
             } else {
               secthour = curuser[reccnt - 1].hour;
@@ -186,7 +193,8 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
               }
               validusers[daycnt]['detail'].push({'user':curuser[0].user,
                                                  'total':secthour,
-                                                 'available':secthour});
+                                                 'available':secthour,
+                                                 'projects':[]});
             }
           }
         }
