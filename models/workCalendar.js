@@ -195,7 +195,7 @@ calendarSchema.statics.workloadInfo = function(year_start, month_start, year_end
         workdays.push(tmpworkdays[j].valueOf());
       }
     }
-    UserHour.filterUser(new Date(year_start, month_start - 1, 1), new Date(year_end, month_end, 1), function(data) {
+    UserHour.filterUser(year_start, month_start, year_end, month_end, function(data) {
       for (var i = 0; i < data.length; i++) {
         if (workdays.indexOf(data[i].date.valueOf()) < 0) {
           for (var j = 0; j < data[i].detail.length; j++) {

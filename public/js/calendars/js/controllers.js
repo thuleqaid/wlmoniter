@@ -48,6 +48,7 @@ angular.module('calendars.controllers').controller('CalendarWorkloadController',
       $scope.current.total = {};
       $scope.current.extra = {};
       $scope.users = data.users;
+      $scope.projects = data.projects;
       for (var i = 0; i < data.extra.length; i++) {
         var tmpdate = new Date(Date.parse(data.extra[i]['date']));
         var tmpleft = 0;
@@ -109,6 +110,7 @@ angular.module('calendars.controllers').controller('CalendarWorkloadController',
         }
       }
       $scope.users.unshift({_id:'', first_name:'', last_name:'All', workid:'', gender:''});
+      $scope.projects.unshift({_id:'', name:'All'});
       $scope.current.info.counter = counter;
     });
   };
@@ -132,6 +134,7 @@ angular.module('calendars.controllers').controller('CalendarWorkloadController',
       'zero': []
     };
     $scope.users = [];
+    $scope.projects = [];
     arrangeData();
   };
   var updateList = function() {

@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var HistoryUserHour = require('./historyUserHour');
+var Project = require('./project');
+var WorkPlan = require('./workPlan');
 var _ = require('underscore');
 var userHourSchema = mongoose.Schema({
   user: {type:String, required:true},
@@ -25,11 +27,13 @@ userHourSchema.post('save', function(user) {
   new HistoryUserHour(histobj).save(function(err) {if (err) console.log(err);});
 });
 
-userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
+userHourSchema.statics.filterUser = function(year_start, month_start, year_end, month_end, cb) {
   /* 查找指定期间内有效用户（可投入工时大于0,不考虑休假） */
   if (typeof(cb) != 'function') {
     return;
   }
+  var date_start = new Date(year_start, month_start - 1, 1);
+  var date_end = new Date(year_end, month_end, 1);
   this.find().sort({user:1, start_date:1}).exec(function(err, records) {
     if (err) {
       console.log(err);
@@ -41,7 +45,8 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
     /* [{'date'   : date_start,
          'detail' : [{'user'      : userid,
                       'total'     : hours,
-                      'available' : hours},
+                      'available' : hours,
+                      'projects'  : []},
                      ...
                     ]},
         ...
@@ -201,8 +206,41 @@ userHourSchema.statics.filterUser = function(date_start, date_end, cb) {
       }
       curuser = [];
     }
-    cb(validusers);
-    return;
+    // cb(validusers);
+    /* 设置每个用户的项目数据 */
+    Project.filterProject(year_start, month_start, year_end, month_end, function(projects) {
+      WorkPlan.planList(_.map(projects, function(value, key) { return value._id;}), function(plans) {
+        for (var prj in plans) {
+          var prjobj = _.find(projects, function(item) {
+            return item._id == prj;
+          });
+          var prjstart = prjobj.startdate_plan;
+          var prjend = prjobj.enddate_plan;
+          var mindate = new Date(Math.max(prjstart, date_start));
+          var maxdate = new Date(Math.min(prjend, date_end));
+          for (var i = 0; i < plans[prj].length; i++) {
+            if (plans[prj][i].plan.length == 1) {
+              if (plans[prj][i].plan[0].hour <= 0) {
+              } else {
+                for (var daycnt = 0; daycnt < validusers.length; daycnt++) {
+                  if (validusers[daycnt]['date'] >= mindate && validusers[daycnt]['date'] <= maxdate) {
+                    for (var usercnt = 0; usercnt < validusers[daycnt]['detail'].length; usercnt++) {
+                      if (plans[prj][i].user == validusers[daycnt]['detail'][usercnt].user) {
+                        validusers[daycnt]['detail'][usercnt].projects.push({project:prj, hour:plans[prj][i].plan[0].hour});
+                        validusers[daycnt]['detail'][usercnt].available -= plans[prj][i].plan[0].hour;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            } else if (plans[prj][i].plan.length > 1) {
+            }
+          }
+        }
+        cb(validusers);
+      });
+    });
   });
 };
 

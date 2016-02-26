@@ -1,11 +1,14 @@
 <ion-view>
   <ion-nav-title translate="T_CALENDARS_WORKLOAD"></ion-nav-title>
   <ion-content>
-    <div>
-      <!-- <select name="userid" ng-mode="mode.userid" ng-options="user.id as user.name for user in users"> -->
-      <!-- </select> -->
-      <select name="userid" ng-model="mode.userid">
+    <div class="row">
+      <label class="col-10">User</label>
+      <select name="userid" ng-model="mode.userid" class="col-40">
         <option value="{{user._id}}" ng-repeat="user in users track by $index">{{user |fullname:' '}}</option>
+      </select>
+      <label class="col-10">Project</label>
+      <select name="projectid" ng-model="mode.projectid" class="col-40">
+        <option value="{{project._id}}" ng-repeat="project in projects track by $index">{{project.name}}</option>
       </select>
     </div>
     <div class="buttons row">
